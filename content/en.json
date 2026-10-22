@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "Sagh — Identity, Web & App Studio",
+    "description": "Sagh is a studio that crafts brand identities, websites and mobile apps in one consistent voice."
+  },
+  "nav": {
+    "link": "Process",
+    "cta": "Start a project",
+    "lang": "ع"
+  },
+  "splash": {
+    "skip": "Click to skip"
+  },
+  "hero": {
+    "eyebrow": "SAGH STUDIO",
+    "title_1": "We shape ideas",
+    "title_2": "into brands",
+    "text": "Brand identity, websites and mobile apps — in one voice that sounds like you",
+    "scroll_hint": "Scroll to turn the cube"
+  },
+  "services": {
+    "identity": {
+      "eyebrow": "01 IDENTITY",
+      "title": "Brand identity",
+      "text": "A logo and visual system people recognise at first glance"
+    },
+    "web": {
+      "eyebrow": "02 WEB",
+      "title": "Websites",
+      "text": "Fast, responsive sites that read easily and turn visitors into clients"
+    },
+    "apps": {
+      "eyebrow": "03 APPS",
+      "title": "Mobile apps",
+      "text": "iOS and Android apps that feel smooth from the first tap"
+    },
+    "closing": {
+      "eyebrow": "ONE TEAM",
+      "title": "From idea to launch",
+      "text": "Identity, website and app — by one team"
+    }
+  },
+  "statement": {
+    "line_1": "A strong brand needs no",
+    "strike": "introduction",
+    "line_2": "You see it, you know it"
+  },
+  "approach": {
+    "eyebrow": "HOW WE WORK",
+    "title": "Three clear steps",
+    "step_1": {
+      "title": "Listen",
+      "text": "We learn your idea, your audience and what sets you apart"
+    },
+    "step_2": {
+      "title": "Sketch",
+      "text": "We turn the idea into a clear visual direction you see before anything is built"
+    },
+    "step_3": {
+      "title": "Build",
+      "text": "We build and hand you a product ready to launch from day one"
+    }
+  },
+  "contact": {
+    "title_1": "Got an idea?",
+    "title_2": "Let's shape it together",
+    "sub": "Build your sentence and send it in one tap",
+    "sentence_start": "I want",
+    "sentence_middle": "and to start",
+    "type_options": ["a brand identity", "a website", "a mobile app", "identity + website"],
+    "timing_options": ["now", "within a month", "in 3 months"],
+    "placeholder": "Your idea in one line",
+    "send": "Send",
+    "hint": "Tap the highlighted words to change them",
+    "error_empty": "Write your idea in one line before sending",
+    "wa_greeting": "Hi Sagh 👋",
+    "wa_sentence": "I want {type} and to start {timing}.",
+    "wa_idea": "Idea: {idea}"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  }
+}

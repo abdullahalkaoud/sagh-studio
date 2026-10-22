@@ -1,0 +1,218 @@
+<!doctype html>
+<!--
+  Page template. build.js fills every double-brace placeholder from content/<lang>.json
+  (edited in the CMS at /admin) and writes dist/index.html (ar) and dist/en/index.html.
+  A "|pipe" suffix joins a list with "|"; ".0" picks a list's first item.
+-->
+<html lang="{{lang}}" dir="{{dir}}" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{{meta.title}}</title>
+  <meta name="description" content="{{meta.description}}" />
+  <meta name="theme-color" content="#efe6d6" />
+  <meta property="og:title" content="{{meta.title}}" />
+  <meta property="og:description" content="{{meta.description}}" />
+  <meta property="og:type" content="website" />
+  <link rel="alternate" hreflang="ar" href="/" />
+  <link rel="alternate" hreflang="en" href="/en/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d7ff3a'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z M7 11l9 5 9-5M16 16v10' fill='none' stroke='%231a1a17' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="is-loading">
+  <!-- Splash: ~2s, click or any key skips -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <div class="splash__inner">
+      <div class="splash__cube">
+        <div class="cube cube--spin">
+          <div class="face face--front"><span class="face__ar">صاغ</span></div>
+          <div class="face face--right"></div><div class="face face--back"></div>
+          <div class="face face--left"></div><div class="face face--top"></div><div class="face face--bottom"></div>
+          <i class="edge face--front"></i><i class="edge face--right"></i><i class="edge face--back"></i>
+          <i class="edge face--left"></i><i class="edge face--top"></i><i class="edge face--bottom"></i>
+        </div>
+      </div>
+      <span class="splash__latin">SAGH STUDIO</span>
+    </div>
+    <span class="splash__skip">{{splash.skip}}</span>
+  </div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="{{a11y.home}}">
+        <span class="logo-tile"><svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11" /></svg></span>
+        <span class="brand__name">SAGH</span>
+      </a>
+      <nav class="nav__end" aria-label="{{a11y.sections}}">
+        <a class="nav__link" href="#approach">{{nav.link}}</a>
+        <a class="nav__lang" href="{{alt_href}}" hreflang="{{alt_lang}}" lang="{{alt_lang}}" aria-label="{{a11y.switch}}">{{nav.lang}}</a>
+        <a class="btn" href="#contact">{{nav.cta}}</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero + transparent cube. JS maps scroll progress to --rx/--ry/--sy/--ss and caption opacity. -->
+    <section class="flip-section" id="services" aria-label="{{a11y.services}}">
+      <div class="stage">
+        <div class="stage__glow" aria-hidden="true"></div>
+
+        <div class="captions">
+          <article class="caption caption--hero" data-step="0">
+            <p class="eyebrow">{{hero.eyebrow}}</p>
+            <h1 class="hero__title">{{hero.title_1}}<br /><em>{{hero.title_2}}</em></h1>
+            <p class="caption__text">{{hero.text}}</p>
+          </article>
+          <article class="caption" data-step="1">
+            <p class="eyebrow">{{services.identity.eyebrow}}</p>
+            <h2 class="caption__title">{{services.identity.title}}</h2>
+            <p class="caption__text">{{services.identity.text}}</p>
+          </article>
+          <article class="caption" data-step="2">
+            <p class="eyebrow">{{services.web.eyebrow}}</p>
+            <h2 class="caption__title">{{services.web.title}}</h2>
+            <p class="caption__text">{{services.web.text}}</p>
+          </article>
+          <article class="caption" data-step="3">
+            <p class="eyebrow">{{services.apps.eyebrow}}</p>
+            <h2 class="caption__title">{{services.apps.title}}</h2>
+            <p class="caption__text">{{services.apps.text}}</p>
+          </article>
+          <article class="caption" data-step="4">
+            <p class="eyebrow">{{services.closing.eyebrow}}</p>
+            <h2 class="caption__title">{{services.closing.title}}</h2>
+            <p class="caption__text">{{services.closing.text}}</p>
+          </article>
+        </div>
+
+        <div class="tile-wrap" aria-hidden="true">
+          <div class="cube">
+            <div class="face face--front"><span class="face__ar">صاغ</span><span class="face__label">SAGH</span></div>
+            <div class="face face--right"><span class="face__no">01</span><span class="face__big">ID</span><span class="face__label">Identity</span></div>
+            <div class="face face--back"><span class="face__no">02</span><span class="face__big">WEB</span><span class="face__label">Websites</span></div>
+            <div class="face face--left"><span class="face__no">03</span><span class="face__big">APP</span><span class="face__label">Mobile</span></div>
+            <div class="face face--top">
+              <svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11" /></svg>
+              <span class="face__label">One team</span>
+            </div>
+            <div class="face face--bottom"></div>
+            <!-- edge-only copies with backfaces visible, so hidden edges show faintly through -->
+            <i class="edge face--front"></i><i class="edge face--right"></i><i class="edge face--back"></i>
+            <i class="edge face--left"></i><i class="edge face--top"></i><i class="edge face--bottom"></i>
+          </div>
+          <div class="tile-shadow"></div>
+        </div>
+
+        <p class="scroll-pill" id="scrollPill" aria-hidden="true"><span></span>{{hero.scroll_hint}}</p>
+      </div>
+    </section>
+
+    <!-- Statement: words darken as you scroll -->
+    <section class="statement" aria-label="{{a11y.statement}}">
+      <div class="statement__sticky">
+        <p class="statement__text">
+          <span class="statement__line" data-words>{{statement.line_1}} <s>{{statement.strike}}</s></span>
+          <span class="statement__line statement__line--accent" data-words>{{statement.line_2}}</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Approach -->
+    <section class="approach" id="approach" aria-labelledby="approachTitle">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">{{approach.eyebrow}}</p>
+          <h2 id="approachTitle" class="section-title">{{approach.title}}</h2>
+        </div>
+        <ol class="steps">
+          <li class="step reveal">
+            <div class="step__art">
+              <span class="step__no">01</span>
+              <span class="art-chat"><i></i><i></i><b><u></u><u></u><u></u></b></span>
+            </div>
+            <h3>{{approach.step_1.title}}</h3>
+            <p>{{approach.step_1.text}}</p>
+          </li>
+          <li class="step reveal">
+            <div class="step__art">
+              <span class="step__no">02</span>
+              <span class="art-line"><i></i></span>
+            </div>
+            <h3>{{approach.step_2.title}}</h3>
+            <p>{{approach.step_2.text}}</p>
+          </li>
+          <li class="step reveal">
+            <div class="step__art">
+              <span class="step__no">03</span>
+              <span class="art-stack">
+                <span class="logo-tile"></span>
+                <span class="logo-tile"></span>
+                <span class="logo-tile"><svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11" /></svg></span>
+              </span>
+            </div>
+            <h3>{{approach.step_3.title}}</h3>
+            <p>{{approach.step_3.text}}</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Contact: sentence builder → WhatsApp. data-* carry the localized message parts for main.js -->
+    <section class="contact" id="contact" aria-labelledby="contactTitle">
+      <div class="contact__panel reveal">
+        <h2 id="contactTitle" class="contact__title">{{contact.title_1}}<br /><em>{{contact.title_2}}</em></h2>
+        <p class="contact__sub">{{contact.sub}}</p>
+
+        <form class="builder" id="contactForm" novalidate
+              data-error="{{contact.error_empty}}"
+              data-greeting="{{contact.wa_greeting}}"
+              data-sentence="{{contact.wa_sentence}}"
+              data-idea="{{contact.wa_idea}}">
+          <p class="builder__sentence">
+            {{contact.sentence_start}}
+            <button type="button" class="token" data-token="type" data-options="{{contact.type_options|pipe}}">{{contact.type_options.0}}</button>
+            {{contact.sentence_middle}}
+            <button type="button" class="token" data-token="timing" data-options="{{contact.timing_options|pipe}}">{{contact.timing_options.0}}</button>
+          </p>
+          <div class="builder__row">
+            <label class="sr-only" for="idea">{{contact.placeholder}}</label>
+            <input class="builder__input" id="idea" name="idea" type="text" placeholder="{{contact.placeholder}}" autocomplete="off" />
+            <button class="btn btn--send" type="submit">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5z" /></svg>
+              {{contact.send}}
+            </button>
+          </div>
+          <p class="builder__hint" id="formHint">{{contact.hint}}</p>
+        </form>
+
+        <div class="contact__pills">
+          <a class="pill" id="phonePill" href="#" target="_blank" rel="noopener" dir="ltr"></a>
+          <a class="pill" href="#top">sagh-studio.netlify.app</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="logo-tile"><svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11" /></svg></span>
+        <span>
+          <b>SAGH</b>
+          <small>© <span id="year">2026</span> {{footer.rights}}</small>
+        </span>
+      </div>
+      <code class="footer__sig">&lt;crafted by sagh /&gt;</code>
+    </div>
+  </footer>
+
+  <a class="fab" id="fab" href="#contact" target="_blank" rel="noopener" aria-label="{{a11y.whatsapp}}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5z" /></svg>
+  </a>
+
+  <script src="/main.js" defer></script>
+</body>
+</html>

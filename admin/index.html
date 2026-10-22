@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>صاغ — لوحة التحكم</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d7ff3a'/%3E%3Cpath d='M16 6l9 5v10l-9 5-9-5V11z M7 11l9 5 9-5M16 16v10' fill='none' stroke='%231a1a17' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <style>
+    /* Arabic fields: dir="auto" (set below) makes them right-aligned; this keeps mixed text readable */
+    input[type="text"], textarea { unicode-bidi: plaintext; }
+  </style>
+</head>
+<body>
+  <!-- Decap CMS reads ./config.yml -->
+  <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+  <script>
+    // Decap renders inputs dynamically; give each one dir="auto" so Arabic text runs right-to-left.
+    new MutationObserver(() => {
+      document.querySelectorAll('input[type="text"]:not([dir]), textarea:not([dir])')
+        .forEach((el) => el.setAttribute("dir", "auto"));
+    }).observe(document.body, { childList: true, subtree: true });
+  </script>
+</body>
+</html>

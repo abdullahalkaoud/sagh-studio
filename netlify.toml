@@ -1,0 +1,4 @@
+[build]
+  # Renders content/ar.json + content/en.json into dist/ (see build.js)
+  command = "node build.js"
+  publish = "dist"
