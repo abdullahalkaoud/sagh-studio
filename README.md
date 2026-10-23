@@ -10,10 +10,11 @@
 | `main.js` | الشاشة الافتتاحية، المكعب، الحركة، ونموذج واتساب (رقم واتساب في أعلاه) |
 | `admin/` | لوحة التحكم Decap CMS على `/admin` |
 | `build.js` | يولّد الموقع في `dist/` |
+| `worker.js`، `wrangler.jsonc` | Cloudflare Worker: يعرض الموقع ويتولى تسجيل الدخول للوحة التحكم |
 
 ## تعديل النصوص
 
-ادخل على `https://sagh-studio.netlify.app/admin` وسجّل الدخول بحساب GitHub. عدّل ثم اضغط **Publish**، ويتحدّث الموقع خلال دقيقة تقريباً.
+ادخل على `https://sagh.co/admin` وسجّل الدخول بحساب GitHub. عدّل ثم اضغط **Publish**، ويتحدّث الموقع خلال دقيقة تقريباً.
 
 ## التشغيل محلياً
 
@@ -29,4 +30,6 @@ python3 -m http.server 4173 -d dist
 
 ## النشر
 
-Netlify يبني الموقع تلقائياً من فرع `main` بالأمر `node build.js` وينشر مجلد `dist` (الإعدادات في `netlify.toml`).
+Cloudflare Workers Builds يبني الموقع تلقائياً من فرع `main`: الأمر `node build.js` ثم `npx wrangler deploy`، وينشره على https://sagh.co.
+
+يحتاج الـ Worker سرّين في إعداداته: `GITHUB_CLIENT_ID` و`GITHUB_CLIENT_SECRET` (من تطبيق «Sagh CMS» على GitHub، وعنوان الرجوع فيه `https://sagh.co/api/callback`).

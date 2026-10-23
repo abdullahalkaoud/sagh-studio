@@ -1,0 +1,13 @@
+// Cloudflare Worker config. Workers Builds runs:  node build.js  →  npx wrangler deploy
+{
+  "name": "sagh",
+  "main": "worker.js",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // only the login endpoints go through worker.js; everything else is served straight from dist/
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": { "enabled": true }
+}

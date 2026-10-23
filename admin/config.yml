@@ -6,8 +6,8 @@ backend:
   branch: "main"
   commit_messages:
     update: "Update {{slug}} content"
-site_url: "https://sagh-studio.netlify.app"
-display_url: "https://sagh-studio.netlify.app"
+site_url: "https://sagh.co"
+display_url: "https://sagh.co"
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 collections:
