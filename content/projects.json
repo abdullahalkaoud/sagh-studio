@@ -14,6 +14,17 @@
       "year": "2025"
     },
     {
+      "summary_en": "Home gym app with variety of workouts, competitions, and check-in and check-out system",
+      "summary_ar": "تطبيق نادي منزلي مع مجموعه واسعه من التمارين والمسابقات ونظام تسجيل الحضور",
+      "category_en": "IOS + Android app",
+      "image_fit": "cover",
+      "title_en": "Gymly",
+      "category_ar": "تطبيق IOS + Android",
+      "title_ar": "جيملي",
+      "image": "/assets/uploads/gymly-app-mockup.png",
+      "year": "2026"
+    },
+    {
       "summary_en": "An online store for healthy, natural snacks",
       "image_bg": "#502985",
       "summary_ar": "متجر إلكتروني مختص بالسناكات الصحية والطبيعية",
@@ -25,17 +36,6 @@
       "title_ar": "سناكشيز",
       "image": "/assets/projects/snackches.webp",
       "year": "2020"
-    },
-    {
-      "summary_en": "Home gym app with variety of workouts, competitions, and check-in and check-out system",
-      "summary_ar": "تطبيق نادي منزلي مع مجموعه واسعه من التمارين والمسابقات ونظام تسجيل الحضور",
-      "category_en": "IOS + Android app",
-      "image_fit": "cover",
-      "title_en": "Gymly",
-      "category_ar": "تطبيق IOS + Android",
-      "title_ar": "جيملي",
-      "image": "/assets/uploads/gymly-app-mockup.png",
-      "year": "2026"
     }
   ]
 }
