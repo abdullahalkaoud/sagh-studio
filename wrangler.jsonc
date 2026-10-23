@@ -3,6 +3,8 @@
   "name": "sagh",
   "main": "worker.js",
   "compatibility_date": "2025-10-01",
+  // GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET are set in the dashboard (as Secrets); don't let deploys drop them
+  "keep_vars": true,
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
