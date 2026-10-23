@@ -5,6 +5,31 @@
    --px / --py (pointer parallax), and per-caption --o / --shift.
    ========================================================== */
 
+/* ---------- Fonts (OFL; licences in /fonts) ---------- */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/bricolage-grotesque.woff2") format("woff2");
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/fonts/alexandria.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
 :root {
   --bg: #efe6d6;          /* beige */
   --bg-2: #e6dbc6;        /* band behind the approach cards */
@@ -19,9 +44,14 @@
   --panel: #1a1a17;       /* dark contact panel */
   --on-panel: #f2efe6;
 
-  --font-ar: "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --font-en: "Space Grotesk", "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  /* Brand fonts (self-hosted in /fonts) */
+  --font-ar: "IBM Plex Sans Arabic", system-ui, sans-serif;          /* Arabic body + labels */
+  --font-ar-display: "Alexandria", "IBM Plex Sans Arabic", system-ui, sans-serif; /* Arabic headlines */
+  --font-latin: "Bricolage Grotesque", system-ui, sans-serif;       /* English headlines + body */
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;     /* small uppercase labels */
+  /* per-language roles (English page overrides below) */
+  --font-body: var(--font-ar);
+  --font-display: var(--font-ar-display);
 
   --nav-h: 64px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -39,7 +69,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-ar);
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -47,7 +77,13 @@ body {
 }
 body.is-loading { overflow: hidden; }
 /* English page: Latin display face for everything */
-html[lang="en"] body { font-family: var(--font-en); }
+html[lang="en"] {
+  --font-body: var(--font-latin);
+  --font-display: var(--font-latin);
+}
+h1, h2, h3,
+.statement__text,
+.builder__sentence { font-family: var(--font-display); }
 
 svg { display: block; }
 a { color: inherit; text-decoration: none; }
@@ -63,9 +99,9 @@ h1, h2, h3, p { margin: 0; }
 .container { max-width: 1120px; margin-inline: auto; padding-inline: 20px; }
 
 .eyebrow {
-  font-family: var(--font-en);
+  font-family: var(--font-mono);
   font-weight: 500;
-  font-size: 13px;
+  font-size: 12.5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--accent-text);
@@ -107,7 +143,7 @@ h1, h2, h3, p { margin: 0; }
   border-radius: 999px;
   background: var(--accent);
   color: var(--accent-ink);
-  font: 700 15px/1 var(--font-ar);
+  font: 700 15px/1 var(--font-body);
   white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 4px 0 var(--accent-deep);
@@ -144,7 +180,7 @@ h1, h2, h3, p { margin: 0; }
   to   { transform: rotateX(-20deg) rotateY(330deg); }
 }
 .splash__latin {
-  font: 500 12px/1 var(--font-en);
+  font: 500 12px/1 var(--font-mono);
   letter-spacing: 0.5em;
   color: var(--muted);
   animation: rise 0.9s 0.25s var(--ease) both;
@@ -183,7 +219,7 @@ h1, h2, h3, p { margin: 0; }
   justify-content: space-between;
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
-.brand__name { font: 700 18px/1 var(--font-en); letter-spacing: 0.02em; }
+.brand__name { font: 700 19px/1 var(--font-latin); letter-spacing: 0.02em; }
 .nav__end { display: flex; align-items: center; gap: 24px; }
 .nav__link { font-size: 15px; color: var(--muted); transition: color 0.2s; }
 .nav__link:hover { color: var(--text); }
@@ -195,7 +231,7 @@ h1, h2, h3, p { margin: 0; }
   padding: 0 8px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  font: 700 13px/1 var(--font-en);
+  font: 700 13px/1 var(--font-latin);
   transition: border-color 0.2s, background-color 0.2s;
 }
 .nav__lang:lang(ar) { font: 700 15px/1 var(--font-ar); }
@@ -262,6 +298,9 @@ h1, h2, h3, p { margin: 0; }
   letter-spacing: -0.01em;
 }
 .hero__title em { font-style: normal; color: var(--accent-text); }
+/* Alexandria has tall ascenders/descenders; give Arabic headlines more room */
+html[lang="ar"] .hero__title { line-height: 1.3; }
+html[lang="ar"] .contact__title { line-height: 1.35; }
 
 .caption__title {
   font-size: clamp(34px, 4.2vw, 60px);
@@ -332,18 +371,18 @@ h1, h2, h3, p { margin: 0; }
 .face--top    { transform: rotateX(90deg)  translateZ(calc(var(--cube) / 2)); }
 .face--bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube) / 2)); }
 
-.face__ar { font-size: calc(var(--cube) * 0.32); font-weight: 500; line-height: 1; }
+.face__ar { font-family: var(--font-ar-display); font-size: calc(var(--cube) * 0.3); font-weight: 500; line-height: 1.1; }
 .face__label, .face__no {
-  font-family: var(--font-en);
+  font-family: var(--font-mono);
   font-weight: 500;
-  font-size: calc(var(--cube) * 0.06);
+  font-size: calc(var(--cube) * 0.055);
   letter-spacing: 0.3em;
   text-transform: uppercase;
   opacity: 0.75;
 }
 .face__no { color: var(--accent-text); opacity: 1; }
 .face__big {
-  font-family: var(--font-en);
+  font-family: var(--font-latin);
   font-weight: 500;
   font-size: calc(var(--cube) * 0.28);
   line-height: 1;
@@ -451,7 +490,7 @@ h1, h2, h3, p { margin: 0; }
   position: absolute;
   top: 14px;
   inset-inline-end: 16px;
-  font: 500 13px/1 var(--font-en);
+  font: 500 13px/1 var(--font-mono);
   letter-spacing: 0.1em;
   color: var(--muted);
 }
@@ -594,7 +633,7 @@ h1, h2, h3, p { margin: 0; }
 .footer__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .footer__brand { display: flex; align-items: center; gap: 12px; }
 .footer__brand .logo-tile { width: 42px; height: 42px; border-radius: 12px; }
-.footer__brand b { display: block; font: 700 18px/1.2 var(--font-en); }
+.footer__brand b { display: block; font: 700 18px/1.2 var(--font-latin); }
 .footer__brand small { font-size: 13px; color: var(--muted); }
 .footer__sig { font: 12px/1 var(--font-mono); color: var(--muted); direction: ltr; }
 

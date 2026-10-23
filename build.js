@@ -1,7 +1,7 @@
 // Builds the static site into dist/ (no dependencies; runs on Netlify with `node build.js`).
 //   src/index.html + content/ar.json → dist/index.html
 //   src/index.html + content/en.json → dist/en/index.html
-//   styles.css, main.js, admin/      → copied as-is
+//   styles.css, main.js, admin/, fonts/ → copied as-is
 const fs = require("fs");
 const path = require("path");
 
@@ -72,4 +72,5 @@ for (const [lang, opts] of Object.entries(languages)) {
 copy("styles.css", "styles.css");
 copy("main.js", "main.js");
 copy("admin", "admin");
-console.log("copied styles.css, main.js, admin/");
+copy("fonts", "fonts");
+console.log("copied styles.css, main.js, admin/, fonts/");
