@@ -519,8 +519,21 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 .statement__line { display: block; }
 .statement .w { color: rgba(26, 26, 23, 0.14); transition: color 0.35s var(--ease); }
 .statement .w.is-on { color: var(--text); }
-.statement__line--accent .w { color: rgba(79, 98, 0, 0.16); }
-.statement__line--accent .w.is-on { color: var(--accent-text); }
+/* second line: dark text on a lime highlighter band (same treatment as the hero), drawn once the line is lit */
+.statement__mark {
+  color: inherit;
+  background-color: transparent; /* drop the browser's default <mark> yellow */
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-size: 0% 0.42em;
+  background-position: right 82%;
+  padding-inline: 0.12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 0.8s var(--ease);
+}
+[dir="ltr"] .statement__mark { background-position: left 82%; }
+.statement__mark.is-on { background-size: 100% 0.42em; }
 .statement s { position: relative; text-decoration: none; }
 .statement s::after {
   content: "";
@@ -529,7 +542,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   top: 0.55em;
   height: 0.09em;
   border-radius: 1em;
-  background: var(--accent-text);
+  background: var(--accent);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.5s var(--ease);
@@ -744,6 +757,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 .reveal.is-in { opacity: 1; transform: none; }
 .no-js .reveal { opacity: 1; transform: none; }
 .no-js .statement .w, .no-js .statement__line { color: var(--text); }
+.no-js .statement__mark { background-size: 100% 0.42em; }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
@@ -755,6 +769,6 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   .splash { display: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .art-line { transform: none; transition: none; }
-  .statement .w, .statement s::after { transition: none; }
+  .statement .w, .statement s::after, .statement__mark { transition: none; }
   .btn:hover, .fab:hover { transform: none; }
 }

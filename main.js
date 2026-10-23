@@ -122,6 +122,7 @@ const smooth = (t) => t * t * (3 - 2 * t);
 (() => {
   const section = document.querySelector(".statement");
   const strike = section.querySelector("s");
+  const mark = section.querySelector(".statement__mark");
 
   // Wrap each word in a span (the <s> word is wrapped from inside).
   section.querySelectorAll("[data-words]").forEach((line) => {
@@ -155,6 +156,7 @@ const smooth = (t) => t * t * (3 - 2 * t);
     const lit = Math.round(p * words.length);
     words.forEach((w, i) => w.classList.toggle("is-on", i < lit));
     strike.classList.toggle("is-struck", lit >= firstLineCount);
+    mark.classList.toggle("is-on", lit >= words.length);
   }
   let ticking = false;
   window.addEventListener("scroll", () => {
