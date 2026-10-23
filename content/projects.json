@@ -1,30 +1,41 @@
 {
   "items": [
     {
-      "title_ar": "حيتان",
+      "summary_en": "Brand identity and website for a podcast that analyses the financial market",
+      "image_bg": "#14161a",
+      "summary_ar": "هوية بصرية وموقع إلكتروني لبودكاست يحلّل سوق المال",
+      "category_en": "Podcast",
+      "image_fit": "cover",
+      "url": "https://www.hetaan.com",
       "title_en": "Hetaan",
       "category_ar": "بودكاست",
-      "category_en": "Podcast",
-      "year": "2025",
-      "summary_ar": "هوية بصرية وموقع إلكتروني لبودكاست يحلّل سوق المال",
-      "summary_en": "Brand identity and website for a podcast that analyses the financial market",
-      "url": "https://www.hetaan.com",
+      "title_ar": "حيتان",
       "image": "/assets/projects/hetaan.webp",
-      "image_fit": "cover",
-      "image_bg": "#14161a"
+      "year": "2025"
     },
     {
-      "title_ar": "سناكشيز",
+      "summary_en": "An online store for healthy, natural snacks",
+      "image_bg": "#502985",
+      "summary_ar": "متجر إلكتروني مختص بالسناكات الصحية والطبيعية",
+      "category_en": "E-commerce store & brand identity",
+      "image_fit": "contain",
+      "url": "",
       "title_en": "Snackches",
       "category_ar": "متجر إلكتروني وهوية بصرية",
-      "category_en": "E-commerce store & brand identity",
-      "year": "2020",
-      "summary_ar": "متجر إلكتروني مختص بالسناكات الصحية والطبيعية",
-      "summary_en": "An online store for healthy, natural snacks",
-      "url": "",
+      "title_ar": "سناكشيز",
       "image": "/assets/projects/snackches.webp",
-      "image_fit": "contain",
-      "image_bg": "#502985"
+      "year": "2020"
+    },
+    {
+      "summary_en": "Home gym app with variety of workouts, competitions, and check-in and check-out system",
+      "summary_ar": "تطبيق نادي منزلي مع مجموعه واسعه من التمارين والمسابقات ونظام تسجيل الحضور",
+      "category_en": "IOS + Android app",
+      "image_fit": "cover",
+      "title_en": "Gymly",
+      "category_ar": "تطبيق IOS + Android",
+      "title_ar": "جيملي",
+      "image": "/assets/uploads/gymly-app-mockup.png",
+      "year": "2026"
     }
   ]
 }
