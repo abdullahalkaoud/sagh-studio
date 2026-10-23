@@ -64,15 +64,15 @@ function renderProjects(projects, section, lang) {
       ? `<img src="${escape(p.image)}" alt="${escape(title)}" loading="lazy" decoding="async" />`
       : `<span class="project__initial">${escape(title.slice(0, 1))}</span>`;
     const tag = url ? "a" : "div";
+    const badge = status !== "live" ? `<span class="project__status" data-status="${status}">${escape(section[`status_${status}`])}</span>` : "";
     return `
           <article class="project reveal">
-            <${tag} class="project__media" data-fit="${p.image_fit === "contain" ? "contain" : "cover"}" style="--media-bg: ${color(p.image_bg)}"${link}${url ? ` aria-label="${escape(title)}"` : ""}>${media}</${tag}>
+            <${tag} class="project__media" data-fit="${p.image_fit === "contain" ? "contain" : "cover"}" style="--media-bg: ${color(p.image_bg)}"${link}${url ? ` aria-label="${escape(title)}"` : ""}>${media}${badge}</${tag}>
             <div class="project__body">
               <p class="project__meta"><span>${escape(pick("category"))}</span>${p.year ? `<span class="project__year">${escape(p.year)}</span>` : ""}</p>
               <h3 class="project__title">${escape(title)}</h3>
               ${pick("summary") ? `<p class="project__text">${escape(pick("summary"))}</p>` : ""}
               ${url ? `<a class="project__link"${link}>${escape(section.visit)}</a>` : ""}
-              ${status !== "live" ? `<span class="project__status" data-status="${status}">${escape(section[`status_${status}`])}</span>` : ""}
             </div>
           </article>`;
   }).join("");
