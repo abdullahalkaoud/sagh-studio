@@ -1,56 +1,47 @@
 {
-  "meta": {
-    "title": "Sagh — Identity, Web & App Studio",
-    "description": "Sagh is a studio that crafts brand identities, websites and mobile apps in one consistent voice."
+  "contact": {
+    "sub": "Build your sentence and send it in one click",
+    "sentence_start": "I want",
+    "hint": "Tap the highlighted words to change them",
+    "send": "Send",
+    "timing_options": [
+      "now",
+      "within a month",
+      "in 3 months"
+    ],
+    "title_1": "Got an idea?",
+    "title_2": "Let's shape it together",
+    "wa_idea": "Idea: {idea}",
+    "wa_greeting": "Hello Sagh team 👋",
+    "sentence_middle": "and to start",
+    "placeholder": "tell us your idea in one line",
+    "error_empty": "Write your idea in one line before sending",
+    "wa_sentence": "I want {type} and to start {timing}.",
+    "type_options": [
+      "a brand identity",
+      "a website",
+      "a mobile app",
+      "identity + website"
+    ]
   },
   "nav": {
-    "link": "Process",
+    "link": "Our Process",
     "cta": "Start a project",
-    "lang": "ع"
+    "lang": "عربي"
+  },
+  "meta": {
+    "title": "Sagh — we build Identity, Apps & Websites",
+    "description": "Sagh is a Tech studio that crafts brand identities, mobile apps, and websites in one consistent voice"
   },
   "splash": {
-    "skip": "Click to skip"
-  },
-  "hero": {
-    "eyebrow": "SAGH STUDIO",
-    "title_1": "We shape ideas",
-    "title_2": "into brands",
-    "text": "Brand identity, websites and mobile apps — in one voice that sounds like you",
-    "scroll_hint": "Scroll to turn the cube"
-  },
-  "services": {
-    "identity": {
-      "eyebrow": "01 IDENTITY",
-      "title": "Brand identity",
-      "text": "A logo and visual system people recognise at first glance"
-    },
-    "web": {
-      "eyebrow": "02 WEB",
-      "title": "Websites",
-      "text": "Fast, responsive sites that read easily and turn visitors into clients"
-    },
-    "apps": {
-      "eyebrow": "03 APPS",
-      "title": "Mobile apps",
-      "text": "iOS and Android apps that feel smooth from the first tap"
-    },
-    "closing": {
-      "eyebrow": "ONE TEAM",
-      "title": "From idea to launch",
-      "text": "Identity, website and app — by one team"
-    }
-  },
-  "statement": {
-    "line_1": "A strong brand needs no",
-    "strike": "introduction",
-    "line_2": "You see it, you know it"
+    "skip": "skip"
   },
   "approach": {
-    "eyebrow": "HOW WE WORK",
+    "eyebrow": "HOW DO WE WORK",
     "title": "Three clear steps",
     "step_1": {
       "title": "Listen",
-      "text": "We learn your idea, your audience and what sets you apart"
+      "text": "We hear your idea, know your audience and what sets you apart"
     },
     "step_2": {
       "title": "Sketch",
@@ -58,26 +49,44 @@
     },
     "step_3": {
       "title": "Build",
-      "text": "We build and hand you a product ready to launch from day one"
+      "text": "We build and hand you a product ready to launch"
     }
   },
-  "contact": {
-    "title_1": "Got an idea?",
-    "title_2": "Let's shape it together",
-    "sub": "Build your sentence and send it in one tap",
-    "sentence_start": "I want",
-    "sentence_middle": "and to start",
-    "type_options": ["a brand identity", "a website", "a mobile app", "identity + website"],
-    "timing_options": ["now", "within a month", "in 3 months"],
-    "placeholder": "Your idea in one line",
-    "send": "Send",
-    "hint": "Tap the highlighted words to change them",
-    "error_empty": "Write your idea in one line before sending",
-    "wa_greeting": "Hi Sagh 👋",
-    "wa_sentence": "I want {type} and to start {timing}.",
-    "wa_idea": "Idea: {idea}"
+  "statement": {
+    "line_1": "A good brand needs no",
+    "strike": "introduction",
+    "line_2": "By seeing it, you know it"
+  },
+  "hero": {
+    "eyebrow": "SAGH",
+    "title_1": "We shape ideas",
+    "title_2": "into reality",
+    "text": "Brand identity, websites and mobile apps — in one voice that sounds like you",
+    "scroll_hint": "Scroll the cube"
   },
   "footer": {
-    "rights": "All rights reserved"
+    "rights": "All rights reserved to sagh"
+  },
+  "services": {
+    "identity": {
+      "eyebrow": "01 IDENTITY",
+      "title": "Brand Identity",
+      "text": "Logos and visual system people recognise at first glance"
+    },
+    "web": {
+      "eyebrow": "02 WEB",
+      "title": "Websites",
+      "text": "Simple, fast, and responsive sites that read easily and turn visitors into clients"
+    },
+    "apps": {
+      "eyebrow": "03 APPS",
+      "title": "Mobile Apps",
+      "text": "iOS and Android apps that feel smooth from the first touch"
+    },
+    "closing": {
+      "eyebrow": "ONE TEAM",
+      "title": "From idea to reality",
+      "text": "Identity, website and apps — by one team"
+    }
   }
 }
