@@ -396,6 +396,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   opacity: 0.75;
 }
 .face__no { color: var(--accent-text); opacity: 1; }
+.face__label--name { text-transform: none; }
 .face__big {
   font-family: var(--font-latin);
   font-weight: 500;
@@ -680,6 +681,12 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 @keyframes swap { 0% { transform: translateY(6px); opacity: 0.2; } 100% { transform: none; opacity: 1; } }
 
 .builder__row { display: flex; gap: 10px; margin-top: 20px; }
+/* narrow phones: field on its own line, button below */
+@media (max-width: 420px) {
+  .builder__row { flex-wrap: wrap; }
+  .builder__row .builder__input { flex: 1 1 100%; }
+  .builder__row .btn--send { flex: 1 1 100%; }
+}
 .builder__input {
   flex: 1;
   min-width: 0;
@@ -717,7 +724,11 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 .footer__brand .logo-tile { width: 42px; height: 42px; border-radius: 12px; }
 .footer__brand b { display: block; font: 700 18px/1.2 var(--font-latin); }
 .footer__brand small { font-size: 13px; color: var(--muted); }
-.footer__sig { font: 12px/1 var(--font-mono); color: var(--muted); direction: ltr; }
+
+/* keep the end of the footer clear of the floating WhatsApp button on phones */
+@media (max-width: 760px) {
+  .footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+}
 
 /* ---------- Floating WhatsApp button ---------- */
 .fab {
