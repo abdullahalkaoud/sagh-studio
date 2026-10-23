@@ -579,6 +579,18 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 .project__link::after { content: "↗"; font-family: var(--font-latin); }
 [dir="rtl"] .project__link::after { content: "↖"; }
 .project__link:hover { border-color: var(--accent-text); }
+.project__status {
+  margin-top: 6px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+}
+.project__status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.project__status[data-status="soon"] { background: var(--accent); color: var(--accent-ink); }
+.project__status[data-status="soon"]::before { animation: soon-pulse 1.6s ease-in-out infinite; }
+.project__status[data-status="closed"] { border: 1px solid var(--line); color: var(--muted); }
+@keyframes soon-pulse { 50% { opacity: 0.3; } }
 
 /* ---------- Statement: words light up with scroll ---------- */
 .statement { position: relative; height: 220vh; height: 220svh; }

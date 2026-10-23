@@ -11,7 +11,8 @@
       "category_ar": "بودكاست",
       "title_ar": "حيتان",
       "image": "/assets/projects/hetaan.webp",
-      "year": "2025"
+      "year": "2025",
+      "status": "live"
     },
     {
       "summary_en": "Home gym app with variety of workouts, competitions, and check-in and check-out system",
@@ -22,7 +23,8 @@
       "category_ar": "تطبيق IOS + Android",
       "title_ar": "جيملي",
       "image": "/assets/uploads/gymly-app-mockup.png",
-      "year": "2026"
+      "year": "2026",
+      "status": "soon"
     },
     {
       "summary_en": "An online store for healthy, natural snacks",
@@ -35,7 +37,8 @@
       "category_ar": "متجر إلكتروني وهوية بصرية",
       "title_ar": "سناكشيز",
       "image": "/assets/projects/snackches.webp",
-      "year": "2020"
+      "year": "2020",
+      "status": "closed"
     }
   ]
 }

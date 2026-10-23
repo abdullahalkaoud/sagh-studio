@@ -158,6 +158,14 @@ collections:
         label: نص رابط المشروع
         widget: string
         hint: 'مثل: زيارة المشروع'
+      - name: status_soon
+        label: وسم «قريباً»
+        widget: string
+        hint: يظهر على المشاريع التي حالتها «قريباً»
+      - name: status_closed
+        label: وسم «مغلق»
+        widget: string
+        hint: يظهر على المشاريع التي حالتها «مغلق»
     - name: statement
       label: العبارة الكبيرة
       widget: object
@@ -578,10 +586,22 @@ collections:
         label: وصف قصير (English)
         widget: text
         required: false
+      - name: status
+        label: حالة المشروع
+        widget: select
+        default: live
+        hint: 'منشور: يظهر رابط «زيارة المشروع» (يحتاج رابطاً). قريباً أو مغلق: يظهر وسم بدل الرابط.'
+        options:
+        - label: منشور (يظهر الرابط)
+          value: live
+        - label: قريباً
+          value: soon
+        - label: مغلق
+          value: closed
       - name: url
         label: رابط المشروع
         widget: string
-        hint: اتركه فارغاً إذا لا يوجد رابط
+        hint: يُستخدم فقط إذا كانت الحالة «منشور»
         required: false
       - name: image
         label: الصورة

@@ -55,7 +55,10 @@ function renderProjects(projects, section, lang) {
     const pick = (field) => p[`${field}_${lang}`] || p[`${field}_ar`] || "";
     const title = pick("title");
     if (!title) throw new Error(`content/projects.json: project ${i + 1} has no title`);
-    const url = (p.url || "").trim();
+    // status: "live" shows the link (needs a URL); "soon" / "closed" show a tag instead.
+    // Older entries without a status count as live when they have a URL.
+    const status = ["live", "soon", "closed"].includes(p.status) ? p.status : "live";
+    const url = status === "live" ? (p.url || "").trim() : "";
     const link = url ? ` href="${escape(url)}" target="_blank" rel="noopener"` : "";
     const media = p.image
       ? `<img src="${escape(p.image)}" alt="${escape(title)}" loading="lazy" decoding="async" />`
@@ -69,6 +72,7 @@ function renderProjects(projects, section, lang) {
               <h3 class="project__title">${escape(title)}</h3>
               ${pick("summary") ? `<p class="project__text">${escape(pick("summary"))}</p>` : ""}
               ${url ? `<a class="project__link"${link}>${escape(section.visit)}</a>` : ""}
+              ${status !== "live" ? `<span class="project__status" data-status="${status}">${escape(section[`status_${status}`])}</span>` : ""}
             </div>
           </article>`;
   }).join("");
