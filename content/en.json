@@ -88,5 +88,11 @@
       "title": "From idea to reality",
       "text": "Identity, website and apps — by one team"
     }
+  },
+  "projects": {
+    "eyebrow": "SELECTED WORK",
+    "title": "Projects we've worked on",
+    "text": "A few of the identities and websites we've shaped",
+    "visit": "Visit project"
   }
 }

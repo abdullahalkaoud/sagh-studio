@@ -1,7 +1,8 @@
 // Builds the static site into dist/ (no dependencies; Cloudflare Workers Builds runs `node build.js`).
 //   src/index.html + content/ar.json → dist/index.html
 //   src/index.html + content/en.json → dist/en/index.html
-//   styles.css, main.js, admin/, fonts/ → copied as-is
+//   content/projects.json            → the project cards (in place of <!--PROJECTS--> in the template)
+//   styles.css, main.js, admin/, fonts/, assets/ → copied as-is
 const fs = require("fs");
 const path = require("path");
 
@@ -45,6 +46,46 @@ function render(template, data, lang) {
   });
 }
 
+// Project cards. Each item carries both languages (title_ar / title_en, …); shared fields
+// (year, url, image) are written once. An empty list removes the whole section.
+function renderProjects(projects, section, lang) {
+  if (!projects.length) return "";
+  const color = (c) => (/^#[0-9a-f]{3,8}$/i.test(c || "") ? c : "#f4f2ee");
+  const cards = projects.map((p, i) => {
+    const pick = (field) => p[`${field}_${lang}`] || p[`${field}_ar`] || "";
+    const title = pick("title");
+    if (!title) throw new Error(`content/projects.json: project ${i + 1} has no title`);
+    const url = (p.url || "").trim();
+    const link = url ? ` href="${escape(url)}" target="_blank" rel="noopener"` : "";
+    const media = p.image
+      ? `<img src="${escape(p.image)}" alt="${escape(title)}" loading="lazy" decoding="async" />`
+      : `<span class="project__initial">${escape(title.slice(0, 1))}</span>`;
+    const tag = url ? "a" : "div";
+    return `
+          <article class="project reveal">
+            <${tag} class="project__media" data-fit="${p.image_fit === "contain" ? "contain" : "cover"}" style="--media-bg: ${color(p.image_bg)}"${link}${url ? ` aria-label="${escape(title)}"` : ""}>${media}</${tag}>
+            <div class="project__body">
+              <p class="project__meta"><span>${escape(pick("category"))}</span>${p.year ? `<span class="project__year">${escape(p.year)}</span>` : ""}</p>
+              <h3 class="project__title">${escape(title)}</h3>
+              ${pick("summary") ? `<p class="project__text">${escape(pick("summary"))}</p>` : ""}
+              ${url ? `<a class="project__link"${link}>${escape(section.visit)}</a>` : ""}
+            </div>
+          </article>`;
+  }).join("");
+  return `
+    <section class="projects" id="work" aria-labelledby="projectsTitle">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">${escape(section.eyebrow)}</p>
+          <h2 id="projectsTitle" class="section-title">${escape(section.title)}</h2>
+          <p class="section-sub">${escape(section.text)}</p>
+        </div>
+        <div class="projects__grid">${cards}
+        </div>
+      </div>
+    </section>`;
+}
+
 function copy(from, to) {
   const src = path.join(root, from);
   const dest = path.join(dist, to);
@@ -54,12 +95,14 @@ function copy(from, to) {
 
 fs.rmSync(dist, { recursive: true, force: true });
 const template = fs.readFileSync(path.join(root, "src/index.html"), "utf8");
+const projects = JSON.parse(fs.readFileSync(path.join(root, "content/projects.json"), "utf8")).items || [];
 
 for (const [lang, opts] of Object.entries(languages)) {
   const content = JSON.parse(fs.readFileSync(path.join(root, `content/${lang}.json`), "utf8"));
   const data = { ...content, lang, dir: opts.dir, alt_lang: opts.alt_lang, alt_href: opts.alt_href, a11y: opts.a11y };
+  const projectsHtml = renderProjects(projects, lookup(data, "projects", lang), lang);
   // Eyebrows are styled for spaced-out Latin caps; Arabic ones get their own style.
-  const html = render(template, data, lang).replace(
+  const html = render(template, data, lang).replace("<!--PROJECTS-->", projectsHtml).replace(
     /<p class="eyebrow">([^<]*[\u0600-\u06FF][^<]*)<\/p>/g,
     '<p class="eyebrow eyebrow--ar">$1</p>'
   );
@@ -73,4 +116,5 @@ copy("styles.css", "styles.css");
 copy("main.js", "main.js");
 copy("admin", "admin");
 copy("fonts", "fonts");
-console.log("copied styles.css, main.js, admin/, fonts/");
+copy("assets", "assets");
+console.log("copied styles.css, main.js, admin/, fonts/, assets/");

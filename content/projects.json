@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "title_ar": "حيتان",
+      "title_en": "Hetaan",
+      "category_ar": "بودكاست",
+      "category_en": "Podcast",
+      "year": "2025",
+      "summary_ar": "هوية بصرية وموقع إلكتروني لبودكاست يحلّل سوق المال",
+      "summary_en": "Brand identity and website for a podcast that analyses the financial market",
+      "url": "https://www.hetaan.com",
+      "image": "/assets/projects/hetaan.webp",
+      "image_fit": "cover",
+      "image_bg": "#14161a"
+    },
+    {
+      "title_ar": "سناكشيز",
+      "title_en": "Snackches",
+      "category_ar": "متجر إلكتروني وهوية بصرية",
+      "category_en": "E-commerce store & brand identity",
+      "year": "2020",
+      "summary_ar": "متجر إلكتروني مختص بالسناكات الصحية والطبيعية",
+      "summary_en": "An online store for healthy, natural snacks",
+      "url": "",
+      "image": "/assets/projects/snackches.webp",
+      "image_fit": "contain",
+      "image_bg": "#502985"
+    }
+  ]
+}

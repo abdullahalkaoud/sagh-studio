@@ -1,524 +1,605 @@
 # Decap CMS config — the admin panel at /admin edits content/ar.json and content/en.json.
 # Every field here must match a key used in src/index.html.
 backend:
-  name: "github"
-  repo: "abdullahalkaoud/sagh-studio"
-  branch: "main"
+  name: github
+  repo: abdullahalkaoud/sagh-studio
+  branch: main
   commit_messages:
-    update: "Update {{slug}} content"
-site_url: "https://sagh.co"
-display_url: "https://sagh.co"
-media_folder: "assets/uploads"
-public_folder: "/assets/uploads"
+    update: Update {{slug}} content
+site_url: https://sagh.co
+display_url: https://sagh.co
+media_folder: assets/uploads
+public_folder: /assets/uploads
 collections:
-  - name: "content"
-    label: "محتوى الموقع"
-    editor:
-      preview: false
-    files:
-      - name: "ar"
-        label: "المحتوى العربي"
-        file: "content/ar.json"
+- name: content
+  label: محتوى الموقع
+  editor:
+    preview: false
+  files:
+  - name: ar
+    label: المحتوى العربي
+    file: content/ar.json
+    fields:
+    - name: meta
+      label: بيانات الصفحة (تظهر في محركات البحث وتبويب المتصفح)
+      widget: object
+      collapsed: true
+      fields:
+      - name: title
+        label: عنوان الصفحة
+        widget: string
+      - name: description
+        label: وصف الصفحة
+        widget: text
+    - name: nav
+      label: الشريط العلوي
+      widget: object
+      collapsed: true
+      fields:
+      - name: link
+        label: رابط المنهج
+        widget: string
+      - name: cta
+        label: زر ابدأ مشروعك
+        widget: string
+      - name: lang
+        label: زر تبديل اللغة
+        widget: string
+        hint: النص الظاهر على الزر، مثل EN أو ع
+    - name: splash
+      label: شاشة التحميل
+      widget: object
+      collapsed: true
+      fields:
+      - name: skip
+        label: نص التخطي
+        widget: string
+    - name: hero
+      label: البداية (أول الصفحة)
+      widget: object
+      collapsed: true
+      fields:
+      - name: eyebrow
+        label: السطر الصغير فوق العنوان
+        widget: string
+      - name: title_1
+        label: العنوان – السطر الأول
+        widget: string
+      - name: title_2
+        label: العنوان – السطر الثاني (الملوّن)
+        widget: string
+      - name: text
+        label: الوصف تحت العنوان
+        widget: text
+      - name: scroll_hint
+        label: تلميح التمرير أسفل الشاشة
+        widget: string
+    - name: services
+      label: الخدمات (تظهر مع لفّ المكعب)
+      widget: object
+      collapsed: true
+      fields:
+      - name: identity
+        label: 01 تصميم الهوية
+        widget: object
+        collapsed: true
         fields:
-          - name: "meta"
-            label: "بيانات الصفحة (تظهر في محركات البحث وتبويب المتصفح)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "title"
-                label: "عنوان الصفحة"
-                widget: "string"
-              - name: "description"
-                label: "وصف الصفحة"
-                widget: "text"
-          - name: "nav"
-            label: "الشريط العلوي"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "link"
-                label: "رابط المنهج"
-                widget: "string"
-              - name: "cta"
-                label: "زر ابدأ مشروعك"
-                widget: "string"
-              - name: "lang"
-                label: "زر تبديل اللغة"
-                widget: "string"
-                hint: "النص الظاهر على الزر، مثل EN أو ع"
-          - name: "splash"
-            label: "شاشة التحميل"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "skip"
-                label: "نص التخطي"
-                widget: "string"
-          - name: "hero"
-            label: "البداية (أول الصفحة)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "eyebrow"
-                label: "السطر الصغير فوق العنوان"
-                widget: "string"
-              - name: "title_1"
-                label: "العنوان – السطر الأول"
-                widget: "string"
-              - name: "title_2"
-                label: "العنوان – السطر الثاني (الملوّن)"
-                widget: "string"
-              - name: "text"
-                label: "الوصف تحت العنوان"
-                widget: "text"
-              - name: "scroll_hint"
-                label: "تلميح التمرير أسفل الشاشة"
-                widget: "string"
-          - name: "services"
-            label: "الخدمات (تظهر مع لفّ المكعب)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "identity"
-                label: "01 تصميم الهوية"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "web"
-                label: "02 تطوير المواقع"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "apps"
-                label: "03 تطبيقات الجوال"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "closing"
-                label: "الخطوة الأخيرة (فريق واحد)"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-          - name: "statement"
-            label: "العبارة الكبيرة"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "line_1"
-                label: "السطر الأول (بدون الكلمة المشطوبة)"
-                widget: "string"
-              - name: "strike"
-                label: "الكلمة المشطوبة"
-                widget: "string"
-                hint: "تظهر في آخر السطر الأول ويُرسم عليها خط"
-              - name: "line_2"
-                label: "السطر الثاني (الملوّن)"
-                widget: "string"
-          - name: "approach"
-            label: "المنهج"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "eyebrow"
-                label: "السطر الصغير فوق العنوان"
-                widget: "string"
-              - name: "title"
-                label: "العنوان"
-                widget: "string"
-              - name: "step_1"
-                label: "الخطوة 1"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "step_2"
-                label: "الخطوة 2"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "step_3"
-                label: "الخطوة 3"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-          - name: "contact"
-            label: "التواصل"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "title_1"
-                label: "العنوان – السطر الأول"
-                widget: "string"
-              - name: "title_2"
-                label: "العنوان – السطر الثاني (الملوّن)"
-                widget: "string"
-              - name: "sub"
-                label: "الوصف تحت العنوان"
-                widget: "string"
-              - name: "sentence_start"
-                label: "بداية الجملة"
-                widget: "string"
-                hint: "مثل: أبي"
-              - name: "type_options"
-                label: "خيارات نوع المشروع"
-                widget: "list"
-                hint: "الخيار الأول هو الظاهر افتراضياً؛ الزائر يضغط ليتنقل بينها"
-                min: 1
-                field:
-                  name: "item"
-                  label: "خيار"
-                  widget: "string"
-              - name: "sentence_middle"
-                label: "وسط الجملة"
-                widget: "string"
-                hint: "مثل: ونبدأ"
-              - name: "timing_options"
-                label: "خيارات التوقيت"
-                widget: "list"
-                hint: "الخيار الأول هو الظاهر افتراضياً"
-                min: 1
-                field:
-                  name: "item"
-                  label: "خيار"
-                  widget: "string"
-              - name: "placeholder"
-                label: "نص خانة الفكرة"
-                widget: "string"
-              - name: "send"
-                label: "زر الإرسال"
-                widget: "string"
-              - name: "hint"
-                label: "التلميح تحت الخانة"
-                widget: "string"
-              - name: "error_empty"
-                label: "رسالة إذا أرسل بدون فكرة"
-                widget: "string"
-              - name: "wa_greeting"
-                label: "رسالة واتساب – التحية"
-                widget: "string"
-              - name: "wa_sentence"
-                label: "رسالة واتساب – الجملة"
-                widget: "string"
-                hint: "اترك {type} و {timing} كما هي، تُستبدل بخيارات الزائر"
-              - name: "wa_idea"
-                label: "رسالة واتساب – الفكرة"
-                widget: "string"
-                hint: "اترك {idea} كما هي، تُستبدل بفكرة الزائر"
-          - name: "footer"
-            label: "الذيل"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "rights"
-                label: "نص الحقوق"
-                widget: "string"
-      - name: "en"
-        label: "English content (المحتوى الإنجليزي)"
-        file: "content/en.json"
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: web
+        label: 02 تطوير المواقع
+        widget: object
+        collapsed: true
         fields:
-          - name: "meta"
-            label: "بيانات الصفحة (تظهر في محركات البحث وتبويب المتصفح)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "title"
-                label: "عنوان الصفحة"
-                widget: "string"
-              - name: "description"
-                label: "وصف الصفحة"
-                widget: "text"
-          - name: "nav"
-            label: "الشريط العلوي"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "link"
-                label: "رابط المنهج"
-                widget: "string"
-              - name: "cta"
-                label: "زر ابدأ مشروعك"
-                widget: "string"
-              - name: "lang"
-                label: "زر تبديل اللغة"
-                widget: "string"
-                hint: "النص الظاهر على الزر، مثل EN أو ع"
-          - name: "splash"
-            label: "شاشة التحميل"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "skip"
-                label: "نص التخطي"
-                widget: "string"
-          - name: "hero"
-            label: "البداية (أول الصفحة)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "eyebrow"
-                label: "السطر الصغير فوق العنوان"
-                widget: "string"
-              - name: "title_1"
-                label: "العنوان – السطر الأول"
-                widget: "string"
-              - name: "title_2"
-                label: "العنوان – السطر الثاني (الملوّن)"
-                widget: "string"
-              - name: "text"
-                label: "الوصف تحت العنوان"
-                widget: "text"
-              - name: "scroll_hint"
-                label: "تلميح التمرير أسفل الشاشة"
-                widget: "string"
-          - name: "services"
-            label: "الخدمات (تظهر مع لفّ المكعب)"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "identity"
-                label: "01 تصميم الهوية"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "web"
-                label: "02 تطوير المواقع"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "apps"
-                label: "03 تطبيقات الجوال"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "closing"
-                label: "الخطوة الأخيرة (فريق واحد)"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "eyebrow"
-                    label: "السطر الصغير فوق العنوان"
-                    widget: "string"
-                    hint: "بالإنجليزية عادةً، مثل 01 IDENTITY"
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-          - name: "statement"
-            label: "العبارة الكبيرة"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "line_1"
-                label: "السطر الأول (بدون الكلمة المشطوبة)"
-                widget: "string"
-              - name: "strike"
-                label: "الكلمة المشطوبة"
-                widget: "string"
-                hint: "تظهر في آخر السطر الأول ويُرسم عليها خط"
-              - name: "line_2"
-                label: "السطر الثاني (الملوّن)"
-                widget: "string"
-          - name: "approach"
-            label: "المنهج"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "eyebrow"
-                label: "السطر الصغير فوق العنوان"
-                widget: "string"
-              - name: "title"
-                label: "العنوان"
-                widget: "string"
-              - name: "step_1"
-                label: "الخطوة 1"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "step_2"
-                label: "الخطوة 2"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-              - name: "step_3"
-                label: "الخطوة 3"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - name: "title"
-                    label: "العنوان"
-                    widget: "string"
-                  - name: "text"
-                    label: "الوصف"
-                    widget: "text"
-          - name: "contact"
-            label: "التواصل"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "title_1"
-                label: "العنوان – السطر الأول"
-                widget: "string"
-              - name: "title_2"
-                label: "العنوان – السطر الثاني (الملوّن)"
-                widget: "string"
-              - name: "sub"
-                label: "الوصف تحت العنوان"
-                widget: "string"
-              - name: "sentence_start"
-                label: "بداية الجملة"
-                widget: "string"
-                hint: "مثل: أبي"
-              - name: "type_options"
-                label: "خيارات نوع المشروع"
-                widget: "list"
-                hint: "الخيار الأول هو الظاهر افتراضياً؛ الزائر يضغط ليتنقل بينها"
-                min: 1
-                field:
-                  name: "item"
-                  label: "خيار"
-                  widget: "string"
-              - name: "sentence_middle"
-                label: "وسط الجملة"
-                widget: "string"
-                hint: "مثل: ونبدأ"
-              - name: "timing_options"
-                label: "خيارات التوقيت"
-                widget: "list"
-                hint: "الخيار الأول هو الظاهر افتراضياً"
-                min: 1
-                field:
-                  name: "item"
-                  label: "خيار"
-                  widget: "string"
-              - name: "placeholder"
-                label: "نص خانة الفكرة"
-                widget: "string"
-              - name: "send"
-                label: "زر الإرسال"
-                widget: "string"
-              - name: "hint"
-                label: "التلميح تحت الخانة"
-                widget: "string"
-              - name: "error_empty"
-                label: "رسالة إذا أرسل بدون فكرة"
-                widget: "string"
-              - name: "wa_greeting"
-                label: "رسالة واتساب – التحية"
-                widget: "string"
-              - name: "wa_sentence"
-                label: "رسالة واتساب – الجملة"
-                widget: "string"
-                hint: "اترك {type} و {timing} كما هي، تُستبدل بخيارات الزائر"
-              - name: "wa_idea"
-                label: "رسالة واتساب – الفكرة"
-                widget: "string"
-                hint: "اترك {idea} كما هي، تُستبدل بفكرة الزائر"
-          - name: "footer"
-            label: "الذيل"
-            widget: "object"
-            collapsed: true
-            fields:
-              - name: "rights"
-                label: "نص الحقوق"
-                widget: "string"
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: apps
+        label: 03 تطبيقات الجوال
+        widget: object
+        collapsed: true
+        fields:
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: closing
+        label: الخطوة الأخيرة (فريق واحد)
+        widget: object
+        collapsed: true
+        fields:
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+    - &id001
+      name: projects
+      label: قسم المشاريع (العناوين)
+      widget: object
+      collapsed: true
+      fields:
+      - name: eyebrow
+        label: السطر الصغير فوق العنوان
+        widget: string
+      - name: title
+        label: العنوان
+        widget: string
+      - name: text
+        label: الوصف تحت العنوان
+        widget: text
+      - name: visit
+        label: نص رابط المشروع
+        widget: string
+        hint: 'مثل: زيارة المشروع'
+    - name: statement
+      label: العبارة الكبيرة
+      widget: object
+      collapsed: true
+      fields:
+      - name: line_1
+        label: السطر الأول (بدون الكلمة المشطوبة)
+        widget: string
+      - name: strike
+        label: الكلمة المشطوبة
+        widget: string
+        hint: تظهر في آخر السطر الأول ويُرسم عليها خط
+      - name: line_2
+        label: السطر الثاني (الملوّن)
+        widget: string
+    - name: approach
+      label: المنهج
+      widget: object
+      collapsed: true
+      fields:
+      - name: eyebrow
+        label: السطر الصغير فوق العنوان
+        widget: string
+      - name: title
+        label: العنوان
+        widget: string
+      - name: step_1
+        label: الخطوة 1
+        widget: object
+        collapsed: true
+        fields:
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: step_2
+        label: الخطوة 2
+        widget: object
+        collapsed: true
+        fields:
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: step_3
+        label: الخطوة 3
+        widget: object
+        collapsed: true
+        fields:
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+    - name: contact
+      label: التواصل
+      widget: object
+      collapsed: true
+      fields:
+      - name: title_1
+        label: العنوان – السطر الأول
+        widget: string
+      - name: title_2
+        label: العنوان – السطر الثاني (الملوّن)
+        widget: string
+      - name: sub
+        label: الوصف تحت العنوان
+        widget: string
+      - name: sentence_start
+        label: بداية الجملة
+        widget: string
+        hint: 'مثل: أبي'
+      - name: type_options
+        label: خيارات نوع المشروع
+        widget: list
+        hint: الخيار الأول هو الظاهر افتراضياً؛ الزائر يضغط ليتنقل بينها
+        min: 1
+        field:
+          name: item
+          label: خيار
+          widget: string
+      - name: sentence_middle
+        label: وسط الجملة
+        widget: string
+        hint: 'مثل: ونبدأ'
+      - name: timing_options
+        label: خيارات التوقيت
+        widget: list
+        hint: الخيار الأول هو الظاهر افتراضياً
+        min: 1
+        field:
+          name: item
+          label: خيار
+          widget: string
+      - name: placeholder
+        label: نص خانة الفكرة
+        widget: string
+      - name: send
+        label: زر الإرسال
+        widget: string
+      - name: hint
+        label: التلميح تحت الخانة
+        widget: string
+      - name: error_empty
+        label: رسالة إذا أرسل بدون فكرة
+        widget: string
+      - name: wa_greeting
+        label: رسالة واتساب – التحية
+        widget: string
+      - name: wa_sentence
+        label: رسالة واتساب – الجملة
+        widget: string
+        hint: اترك {type} و {timing} كما هي، تُستبدل بخيارات الزائر
+      - name: wa_idea
+        label: رسالة واتساب – الفكرة
+        widget: string
+        hint: اترك {idea} كما هي، تُستبدل بفكرة الزائر
+    - name: footer
+      label: الذيل
+      widget: object
+      collapsed: true
+      fields:
+      - name: rights
+        label: نص الحقوق
+        widget: string
+  - name: en
+    label: English content (المحتوى الإنجليزي)
+    file: content/en.json
+    fields:
+    - name: meta
+      label: بيانات الصفحة (تظهر في محركات البحث وتبويب المتصفح)
+      widget: object
+      collapsed: true
+      fields:
+      - name: title
+        label: عنوان الصفحة
+        widget: string
+      - name: description
+        label: وصف الصفحة
+        widget: text
+    - name: nav
+      label: الشريط العلوي
+      widget: object
+      collapsed: true
+      fields:
+      - name: link
+        label: رابط المنهج
+        widget: string
+      - name: cta
+        label: زر ابدأ مشروعك
+        widget: string
+      - name: lang
+        label: زر تبديل اللغة
+        widget: string
+        hint: النص الظاهر على الزر، مثل EN أو ع
+    - name: splash
+      label: شاشة التحميل
+      widget: object
+      collapsed: true
+      fields:
+      - name: skip
+        label: نص التخطي
+        widget: string
+    - name: hero
+      label: البداية (أول الصفحة)
+      widget: object
+      collapsed: true
+      fields:
+      - name: eyebrow
+        label: السطر الصغير فوق العنوان
+        widget: string
+      - name: title_1
+        label: العنوان – السطر الأول
+        widget: string
+      - name: title_2
+        label: العنوان – السطر الثاني (الملوّن)
+        widget: string
+      - name: text
+        label: الوصف تحت العنوان
+        widget: text
+      - name: scroll_hint
+        label: تلميح التمرير أسفل الشاشة
+        widget: string
+    - name: services
+      label: الخدمات (تظهر مع لفّ المكعب)
+      widget: object
+      collapsed: true
+      fields:
+      - name: identity
+        label: 01 تصميم الهوية
+        widget: object
+        collapsed: true
+        fields:
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: web
+        label: 02 تطوير المواقع
+        widget: object
+        collapsed: true
+        fields:
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: apps
+        label: 03 تطبيقات الجوال
+        widget: object
+        collapsed: true
+        fields:
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: closing
+        label: الخطوة الأخيرة (فريق واحد)
+        widget: object
+        collapsed: true
+        fields:
+        - name: eyebrow
+          label: السطر الصغير فوق العنوان
+          widget: string
+          hint: بالإنجليزية عادةً، مثل 01 IDENTITY
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+    - *id001
+    - name: statement
+      label: العبارة الكبيرة
+      widget: object
+      collapsed: true
+      fields:
+      - name: line_1
+        label: السطر الأول (بدون الكلمة المشطوبة)
+        widget: string
+      - name: strike
+        label: الكلمة المشطوبة
+        widget: string
+        hint: تظهر في آخر السطر الأول ويُرسم عليها خط
+      - name: line_2
+        label: السطر الثاني (الملوّن)
+        widget: string
+    - name: approach
+      label: المنهج
+      widget: object
+      collapsed: true
+      fields:
+      - name: eyebrow
+        label: السطر الصغير فوق العنوان
+        widget: string
+      - name: title
+        label: العنوان
+        widget: string
+      - name: step_1
+        label: الخطوة 1
+        widget: object
+        collapsed: true
+        fields:
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: step_2
+        label: الخطوة 2
+        widget: object
+        collapsed: true
+        fields:
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+      - name: step_3
+        label: الخطوة 3
+        widget: object
+        collapsed: true
+        fields:
+        - name: title
+          label: العنوان
+          widget: string
+        - name: text
+          label: الوصف
+          widget: text
+    - name: contact
+      label: التواصل
+      widget: object
+      collapsed: true
+      fields:
+      - name: title_1
+        label: العنوان – السطر الأول
+        widget: string
+      - name: title_2
+        label: العنوان – السطر الثاني (الملوّن)
+        widget: string
+      - name: sub
+        label: الوصف تحت العنوان
+        widget: string
+      - name: sentence_start
+        label: بداية الجملة
+        widget: string
+        hint: 'مثل: أبي'
+      - name: type_options
+        label: خيارات نوع المشروع
+        widget: list
+        hint: الخيار الأول هو الظاهر افتراضياً؛ الزائر يضغط ليتنقل بينها
+        min: 1
+        field:
+          name: item
+          label: خيار
+          widget: string
+      - name: sentence_middle
+        label: وسط الجملة
+        widget: string
+        hint: 'مثل: ونبدأ'
+      - name: timing_options
+        label: خيارات التوقيت
+        widget: list
+        hint: الخيار الأول هو الظاهر افتراضياً
+        min: 1
+        field:
+          name: item
+          label: خيار
+          widget: string
+      - name: placeholder
+        label: نص خانة الفكرة
+        widget: string
+      - name: send
+        label: زر الإرسال
+        widget: string
+      - name: hint
+        label: التلميح تحت الخانة
+        widget: string
+      - name: error_empty
+        label: رسالة إذا أرسل بدون فكرة
+        widget: string
+      - name: wa_greeting
+        label: رسالة واتساب – التحية
+        widget: string
+      - name: wa_sentence
+        label: رسالة واتساب – الجملة
+        widget: string
+        hint: اترك {type} و {timing} كما هي، تُستبدل بخيارات الزائر
+      - name: wa_idea
+        label: رسالة واتساب – الفكرة
+        widget: string
+        hint: اترك {idea} كما هي، تُستبدل بفكرة الزائر
+    - name: footer
+      label: الذيل
+      widget: object
+      collapsed: true
+      fields:
+      - name: rights
+        label: نص الحقوق
+        widget: string
+  - name: projects
+    label: المشاريع
+    file: content/projects.json
+    fields:
+    - name: items
+      label: المشاريع
+      label_singular: مشروع
+      widget: list
+      summary: '{{fields.title_ar}} — {{fields.year}}'
+      hint: اسحب المشاريع لتغيير ترتيبها. إذا حذفت كلها يختفي القسم من الموقع.
+      fields:
+      - name: title_ar
+        label: اسم المشروع (عربي)
+        widget: string
+      - name: title_en
+        label: اسم المشروع (English)
+        widget: string
+      - name: category_ar
+        label: نوع العمل (عربي)
+        widget: string
+        hint: 'مثل: هوية بصرية وموقع'
+      - name: category_en
+        label: نوع العمل (English)
+        widget: string
+      - name: year
+        label: السنة
+        widget: string
+        required: false
+      - name: summary_ar
+        label: وصف قصير (عربي)
+        widget: text
+        required: false
+      - name: summary_en
+        label: وصف قصير (English)
+        widget: text
+        required: false
+      - name: url
+        label: رابط المشروع
+        widget: string
+        hint: اتركه فارغاً إذا لا يوجد رابط
+        required: false
+      - name: image
+        label: الصورة
+        widget: image
+        hint: صورة الغلاف أو الشعار. يفضّل عرضها 1600 بكسل أو أقل
+        required: false
+      - name: image_fit
+        label: طريقة عرض الصورة
+        widget: select
+        hint: 'غلاف: تملأ المساحة. شعار: تظهر كاملة في الوسط على لون الخلفية'
+        options:
+        - label: غلاف (تملأ المساحة)
+          value: cover
+        - label: شعار (كاملة في الوسط)
+          value: contain
+        default: cover
+      - name: image_bg
+        label: لون خلفية الصورة
+        widget: color
+        hint: 'يظهر حول الشعار. بصيغة مثل #502985'
+        required: false
