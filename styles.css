@@ -73,6 +73,13 @@ h1, h2, h3, p { margin: 0; }
   unicode-bidi: isolate;
 }
 
+.eyebrow--ar {
+  font-family: var(--font-ar);
+  font-size: 15px;
+  letter-spacing: 0;
+  direction: inherit;
+}
+
 /* ---------- Logo tile + buttons (raised "lip" look) ---------- */
 .logo-tile {
   display: inline-grid;

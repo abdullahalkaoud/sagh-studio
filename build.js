@@ -58,7 +58,11 @@ const template = fs.readFileSync(path.join(root, "src/index.html"), "utf8");
 for (const [lang, opts] of Object.entries(languages)) {
   const content = JSON.parse(fs.readFileSync(path.join(root, `content/${lang}.json`), "utf8"));
   const data = { ...content, lang, dir: opts.dir, alt_lang: opts.alt_lang, alt_href: opts.alt_href, a11y: opts.a11y };
-  const html = render(template, data, lang);
+  // Eyebrows are styled for spaced-out Latin caps; Arabic ones get their own style.
+  const html = render(template, data, lang).replace(
+    /<p class="eyebrow">([^<]*[\u0600-\u06FF][^<]*)<\/p>/g,
+    '<p class="eyebrow eyebrow--ar">$1</p>'
+  );
   const out = path.join(dist, opts.out);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, html);
