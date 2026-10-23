@@ -30,23 +30,17 @@ const smooth = (t) => t * t * (3 - 2 * t);
   setTimeout(finish, 2000);
 })();
 
-/* ---------- Hero + transparent cube ---------- */
+/* ---------- Hero + companion ---------- */
 (() => {
   const section = document.querySelector(".flip-section");
   const stage = section.querySelector(".stage");
   const captions = [...section.querySelectorAll(".caption")];
   const pill = document.getElementById("scrollPill");
+  const selSize = document.getElementById("selSize");
 
-  // One stop per caption. Values are cube rotations in degrees.
-  // Last stop tumbles forward onto the top face (ry -360 keeps it upright).
-  const stops = [
-    { rx: 0, ry: 0 },      // front — صاغ
-    { rx: 0, ry: -90 },    // right — ID
-    { rx: 0, ry: -180 },   // back  — WEB
-    { rx: 0, ry: -270 },   // left  — APP
-    { rx: -90, ry: -360 }, // top   — one team
-  ];
-  const last = stops.length - 1;
+  // One companion state per caption (layouts live in CSS under .stage[data-step]).
+  const sizes = ["120 × 120", "240 × 148", "1440 × 900", "390 × 844", "Ship ✓"];
+  const last = captions.length - 1;
 
   let ticking = false;
 
@@ -57,21 +51,13 @@ const smooth = (t) => t * t * (3 - 2 * t);
     const p = clamp(-rect.top / travel);
     const t = p * last; // 0..last
 
-    // Rotation: hold on each face, ease between them.
-    let rx, ry;
-    if (reducedMotion.matches) {
-      const s = stops[Math.round(t)];
-      rx = s.rx; ry = s.ry;
-    } else {
-      const i = Math.min(Math.floor(t), last - 1);
-      const e = smooth(clamp((t - i - 0.3) / 0.4));
-      rx = lerp(stops[i].rx, stops[i + 1].rx, e);
-      ry = lerp(stops[i].ry, stops[i + 1].ry, e);
+    const step = String(Math.round(t));
+    if (stage.dataset.step !== step) {
+      stage.dataset.step = step;
+      selSize.textContent = sizes[step];
     }
-    stage.style.setProperty("--rx", rx.toFixed(2) + "deg");
-    stage.style.setProperty("--ry", ry.toFixed(2) + "deg");
 
-    // In the hero the cube sits lower; it rises to centre as the hero fades.
+    // In the hero the companion sits lower; it rises to centre as the hero fades.
     const rise = smooth(clamp(t / 0.6));
     const sy = lerp(window.innerHeight * 0.17, 0, rise);
     stage.style.setProperty("--sy", sy.toFixed(1) + "px");

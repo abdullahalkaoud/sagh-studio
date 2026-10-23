@@ -52,9 +52,9 @@
   </header>
 
   <main id="top">
-    <!-- Hero + transparent cube. JS maps scroll progress to --rx/--ry/--sy/--ss and caption opacity. -->
+    <!-- Hero + companion. JS maps scroll progress to data-step, --sy/--ss and caption opacity. -->
     <section class="flip-section" id="services" aria-label="{{a11y.services}}">
-      <div class="stage">
+      <div class="stage" data-step="0">
         <div class="stage__glow" aria-hidden="true"></div>
 
         <div class="captions">
@@ -85,22 +85,22 @@
           </article>
         </div>
 
-        <div class="tile-wrap" aria-hidden="true">
-          <div class="cube">
-            <div class="face face--front"><span class="face__ar">صاغ</span><span class="face__label face__label--name">sagh</span></div>
-            <div class="face face--right"><span class="face__no">01</span><span class="face__big">ID</span><span class="face__label">Identity</span></div>
-            <div class="face face--back"><span class="face__no">02</span><span class="face__big">WEB</span><span class="face__label">Websites</span></div>
-            <div class="face face--left"><span class="face__no">03</span><span class="face__big">APP</span><span class="face__label">Mobile</span></div>
-            <div class="face face--top">
-              <svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11" /></svg>
-              <span class="face__label">One team</span>
+        <!-- Companion: a cursor working in a small design canvas. Each scroll step (.stage[data-step])
+             shows one object, moves the selection box and cursor onto it, and updates the size label. -->
+        <div class="comp-wrap" aria-hidden="true">
+          <div class="comp">
+            <div class="comp__bar"><i></i><i></i><i></i><span class="comp__file">sagh — canvas</span><span class="comp__zoom">100%</span></div>
+            <div class="comp__area">
+              <div class="obj" data-s="0"><span class="obj-logo"><svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11" /></svg></span></div>
+              <div class="obj" data-s="1"><div class="obj-id"><b>Aa</b><span><i></i><i></i><i></i><i></i></span></div></div>
+              <div class="obj" data-s="2"><div class="obj-web"><em><i></i><i></i><i></i></em><div><p><u></u><u></u><u></u><s></s></p><span></span></div></div></div>
+              <div class="obj" data-s="3"><div class="obj-app"><em></em><p><i></i><i class="on"></i><i></i><i></i><i></i><i></i></p><s></s></div></div>
+              <div class="obj" data-s="4"><div class="obj-ship"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" /></svg><span>sagh.co</span></div></div>
+              <div class="sel"><i></i><i></i><i></i><i></i><b class="sel__size" id="selSize">120 × 120</b></div>
+              <div class="cur"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.4-7.6L20.5 11z" /></svg><span>sagh</span></div>
             </div>
-            <div class="face face--bottom"></div>
-            <!-- edge-only copies with backfaces visible, so hidden edges show faintly through -->
-            <i class="edge face--front"></i><i class="edge face--right"></i><i class="edge face--back"></i>
-            <i class="edge face--left"></i><i class="edge face--top"></i><i class="edge face--bottom"></i>
           </div>
-          <div class="tile-shadow"></div>
+          <div class="comp-shadow"></div>
         </div>
 
         <p class="scroll-pill" id="scrollPill" aria-hidden="true"><span></span>{{hero.scroll_hint}}</p>
