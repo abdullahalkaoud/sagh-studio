@@ -37,10 +37,10 @@
   --line: rgba(26, 26, 23, 0.12);
   --text: #1a1a17;
   --muted: rgba(26, 26, 23, 0.6);
-  --accent: #d7ff3a;      /* lime fills */
+  --accent: #d1ff33;      /* brand lime: fills and highlights */
   --accent-deep: #a6c41a; /* lime "lip" under buttons */
   --accent-ink: #1a1a17;  /* text on lime */
-  --accent-text: #4f6200; /* lime is unreadable as text on beige; olive instead */
+  --accent-text: #4f6200; /* lime is unreadable as text on white; olive instead */
   --panel: #1a1a17;       /* dark contact panel */
   --on-panel: #f2efe6;
 
@@ -221,7 +221,7 @@ h1, h2, h3, p { margin: 0; }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand__name { font: 700 19px/1 var(--font-latin); letter-spacing: 0.02em; }
 .nav__end { display: flex; align-items: center; gap: 24px; }
-.nav__link { font-size: 15px; color: var(--muted); transition: color 0.2s; }
+.nav__link { font-size: 15px; color: var(--muted); white-space: nowrap; transition: color 0.2s; }
 .nav__link:hover { color: var(--text); }
 .nav__lang {
   display: inline-grid;
@@ -236,6 +236,10 @@ h1, h2, h3, p { margin: 0; }
 }
 .nav__lang:lang(ar) { font: 700 15px/1 var(--font-ar); }
 .nav__lang:hover { border-color: var(--text); background: var(--surface); }
+/* very narrow phones: no room for the text link next to the button */
+@media (max-width: 420px) {
+  html[lang="en"] .nav__link { display: none; }
+}
 @media (max-width: 480px) {
   .nav__end { gap: 12px; }
   .nav__end .btn { padding: 0 14px; font-size: 14px; }
@@ -264,7 +268,7 @@ h1, h2, h3, p { margin: 0; }
   width: min(1300px, 180vw);
   height: 900px;
   transform: translate(-50%, -50%);
-  background: radial-gradient(closest-side, rgba(215, 255, 58, 0.3), rgba(215, 255, 58, 0.08) 55%, transparent);
+  background: radial-gradient(closest-side, rgba(209, 255, 51, 0.3), rgba(209, 255, 51, 0.08) 55%, transparent);
   pointer-events: none;
 }
 
@@ -297,7 +301,18 @@ h1, h2, h3, p { margin: 0; }
   line-height: 1.08;
   letter-spacing: -0.01em;
 }
-.hero__title em { font-style: normal; color: var(--accent-text); }
+/* second line: dark text on a lime highlighter band (lime text alone is unreadable on white) */
+.hero__title em {
+  font-style: normal;
+  color: var(--text);
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-size: 100% 0.42em;
+  background-position: 0 82%;
+  padding-inline: 0.12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
 /* Alexandria has tall ascenders/descenders; give Arabic headlines more room */
 html[lang="ar"] .hero__title { line-height: 1.3; }
 html[lang="ar"] .contact__title { line-height: 1.35; }
@@ -609,7 +624,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   left: 50%; top: -260px;
   width: 760px; height: 620px;
   transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgba(215, 255, 58, 0.22), transparent);
+  background: radial-gradient(closest-side, rgba(209, 255, 51, 0.22), transparent);
   z-index: -1;
 }
 .contact__title { font-size: clamp(40px, 5.6vw, 80px); font-weight: 700; line-height: 1.15; }
@@ -639,7 +654,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   border: 0;
   border-bottom: 2px dashed var(--accent);
   border-radius: 8px 8px 2px 2px;
-  background: rgba(215, 255, 58, 0.12);
+  background: rgba(209, 255, 51, 0.12);
   color: var(--on-panel);
   font: inherit;
   line-height: 1.5;
@@ -647,7 +662,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   transition: background-color 0.2s;
 }
 .token::after { content: "↻"; font-size: 0.5em; color: var(--accent); }
-.token:hover { background: rgba(215, 255, 58, 0.2); }
+.token:hover { background: rgba(209, 255, 51, 0.2); }
 .token.is-changed { animation: swap 0.35s var(--ease); }
 @keyframes swap { 0% { transform: translateY(6px); opacity: 0.2; } 100% { transform: none; opacity: 1; } }
 
@@ -711,7 +726,7 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  background: rgba(215, 255, 58, 0.35);
+  background: rgba(209, 255, 51, 0.35);
   z-index: -1;
   animation: ring 2.4s ease-out infinite;
 }
