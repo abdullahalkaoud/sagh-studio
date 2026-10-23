@@ -16,10 +16,8 @@
   <script>window.CMS_MANUAL_INIT = true;</script>
   <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
   <script>
-    // On Cloudflare the Worker handles login at /api/auth (see worker.js).
-    // On *.netlify.app, Decap's default (Netlify's GitHub provider) is used instead.
-    var onNetlify = /\.netlify\.app$/.test(location.hostname);
-    CMS.init(onNetlify ? {} : {
+    // The Worker handles GitHub login at /api/auth on this same domain (see worker.js).
+    CMS.init({
       config: { backend: { base_url: location.origin, auth_endpoint: "api/auth" } },
     });
   </script>

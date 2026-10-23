@@ -1,4 +1,4 @@
-// Builds the static site into dist/ (no dependencies; runs on Netlify with `node build.js`).
+// Builds the static site into dist/ (no dependencies; Cloudflare Workers Builds runs `node build.js`).
 //   src/index.html + content/ar.json → dist/index.html
 //   src/index.html + content/en.json → dist/en/index.html
 //   styles.css, main.js, admin/, fonts/ → copied as-is
