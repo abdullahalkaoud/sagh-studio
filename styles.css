@@ -802,8 +802,8 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 .footer { border-top: 1px solid var(--line); padding: 28px 0 max(36px, env(safe-area-inset-bottom)); }
 .footer__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .footer__brand { display: flex; align-items: center; gap: 12px; }
-.footer__brand .logo-tile { width: 42px; height: 42px; border-radius: 12px; }
-.footer__brand b { display: block; font: 700 18px/1.2 var(--font-latin); }
+.footer__brand b { display: block; font: 700 18px/1.2 var(--font-latin); direction: ltr; unicode-bidi: isolate; }
+[dir="rtl"] .footer__brand b { text-align: right; }
 .footer__brand small { font-size: 13px; color: var(--muted); }
 
 /* keep the end of the footer clear of the floating WhatsApp button on phones */
