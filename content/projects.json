@@ -9,22 +9,23 @@
       "url": "https://www.hetaan.com",
       "title_en": "Hetaan",
       "category_ar": "بودكاست",
+      "status": "live",
       "title_ar": "حيتان",
       "image": "/assets/projects/hetaan.webp",
-      "year": "2025",
-      "status": "live"
+      "year": "2025"
     },
     {
       "summary_en": "Home gym app with variety of workouts, competitions, and check-in and check-out system",
       "summary_ar": "تطبيق نادي منزلي مع مجموعه واسعه من التمارين والمسابقات ونظام تسجيل الحضور",
       "category_en": "IOS + Android app",
       "image_fit": "cover",
+      "url": "https://apps.apple.com/us/app/gymly-%D8%AC%D9%8A%D9%85%D9%84%D9%8A/id6796977306",
       "title_en": "Gymly",
       "category_ar": "تطبيق IOS + Android",
+      "status": "live",
       "title_ar": "جيملي",
       "image": "/assets/uploads/gymly-app-mockup.webp",
-      "year": "2026",
-      "status": "soon"
+      "year": "2026"
     },
     {
       "summary_en": "An online store for healthy, natural snacks",
@@ -35,10 +36,10 @@
       "url": "",
       "title_en": "Snackches",
       "category_ar": "متجر إلكتروني وهوية بصرية",
+      "status": "closed",
       "title_ar": "سناكشيز",
       "image": "/assets/projects/snackches.webp",
-      "year": "2020",
-      "status": "closed"
+      "year": "2020"
     }
   ]
 }
