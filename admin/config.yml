@@ -603,6 +603,11 @@ collections:
         widget: string
         hint: يُستخدم فقط إذا كانت الحالة «منشور»
         required: false
+      - name: url_play
+        label: رابط Google Play (للتطبيقات)
+        widget: string
+        hint: اختياري. إذا عبّيته يظهر رابطين «App Store» و«Google Play» بدل «زيارة المشروع»، ويكون «رابط المشروع» هو رابط App Store
+        required: false
       - name: image
         label: الصورة
         widget: image

@@ -579,6 +579,8 @@ html[lang="ar"] .contact__title { line-height: 1.35; }
 .project__link::after { content: "↗"; font-family: var(--font-latin); }
 [dir="rtl"] .project__link::after { content: "↖"; }
 .project__link:hover { border-color: var(--accent-text); }
+.project__links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 6px; }
+.project__links .project__link { margin: 0; }
 /* status badge sits on the image's top corner, so it adds no height to the card */
 .project__status {
   position: absolute;

@@ -1,2 +1,5 @@
 dist/
 node_modules/
+
+# API keys (e.g. marketing/tiktok-idea-to-app/.env)
+.env

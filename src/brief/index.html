@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>استبيان العميل — صاغ</title>
+<meta name="description" content="استبيان قصير يعرّفنا على مشروعك عشان نجهّز لك عرض سعر.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d1ff33'/%3E%3Ctext x='15.5' y='23.5' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='21' letter-spacing='-0.5' fill='%231a1a17'%3Es%3Ctspan font-size='15' dy='-5'%3E%2A%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/ibm-plex-sans-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/alexandria.woff2" as="font" type="font/woff2" crossorigin>
+<!--
+  Sagh client brief, served at https://sagh.co/brief (card SAG-10). Built from the Design prototype
+  (marketing/client-brief/prototype/index.html); content from marketing/client-brief/questionnaire.md.
+  build.js copies this file to dist/brief/index.html and fills __WHATSAPP_NUMBER__ from main.js.
+
+  Submission: no backend and nothing stored by us. On submit the page opens
+  https://wa.me/<number>?text=<the answers as Arabic text>; the client presses send in WhatsApp.
+  Test/screenshot hooks (URL hash):  #step=0..6  &demo=1 (fictional client)  &svc=app,identity  &err=1  &still=1
+  Query: ?ref=<source>  (added to the message, e.g. ?ref=ig)
+-->
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url("/fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-stretch: 75% 100%; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("/fonts/jetbrains-mono.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+@font-face { font-family: "Alexandria"; src: url("/fonts/alexandria.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans Arabic"; src: url("/fonts/ibm-plex-sans-arabic-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+:root {
+  --bg: #ffffff; --bg-2: #f4f2ee; --surface: #ffffff;
+  --line: rgba(26, 26, 23, 0.12); --line-strong: rgba(26, 26, 23, 0.22);
+  --text: #1a1a17; --muted: rgba(26, 26, 23, 0.6);
+  --accent: #d1ff33; --accent-deep: #a6c41a; --accent-mid: #bfe02a; --accent-ink: #1a1a17; --accent-text: #4f6200;
+  --panel: #1a1a17; --on-panel: #f2efe6; --on-panel-muted: rgba(242, 239, 230, 0.7);
+  --panel-line: rgba(255, 255, 255, 0.08);
+  --canvas-dot: rgba(26, 26, 23, 0.13); --canvas-mark: rgba(26, 26, 23, 0.18);
+  /* not in tokens.json: error text on white (6.6:1). Proposed addition, see report. */
+  --error: #b42318;
+  --font-ar: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-ar-display: "Alexandria", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-latin: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-h: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 16px/1.7 var(--font-ar);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+h1, h2, h3, p { margin: 0; }
+button, input, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; border-radius: 8px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
+.ltr { direction: ltr; unicode-bidi: isolate; }
+
+/* ---------- top bar: brand + progress ---------- */
+.top {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top__row {
+  max-width: 760px; margin-inline: auto; padding: 0 20px;
+  height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-tile {
+  display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 10px;
+  background: var(--accent); box-shadow: 0 3px 0 var(--accent-deep); flex: none;
+}
+.logo-tile svg { width: 64%; fill: none; stroke: var(--accent-ink); stroke-width: 2.6; stroke-linejoin: round; }
+.brand__name { font: 700 19px/1 var(--font-latin); letter-spacing: 0.02em; direction: ltr; unicode-bidi: isolate; }
+.top__count { font: 500 12.5px/1 var(--font-mono); letter-spacing: 0.1em; color: var(--muted); direction: ltr; unicode-bidi: isolate; }
+
+.progress { max-width: 760px; margin-inline: auto; padding: 0 20px 12px; }
+.progress ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.progress li { min-width: 0; }
+.progress b { display: block; height: 6px; border-radius: 999px; background: var(--line); transition: background-color 0.3s var(--ease); }
+.progress span {
+  display: block; margin-top: 6px; font-size: 11.5px; line-height: 1.35; color: var(--muted);
+  text-align: center; overflow-wrap: anywhere;
+}
+.progress li.is-done b { background: var(--text); }
+.progress li.is-done span { color: var(--text); }
+.progress li.is-current b { background: var(--accent); box-shadow: inset 0 0 0 1px var(--accent-deep); }
+.progress li.is-current span { color: var(--text); font-weight: 700; }
+@media (min-width: 560px) { .progress span { font-size: 13px; } }
+
+/* ---------- page frame ---------- */
+main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
+.sheet { position: relative; }
+@media (min-width: 900px) {
+  body { background: var(--bg-2); }
+  main { padding-top: 40px; padding-bottom: 64px; }
+  .sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 48px 56px 0; }
+}
+
+/* ---------- type ---------- */
+.eyebrow { font: 500 15px/1.7 var(--font-ar); color: var(--accent-text); }
+.eyebrow .num { font: 500 12.5px/1 var(--font-mono); letter-spacing: 0.1em; padding-right: 8px; direction: ltr; unicode-bidi: isolate; }
+.title {
+  margin-top: 6px; font: 700 clamp(30px, 7.6vw, 44px)/1.35 var(--font-ar-display);
+}
+.title em, .hl {
+  font-style: normal; color: var(--text);
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat; background-size: 100% 0.42em; background-position: 0 82%;
+  padding-inline: 0.12em; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.lead { margin-top: 10px; font-size: 17px; color: var(--muted); }
+.small { font-size: 13px; color: var(--muted); }
+
+/* ---------- intro ---------- */
+.intro { padding-bottom: 32px; }
+.intro__title { font: 700 clamp(32px, 8.4vw, 54px)/1.35 var(--font-ar-display); margin-top: 8px; }
+.intro__body { margin-top: 14px; font-size: 17px; color: var(--muted); }
+.intro__body p + p { margin-top: 2px; }
+.intro__cta { margin-top: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.intro__cta .btn { min-width: 168px; }
+
+/* canvas window motif */
+.comp {
+  direction: ltr; margin: 28px 0 0; border: 1px solid var(--line); border-radius: 20px; background: #fff;
+  box-shadow: 0 24px 50px -24px rgba(26, 26, 23, 0.28); overflow: hidden;
+}
+.comp__bar {
+  display: flex; align-items: center; gap: 5px; padding: 9px 12px;
+  border-bottom: 1px solid rgba(26, 26, 23, 0.08); font: 500 10px var(--font-mono); color: var(--muted);
+}
+.comp__bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--canvas-mark); }
+.comp__file { margin-inline-start: 8px; }
+.comp__zoom { margin-inline-start: auto; }
+.comp__area {
+  position: relative; height: 176px;
+  background-image: radial-gradient(var(--canvas-dot) 1px, transparent 1.2px); background-size: 14px 14px;
+  display: grid; place-items: center;
+}
+.comp__chips { direction: rtl; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 290px; position: relative; }
+.comp__chips span {
+  padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: #fff;
+  font: 500 13px/1.4 var(--font-ar); white-space: nowrap;
+}
+.comp__chips span.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent-deep); }
+.comp__sel { position: absolute; inset: -8px; border: 1.5px solid var(--text); pointer-events: none; }
+.comp__sel i { position: absolute; width: 7px; height: 7px; background: #fff; border: 1.5px solid var(--text); }
+.comp__sel i:nth-child(1) { top: -4px; left: -4px; } .comp__sel i:nth-child(2) { top: -4px; right: -4px; }
+.comp__sel i:nth-child(3) { bottom: -4px; left: -4px; } .comp__sel i:nth-child(4) { bottom: -4px; right: -4px; }
+.comp__chips .comp__tag {
+  direction: ltr; border: 0; white-space: nowrap;
+  position: absolute; top: -26px; left: 50%; transform: translateX(-50%);
+  padding: 1px 6px; border-radius: 5px; background: var(--text); color: var(--accent); font: 500 9.5px/1.5 var(--font-mono);
+}
+.cur { position: absolute; display: flex; align-items: flex-start; gap: 2px; bottom: 22px; right: 18%; }
+.cur svg { width: 18px; fill: var(--text); stroke: #fff; stroke-width: 1.4; stroke-linejoin: round; }
+.cur span { margin-top: 14px; padding: 1px 7px; border-radius: 6px 6px 6px 2px; background: var(--accent); color: var(--accent-ink); font: 600 10.5px/1.5 var(--font-mono); }
+
+/* ---------- buttons (raised lip) ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 0 24px; border: 0; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink); font: 700 16px/1 var(--font-ar);
+  white-space: nowrap; cursor: pointer; text-decoration: none;
+  box-shadow: 0 4px 0 var(--accent-deep);
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 5px 0 var(--accent-deep); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--accent-deep); }
+.btn svg { width: 18px; height: 18px; }
+.btn .arrow { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.btn .chat { fill: var(--accent-ink); }
+.btn--ghost {
+  background: var(--surface); color: var(--text); box-shadow: none; border: 1px solid var(--line-strong); font-weight: 600;
+}
+.btn--ghost:hover { box-shadow: none; transform: none; border-color: var(--text); }
+.btn--ghost:active { transform: translateY(1px); box-shadow: none; }
+
+/* ---------- steps & questions ---------- */
+.step__head { margin-bottom: 8px; }
+.step__note {
+  margin-top: 16px; padding: 12px 16px; border-radius: 20px; background: var(--bg-2); font-size: 15px;
+}
+.optional-hint { margin-top: 8px; }
+.q { margin: 30px 0 0; padding: 0; border: 0; min-width: 0; }
+.q__label { display: block; padding: 0; font: 600 18px/1.55 var(--font-ar); }
+.req { display: inline-block; margin-inline-start: 8px; font: 500 12.5px/1 var(--font-ar); color: var(--accent-text); vertical-align: 2px; }
+.q__help { margin-top: 2px; font-size: 14px; color: var(--muted); }
+.q__body { margin-top: 12px; }
+.svc-head { margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+.svc-head.is-first { border-top: 0; padding-top: 0; margin-top: 26px; }
+.svc-head + .svc > .q:first-child { margin-top: 14px; }
+.svc-head h3 { font: 700 21px/1.4 var(--font-ar-display); }
+.svc-head .logo-tile { width: 26px; height: 26px; border-radius: 8px; }
+.svc-head .num { font: 500 12px/1 var(--font-mono); color: var(--muted); letter-spacing: 0.1em; margin-inline-start: auto; direction: ltr; unicode-bidi: isolate; }
+
+/* choice chips: unselected = white pill; selected = lime fill with raised lip (like the site tokens/buttons) */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chips label { position: relative; display: block; max-width: 100%; cursor: pointer; }
+.chips input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.chip {
+  display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 18px 10px 20px;
+  border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface);
+  font: 500 15.5px/1.45 var(--font-ar); color: var(--text);
+  transition: background-color 0.18s var(--ease), border-color 0.18s, box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.chip__mark {
+  flex: none; width: 20px; height: 20px; display: grid; place-items: center;
+  border: 1.5px solid var(--line-strong); background: #fff;
+}
+.chip__mark svg { width: 13px; height: 13px; fill: none; stroke: var(--accent-ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.chips--single .chip__mark { border-radius: 50%; }
+.chips--multi .chip__mark { border-radius: 6px; }
+.chips label:hover .chip { border-color: var(--text); }
+.chips input:checked + .chip {
+  background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent-deep); font-weight: 600;
+}
+.chips input:checked + .chip .chip__mark { border-color: var(--accent-ink); }
+.chips input:checked + .chip .chip__mark svg { opacity: 1; }
+.chips input:active + .chip { transform: translateY(2px); }
+.chips input:focus-visible + .chip { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+.chip__en { font: 400 13px/1 var(--font-latin); color: var(--muted); }
+
+/* fields */
+.field {
+  width: 100%; min-height: 54px; padding: 0 22px; border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--surface); font: 400 16px/1.5 var(--font-ar); color: var(--text);
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; resize: vertical; line-height: 1.7; }
+.field::placeholder { color: rgba(26, 26, 23, 0.42); }
+.field:hover { border-color: rgba(26, 26, 23, 0.4); }
+.field:focus { outline: none; border-color: var(--text); box-shadow: 0 0 0 3px var(--accent); }
+.field[type="date"] { max-width: 240px; font-family: var(--font-mono); font-size: 15px; direction: ltr; text-align: right; }
+.field[type="email"], .field[type="url"] { direction: ltr; text-align: right; }
+.field[type="email"]::placeholder { text-align: right; }
+.counter { margin-top: 6px; font: 500 12px/1 var(--font-mono); color: var(--muted); direction: ltr; text-align: left; }
+.phone { display: flex; gap: 8px; direction: ltr; }
+.phone .field { text-align: left; font-family: var(--font-mono); font-size: 15.5px; letter-spacing: 0.02em; }
+.phone .field--cc { flex: 0 0 96px; padding: 0 14px; text-align: center; }
+.phone .field--num { flex: 1; min-width: 0; }
+
+.consent {
+  margin-top: 28px; padding: 18px; border: 1px solid var(--line); border-radius: 28px; background: var(--bg-2);
+}
+.consent label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.consent input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.consent .chip__mark { margin-top: 3px; width: 24px; height: 24px; border-radius: 7px; border-color: rgba(26, 26, 23, 0.4); }
+.consent .chip__mark svg { width: 15px; height: 15px; }
+.consent input:checked + .chip__mark { background: var(--accent); border-color: var(--accent-ink); box-shadow: 0 2px 0 var(--accent-deep); }
+.consent input:checked + .chip__mark svg { opacity: 1; }
+.consent input:focus-visible + .chip__mark { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+.consent__text { font-size: 15px; line-height: 1.8; }
+.consent__more { display: inline-block; margin-top: 8px; margin-inline-start: 36px; font-size: 13.5px; color: var(--accent-text); text-underline-offset: 4px; }
+
+.err {
+  display: flex; align-items: center; gap: 6px; margin-top: 10px;
+  font-size: 14px; font-weight: 500; color: var(--error);
+}
+.err svg { width: 16px; height: 16px; flex: none; fill: var(--error); }
+.q.has-err .field, .q.has-err .chip { border-color: var(--error); }
+.q.has-err .chips input:checked + .chip { border-color: var(--accent); }
+.consent.has-err { border-color: var(--error); }
+
+/* ---------- action bar ---------- */
+.actions {
+  position: sticky; bottom: 0; z-index: 20;
+  margin: 36px -20px 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  display: flex; gap: 10px; align-items: center;
+  background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+.actions .btn--next { flex: 1; }
+.actions .btn--back { flex: 0 0 auto; padding: 0 20px; }
+@media (min-width: 900px) {
+  .actions { position: static; margin: 40px -56px 0; padding: 22px 56px 26px; border-radius: 0 0 28px 28px; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .actions .btn--next { flex: 0 0 auto; min-width: 200px; margin-inline-start: auto; }
+}
+
+/* ---------- thank-you ---------- */
+.done { padding-bottom: 40px; }
+.thanks {
+  position: relative; overflow: hidden; isolation: isolate;
+  margin: 0 -8px; padding: 40px 24px 34px; border-radius: 28px; background: var(--panel); color: var(--on-panel);
+}
+.thanks::before {
+  content: ""; position: absolute; left: 50%; top: -220px; width: 620px; height: 480px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(209, 255, 51, 0.22), transparent); z-index: -1;
+}
+.thanks .logo-tile { width: 44px; height: 44px; border-radius: 12px; }
+.thanks h2 { margin-top: 20px; font: 700 clamp(28px, 7vw, 40px)/1.35 var(--font-ar-display); }
+.thanks h2 em { font-style: normal; color: var(--accent); }
+.thanks__next { margin-top: 22px; font: 600 16px/1.6 var(--font-ar); color: var(--on-panel); }
+.thanks ol { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
+.thanks li { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; line-height: 1.7; color: var(--on-panel-muted); }
+.thanks li b {
+  flex: none; display: grid; place-items: center; width: 28px; height: 28px; margin-top: 1px; border-radius: 9px;
+  background: var(--accent); color: var(--accent-ink); box-shadow: 0 2px 0 var(--accent-deep); font: 700 13px/1 var(--font-mono);
+}
+.thanks__cap { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--panel-line); font-size: 14.5px; color: var(--on-panel-muted); }
+.thanks .btn { margin-top: 24px; width: 100%; }
+@media (min-width: 560px) { .thanks { margin: 0; padding: 48px 40px 40px; border-radius: 40px; } .thanks .btn { width: auto; } }
+
+.thanks__ref { margin-top: 10px; font-size: 14.5px; color: var(--on-panel-muted); }
+.thanks__ref b { font: 600 14px/1 var(--font-mono); letter-spacing: 0.06em; color: var(--accent); direction: ltr; unicode-bidi: isolate; }
+
+/* fallback when WhatsApp did not open */
+.fallback { margin-top: 20px; padding: 20px; border: 1px dashed rgba(26, 26, 23, 0.35); border-radius: 28px; background: var(--surface); }
+.fallback__title { font: 600 16px/1.6 var(--font-ar); }
+.fallback__text { margin-top: 4px; font-size: 14px; color: var(--muted); }
+.fallback__tools { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; margin-top: 16px; }
+.fallback__tools .btn { min-height: 46px; font-size: 15px; }
+.textlink { font-size: 15px; font-weight: 600; color: var(--text); text-decoration: underline; text-decoration-color: var(--accent-deep); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.textlink:hover { text-decoration-color: var(--text); }
+.copied { flex-basis: 100%; font-size: 13.5px; color: var(--accent-text); font-weight: 600; }
+.copied:empty { display: none; }
+.wa-num { direction: ltr; unicode-bidi: isolate; font-family: var(--font-mono); font-size: 13.5px; }
+
+/* screen transitions */
+.screen { animation: rise 0.45s var(--ease) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+.no-anim .screen { animation: none; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__row">
+    <a class="brand" href="/" aria-label="صاغ — الصفحة الرئيسية">
+      <span class="logo-tile" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11"/></svg></span>
+      <span class="brand__name">sagh*</span>
+    </a>
+    <span class="top__count" id="count" aria-hidden="true"></span>
+  </div>
+  <nav class="progress" id="progress" aria-label="خطوات الاستبيان" hidden><ol></ol></nav>
+</header>
+
+<main>
+  <form class="sheet" id="form" novalidate autocomplete="on"></form>
+</main>
+
+<script>
+(function () {
+"use strict";
+
+/* ===================== settings ===================== */
+var WA_NUMBER = "__WHATSAPP_NUMBER__";   // filled by build.js from WHATSAPP_NUMBER in main.js
+var WA_MAX_CHARS = 3500;                 // keep the pre-filled WhatsApp text under this (long free text is trimmed with "…")
+
+/* ===================== CONSENT TEXT — owned by Legal (draft from Marketing, adapted to the WhatsApp flow) =====================
+   Replace with Legal's final wording before launch. Shown next to the required checkbox on the last step. */
+var CONSENT_TEXT = "أوافق إن صاغ تستلم إجاباتي على واتساب وتحفظها في سجل متابعة على Google Sheets (ممكن خوادمه تكون خارج المملكة) عشان تجهّز لي عرض سعر وتتواصل معي بخصوصه فقط، وتحذفها بعد ١٢ شهر إذا ما بدأنا مشروع. عمري ١٨ أو أكثر، وأقدر أسحب موافقتي أو أطلب تعديل بياناتي أو حذفها متى ما بغيت على واتساب.";  // Legal v0.1 2026-11-17, approved by Abdullah; no privacy-page link by his decision
+
+/* ===================== content: questionnaire.md v1.1 (do not edit wording here without Marketing) ===================== */
+var STEP_NAMES = ["الخدمة", "التفاصيل", "المشروع", "الميزانية والوقت", "التواصل"];
+var MULTI_HELP = "اختر كل اللي ينطبق.";
+var SCREENS_OPTS = [["lt10","أقل من 10"],["10to20","من 10 إلى 20"],["20to40","من 20 إلى 40"],["40plus","أكثر من 40"],["unsure","مو متأكد"]];
+
+var Q = {
+  services: { type:"multi", req:true, label:"وش تحتاج منّا؟", help:MULTI_HELP, opts:[
+    ["identity","هوية بصرية"],["website","موقع"],["store","متجر إلكتروني"],["app","تطبيق جوال"],
+    ["uiux","تصميم واجهات UI/UX"],["social","تصاميم سوشيال ميديا"],["other","شي ثاني"]] },
+
+  id_name: { type:"single", req:true, label:"اسم المشروع جاهز؟", opts:[["final","الاسم جاهز"],["draft","عندي اسم بس ممكن يتغير"],["naming","نبي مساعدة في التسمية (خدمة إضافية بسعر منفصل)"],["none","لسّا ما عندي اسم، بختاره بنفسي"]] },
+  id_deliverables: { type:"multi", req:true, label:"وش تبي يكون ضمن الهوية؟", help:MULTI_HELP, opts:[
+    ["logo","شعار فقط"],["system","هوية كاملة: شعار وألوان وخطوط ودليل استخدام"],["stationery","مطبوعات: بطاقات وأوراق رسمية"],
+    ["social_kit","قوالب سوشيال ميديا"],["packaging","تغليف منتج"],["profile","بروفايل شركة"],["unsure","مو متأكد، أبي رأيكم"]] },
+
+  web_pages: { type:"single", req:true, label:"كم صفحة تقريبًا؟", opts:[["one","صفحة وحدة (صفحة هبوط)"],["upto5","من 2 إلى 5 صفحات"],["6to10","من 6 إلى 10 صفحات"],["10plus","أكثر من 10"],["unsure","مو متأكد"]] },
+  web_languages: { type:"single", req:true, label:"الموقع بأي لغة؟", opts:[["ar","عربي"],["en","إنجليزي"],["both","عربي وإنجليزي"]] },
+  web_features: { type:"multi", req:false, label:"وش يحتاج الموقع؟", help:MULTI_HELP, exclusive:"none", opts:[
+    ["cms","أعدّل المحتوى بنفسي من لوحة بسيطة"],["form","نموذج تواصل أو حجز"],["blog","مدونة أو أخبار"],["sell","بيع منتجات أو دفع إلكتروني"],["none","ولا شي من هذي"]] },
+
+  store_platform: { type:"single", req:true, label:"على أي منصة تبي المتجر؟", opts:[
+    ["salla","سلة"],["zid","زد"],["shopify","Shopify"],["custom","متجر مبرمج خاص"],["existing","عندي متجر شغّال وأبي أطوّره"],["unsure","مو متأكد، أبي رأيكم"]] },
+  store_products: { type:"single", req:true, label:"كم منتج تقريبًا؟", opts:[["lt20","أقل من 20"],["20to100","من 20 إلى 100"],["100to500","من 100 إلى 500"],["500plus","أكثر من 500"]] },
+
+  app_platforms: { type:"single", req:true, label:"التطبيق لأي أجهزة؟", opts:[["both","آيفون وأندرويد"],["ios","آيفون فقط"],["android","أندرويد فقط"],["unsure","مو متأكد"]] },
+  app_screens: { type:"single", req:true, label:"كم شاشة تقريبًا؟", help:"الشاشة = صفحة داخل التطبيق، مثل تسجيل الدخول أو الرئيسية أو السلة.", opts:SCREENS_OPTS },
+  app_features: { type:"multi", req:true, label:"وش يحتاج التطبيق؟", help:MULTI_HELP, exclusive:"none", opts:[
+    ["login","تسجيل دخول وحسابات"],["payments","دفع إلكتروني"],["admin","لوحة تحكم لإدارة المحتوى أو الطلبات"],
+    ["backend","عندي سيرفر أو نظام جاهز نربط عليه"],["notifications","إشعارات"],["maps","خرائط أو تتبّع موقع"],["none","ولا شي من هذي، تطبيق بسيط"]] },
+
+  ux_for: { type:"single", req:true, label:"التصميم لأي منتج؟", opts:[["app","تطبيق جوال"],["web","موقع أو منصة ويب"],["internal","نظام داخلي أو لوحة تحكم"]] },
+  ux_screens: { type:"single", req:true, label:"كم شاشة تقريبًا؟", opts:SCREENS_OPTS, show:function(a){ return !has(a.services,"app"); } },
+  ux_existing: { type:"single", req:true, label:"المنتج موجود الحين؟", opts:[["new","لا، منتج جديد"],["live","إيه، شغّال وأبي أحسّن تصميمه"],["building","يتبرمج الحين عند فريق ثاني"]] },
+
+  social_posts: { type:"single", req:true, label:"كم تصميم تحتاج بالشهر تقريبًا؟", opts:[["lt8","أقل من 8"],["8to15","من 8 إلى 15"],["16to30","من 16 إلى 30"],["once","تصاميم لمرة وحدة، مو شهري"]] },
+  social_platforms: { type:"multi", req:false, label:"على أي منصات؟", help:MULTI_HELP, opts:[["instagram","انستقرام"],["tiktok","تيك توك"],["x","إكس"],["snapchat","سناب شات"],["linkedin","لينكدإن"]] },
+
+  other_desc: { type:"textarea", req:true, label:"وصّف لنا وش تحتاج بسطرين.", ph:"مثال: عرض تقديمي للمستثمرين، أو تصميم منيو لمطعم" },
+
+  stage: { type:"single", req:true, label:"وين وصل مشروعك؟", opts:[["idea","فكرة، لسّا ما بدأ"],["starting","يبدأ قريب ويحتاج يطلع بشكل صح"],["live_refresh","شغّال ويبي تجديد"],["live_add","شغّال ويبي شي جديد يُضاف له"]] },
+  goal: { type:"textarea", req:true, max:500, label:"وش تبي يحقق لك هالمشروع؟", help:"سطرين يكفون.", ph:"مثال: أبي الناس تثق في المتجر وتطلب أونلاين بدل الواتساب" },
+  audience: { type:"text", req:false, label:"مين جمهورك؟", ph:"مثال: أمهات في الرياض، أو شركات صغيرة في قطاع المقاولات" },
+  references: { type:"textarea", req:false, links:true, label:"فيه منافسين أو أعمال تعجبك؟ حط روابطها.", help:"حسابات، مواقع، تطبيقات. وإذا فيه شي ما يعجبك قلنا بعد.", ph:"https://" },
+  ready: { type:"multi", req:true, label:"وش الجاهز عندك؟", help:MULTI_HELP, exclusive:"nothing", opts:[
+    ["logo","شعار أو هوية"],["text","النصوص والمحتوى"],["photos","صور المنتجات أو المكان"],["ui_design","تصميم واجهات جاهز (Figma أو غيره)"],["domain","دومين أو حسابات المتاجر"],["nothing","لسّا ما عندي شي"]] },
+
+  budget: { type:"single", req:true, label:"كم الميزانية اللي في بالك؟", help:"تساعدنا نقترح الحل المناسب لميزانيتك. ما هي التزام.", opts:[
+    ["lt3","أقل من 3 آلاف ريال"],["3to7","من 3 إلى 7 آلاف ريال"],["7to15","من 7 إلى 15 ألف ريال"],["15to30","من 15 إلى 30 ألف ريال"],
+    ["30to50","من 30 إلى 50 ألف ريال"],["50plus","أكثر من 50 ألف ريال"],["unsure","مو متأكد، أبي اقتراحكم"]] },
+  timeline: { type:"single", req:true, label:"متى تبيه يكون جاهز؟", opts:[["asap","بأسرع وقت"],["1m","خلال شهر"],["1to3m","من شهر إلى 3 أشهر"],["flex","مرن، الأهم الجودة"]] },
+  deadline: { type:"date", req:false, label:"فيه تاريخ محدد لازم نلحقه؟", help:"مثل افتتاح أو إطلاق أو مناسبة.", show:function(a){ return !!a.timeline && a.timeline !== "flex"; } },
+  decision: { type:"single", req:true, label:"مين يعتمد القرار في المشروع؟", opts:[["me","أنا"],["me_partner","أنا مع شريك أو إدارة"],["other","شخص ثاني، وأنا أجمع التفاصيل"]] },
+  source: { type:"single", req:false, label:"كيف عرفت عن صاغ؟", opts:[["referral","من شخص أعرفه"],["instagram","انستقرام"],["tiktok","تيك توك"],["x","إكس"],["google","بحث قوقل"],["site","موقع صاغ"],["other","غير كذا"]] },
+
+  name: { type:"text", req:true, label:"اسمك", auto:"name" },
+  project_name: { type:"text", req:false, label:"اسم الشركة أو المشروع", ph:"مثال: مقهى ركن", auto:"organization" },
+  phone: { type:"phone", req:true, label:"رقم الواتساب", ph:"05XXXXXXXX", help:"نرد عليك هنا، وما نشاركه مع أحد." },
+  email: { type:"email", req:false, label:"الإيميل", ph:"name@example.com", auto:"email" },
+  city: { type:"text", req:false, label:"المدينة", ph:"مثال: الرياض", auto:"address-level2" },
+  consent: { type:"consent", req:true, label:CONSENT_TEXT }
+};
+
+var BRANCHES = [
+  ["identity", "هوية بصرية", ["id_name","id_deliverables"]],
+  ["website", "موقع", ["web_pages","web_languages","web_features"]],
+  ["store", "متجر إلكتروني", ["store_platform","store_products"]],
+  ["app", "تطبيق جوال", ["app_platforms","app_screens","app_features"]],
+  ["uiux", "تصميم واجهات UI/UX", ["ux_for","ux_screens","ux_existing"]],
+  ["social", "تصاميم سوشيال ميديا", ["social_posts","social_platforms"]],
+  ["other", "شي ثاني", ["other_desc"]]
+];
+var STEP_QS = [null, null, ["stage","goal","audience","references","ready"], ["budget","timeline","deadline","decision","source"], ["name","project_name","phone","email","city","consent"]];
+STEP_QS[0] = ["services"];
+
+/* ===================== microcopy added by Design (not in questionnaire.md; Marketing to confirm) ===================== */
+var MSG = {
+  single: "اختر وحدة من الخيارات عشان نكمل.",
+  multi: "اختر خيار واحد على الأقل.",
+  text: "هذي نحتاجها، اكتب لنا ولو سطر.",
+  name: "اكتب اسمك عشان نعرف مين نكلّم.",
+  phoneEmpty: "نحتاج رقم الواتساب عشان نرد عليك.",
+  phoneBad: "الرقم ناقص أو فيه شي غلط، اكتبه مثل 05XXXXXXXX.",
+  emailBad: "الإيميل فيه شي ناقص، تأكد منه.",
+  consent: "نحتاج موافقتك عشان نقدر نرد عليك بعرض السعر.",
+  copied: "تم النسخ. الصقه في محادثة واتساب معنا وأرسله.",
+  copyFail: "ما قدرنا ننسخ تلقائيًا. صوّر الشاشة أو اكتب لنا مباشرة."
+};
+
+/* ===================== state ===================== */
+var A = { phone_cc: "+966" };
+var step = 0;            // 0 intro, 1..5 steps, 6 thank-you
+var submittedAt = null;
+var briefRef = "";       // SB-YYMMDD-xxx, made on submit
+var waUrl = "";
+var form = document.getElementById("form");
+var params = parseHash();
+var ref = (new URLSearchParams(location.search)).get("ref") || "";
+
+function has(arr, v) { return Array.isArray(arr) && arr.indexOf(v) !== -1; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+function parseHash() {
+  var o = {}; (location.hash || "").replace(/^#/, "").split("&").forEach(function (kv) {
+    if (!kv) return; var p = kv.split("="); o[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || "");
+  }); return o;
+}
+
+/* which questions are visible on a step, given the current answers */
+function stepQuestions(s) {
+  if (s === 2) {
+    var out = [];
+    BRANCHES.forEach(function (b) { if (has(A.services, b[0])) b[2].forEach(function (id) { if (!Q[id].show || Q[id].show(A)) out.push(id); }); });
+    return out;
+  }
+  return (STEP_QS[s - 1] || []).filter(function (id) { return !Q[id].show || Q[id].show(A); });
+}
+
+/* ===================== icons ===================== */
+var ICON_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+var ICON_CUBE = '<svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11"/></svg>';
+var ICON_ERR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z"/></svg>';
+var ICON_NEXT = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+var ICON_BACK = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+var ICON_CHAT = '<svg class="chat" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5z"/></svg>';
+var ICON_CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+
+/* ===================== rendering ===================== */
+function reqTag(q) { return q.req ? '<span class="req">مطلوب</span>' : ""; }
+function helpHtml(id, q) { return q.help ? '<p class="q__help" id="' + id + '-help">' + esc(q.help) + "</p>" : ""; }
+
+function renderQ(id) {
+  var q = Q[id], h = "", desc = (q.help ? id + "-help " : "") + id + "-err";
+  var hidden = q.show && !q.show(A) ? " hidden" : "";
+  if (q.type === "single" || q.type === "multi") {
+    var t = q.type === "single" ? "radio" : "checkbox";
+    h += '<fieldset class="q" data-q="' + id + '"' + hidden + ' aria-describedby="' + desc + '">';
+    h += '<legend class="q__label">' + esc(q.label) + reqTag(q) + "</legend>" + helpHtml(id, q);
+    h += '<div class="q__body chips chips--' + q.type + '">';
+    q.opts.forEach(function (o) {
+      var on = q.type === "single" ? A[id] === o[0] : has(A[id], o[0]);
+      h += '<label><input type="' + t + '" name="' + id + '" value="' + o[0] + '"' + (on ? " checked" : "") + (q.req && q.type === "single" ? " aria-required=\"true\"" : "") + '>' +
+           '<span class="chip"><span class="chip__mark">' + ICON_CHECK + "</span><span>" + esc(o[1]) + "</span></span></label>";
+    });
+    h += "</div>";
+  } else if (q.type === "consent") {
+    h += '<div class="q consent" data-q="' + id + '">';
+    h += '<label><input type="checkbox" name="consent" id="f-consent"' + (A.consent ? " checked" : "") + ' aria-required="true" aria-describedby="consent-err">' +
+         '<span class="chip__mark">' + ICON_CHECK + '</span><span class="consent__text">' + esc(q.label) + reqTag(q) + "</span></label>";
+  } else {
+    h += '<div class="q" data-q="' + id + '"' + hidden + ">";
+    h += '<label class="q__label" for="f-' + id + '">' + esc(q.label) + reqTag(q) + "</label>" + helpHtml(id, q);
+    h += '<div class="q__body">';
+    var common = ' id="f-' + id + '" name="' + id + '" aria-describedby="' + desc + '"' + (q.req ? ' aria-required="true"' : "") + (q.ph ? ' placeholder="' + esc(q.ph) + '"' : "") + (q.auto ? ' autocomplete="' + q.auto + '"' : "");
+    var val = esc(A[id] || "");
+    if (q.type === "textarea") {
+      h += '<textarea class="field"' + common + (q.max ? ' maxlength="' + q.max + '"' : "") + (q.links ? ' dir="auto" rows="3"' : ' rows="3"') + ">" + val + "</textarea>";
+      if (q.max) h += '<div class="counter" id="' + id + '-count">' + (A[id] || "").length + " / " + q.max + "</div>";
+    } else if (q.type === "phone") {
+      h += '<div class="phone"><input class="field field--cc" type="text" inputmode="tel" id="f-phone_cc" name="phone_cc" aria-label="مفتاح الدولة" value="' + esc(A.phone_cc || "+966") + '" maxlength="5" autocomplete="tel-country-code">' +
+           '<input class="field field--num" type="tel" inputmode="tel"' + common + ' value="' + val + '" autocomplete="tel-national"></div>';
+    } else if (q.type === "date") {
+      h += '<input class="field" type="date"' + common + ' value="' + val + '">';
+    } else {
+      h += '<input class="field" type="' + (q.type === "email" ? "email" : "text") + '"' + common + ' value="' + val + '"' + (q.type === "email" ? ' inputmode="email"' : "") + ">";
+    }
+    h += "</div>";
+  }
+  h += '<p class="err" id="' + (q.type === "consent" ? "consent" : id) + '-err" role="alert" hidden></p>';
+  h += q.type === "single" || q.type === "multi" ? "</fieldset>" : "</div>";
+  return h;
+}
+
+function actions(nextLabel, isLast) {
+  return '<div class="actions">' +
+    '<button type="button" class="btn btn--ghost btn--back" data-act="back">' + ICON_BACK + "<span>رجوع</span></button>" +
+    '<button type="' + (isLast ? "submit" : "button") + '" class="btn btn--next" data-act="next"><span>' + nextLabel + "</span>" + ICON_NEXT + "</button></div>";
+}
+
+function head(s, titleHtml, sub) {
+  return '<div class="step__head"><p class="eyebrow">الخطوة<span class="num">' + String(s).padStart(2, "0") + " / 05</span></p>" +
+    '<h1 class="title" tabindex="-1" id="screen-title">' + titleHtml + "</h1>" + (sub ? '<p class="lead">' + sub + "</p>" : "") + "</div>";
+}
+
+function render() {
+  var h = "";
+  if (step === 0) {
+    h = '<section class="screen intro" aria-labelledby="screen-title">' +
+      '<p class="eyebrow">استبيان العميل الجديد</p>' +
+      '<h1 class="intro__title" id="screen-title" tabindex="-1">هلا، هذا استبيان قصير <em class="hl">يعرّفنا على مشروعك.</em></h1>' +
+      '<div class="intro__body"><p>ياخذ تقريبًا 4 دقايق، وأغلبه اختيارات.</p><p>بعدها نرجع لك بالخطوة الجاية.</p></div>' +
+      '<div class="intro__cta"><button type="button" class="btn" data-act="next"><span>نبدأ</span>' + ICON_NEXT + "</button>" +
+      '<p class="small">اللي ما عليه «مطلوب» تقدر تتركه. وفي الأخير ينفتح لك الواتساب برسالة فيها إجاباتك، ترسلها لنا بنفسك.</p></div>' +
+      '<div class="comp" aria-hidden="true"><div class="comp__bar"><i></i><i></i><i></i><span class="comp__file">sagh — brief</span><span class="comp__zoom">100%</span></div>' +
+      '<div class="comp__area"><div class="comp__chips"><span>موقع</span><span class="on">هوية بصرية</span><span>متجر إلكتروني</span><span class="on">تطبيق جوال</span><span>شي ثاني</span>' +
+      '<div class="comp__sel"><i></i><i></i><i></i><i></i><span class="comp__tag">5 options</span></div></div>' +
+      '<div class="cur"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.4-7.6L20.5 11z"/></svg><span>sagh</span></div></div></div>' +
+      "</section>";
+  } else if (step === 1) {
+    h = '<section class="screen">' + head(1, '<em class="hl">الخدمة</em>') + renderQ("services") + actions("التالي") + "</section>";
+  } else if (step === 2) {
+    var picked = BRANCHES.filter(function (b) { return has(A.services, b[0]); });
+    h = '<section class="screen">' + head(2, '<em class="hl">التفاصيل</em>');
+    if (picked.length >= 4) h += '<p class="step__note">اخترت أكثر من خدمة، نسأل عن كل وحدة سؤالين أو ثلاثة بسرعة.</p>';
+    picked.forEach(function (b, i) {
+      if (picked.length > 1) h += '<div class="svc-head' + (i === 0 ? " is-first" : "") + '"><span class="logo-tile" aria-hidden="true">' + ICON_CUBE + "</span><h3>" + esc(b[1]) + '</h3><span class="num">' + (i + 1) + "/" + picked.length + "</span></div>";
+      h += '<div class="svc" data-svc="' + b[0] + '">' + b[2].map(renderQ).join("") + "</div>";
+    });
+    h += actions("التالي") + "</section>";
+  } else if (step === 3) {
+    h = '<section class="screen">' + head(3, '<em class="hl">المشروع</em>') + STEP_QS[2].map(renderQ).join("") + actions("التالي") + "</section>";
+  } else if (step === 4) {
+    h = '<section class="screen">' + head(4, '<em class="hl">الميزانية</em> والوقت') + STEP_QS[3].map(renderQ).join("") + actions("التالي") + "</section>";
+  } else if (step === 5) {
+    h = '<section class="screen">' + head(5, '<em class="hl">التواصل</em>', "آخر خطوة. وين نرد عليك؟") + STEP_QS[4].map(renderQ).join("") + actions("أرسل عبر واتساب", true) + '<p style="margin:14px 0 24px;font-size:13px;line-height:1.7;color:var(--muted,rgba(26,26,23,.6))">الضغط هنا يفتح واتساب برسالة فيها إجاباتك، وما توصلنا إلا إذا ضغطت «إرسال» بنفسك. موقعنا ما يحفظ إجاباتك.</p>' + "</section>";
+  } else {
+    h = renderThanks();
+  }
+  form.innerHTML = h;
+  renderProgress();
+}
+
+function renderProgress() {
+  var nav = document.getElementById("progress"), cnt = document.getElementById("count");
+  nav.hidden = step === 0 || step === 6;
+  cnt.textContent = step >= 1 && step <= 5 ? String(step).padStart(2, "0") + " / 05" : "";
+  nav.querySelector("ol").innerHTML = STEP_NAMES.map(function (n, i) {
+    var s = i + 1, cls = s < step ? "is-done" : s === step ? "is-current" : "";
+    return '<li class="' + cls + '"' + (s === step ? ' aria-current="step"' : "") + '><b aria-hidden="true"></b><span>' + n + (s < step ? '<span class="sr"> (تمّت)</span>' : "") + "</span></li>";
+  }).join("");
+}
+
+/* ===================== the message (what reaches Sagh on WhatsApp) ===================== */
+function labelOf(id, v, cap) {
+  var q = Q[id];
+  if (v == null || v === "" || (Array.isArray(v) && !v.length)) return "";
+  if (q.opts) {
+    var m = {}; q.opts.forEach(function (o) { m[o[0]] = o[1]; });
+    return Array.isArray(v) ? v.map(function (x) { return m[x] || x; }).join("، ") : (m[v] || v);
+  }
+  if (id === "consent") return v ? "وافق" : "";
+  return clip(String(v).trim(), cap);
+}
+/* trim free text to cap characters (0 = no limit), ending on a word with "…" */
+function clip(t, cap) { return cap && t.length > cap ? t.slice(0, cap).replace(/\s+\S*$/, "") + "…" : t; }
+function phoneFull() {
+  var cc = (A.phone_cc || "+966").trim(), n = (A.phone || "").replace(/[\s-]/g, "");
+  if (cc === "966") cc = "+966";
+  if (cc === "+966" && /^0/.test(n)) n = n.slice(1);
+  if (cc && cc.charAt(0) !== "+") cc = "+" + cc;
+  return n ? cc + " " + n : "";
+}
+function makeRef(d) {
+  function p(x) { return String(x).padStart(2, "0"); }
+  var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", r = "", buf = new Uint8Array(3);
+  window.crypto.getRandomValues(buf);
+  for (var i = 0; i < 3; i++) r += abc[buf[i] % abc.length];
+  return "SB-" + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + "-" + r;
+}
+function summaryModel(cap) {
+  function row(id, label) { return [label || Q[id].label, labelOf(id, A[id], cap)]; }
+  function visible(id) { return !Q[id].show || Q[id].show(A); }
+  var secs = [];
+  secs.push({ t: "التواصل", rows: [row("name"), row("project_name"), ["رقم الواتساب", phoneFull()], row("email"), row("city")] });
+  secs.push({ t: "الخدمة", rows: [row("services")] });
+  BRANCHES.forEach(function (b) {
+    if (!has(A.services, b[0])) return;
+    secs.push({ t: "التفاصيل: " + b[1], rows: b[2].filter(visible).map(function (id) { return row(id); }) });
+  });
+  [[2, "المشروع"], [3, "الميزانية والوقت"]].forEach(function (x) {
+    secs.push({ t: x[1], rows: STEP_QS[x[0]].filter(visible).map(function (id) { return row(id); }) });
+  });
+  var flags = [];
+  if (has(A.services, "identity") && A.id_name === "naming") flags.push("يبي مساعدة في التسمية: خدمة إضافية بسعر منفصل.");
+  if (has(A.services, "website") && has(A.web_features, "sell")) flags.push("طلب بيع منتجات أو دفع في الموقع: يمكن المتجر أنسب له.");
+  return { secs: secs, flags: flags };
+}
+/* plain-text summary; cap trims each free-text answer (0 = full text) */
+function summaryText(cap) {
+  var m = summaryModel(cap || 0), L = ["طلب مشروع جديد — صاغ", "رقم الطلب: " + (briefRef || "—")];
+  m.flags.forEach(function (f) { L.push("تنبيه: " + f); });
+  m.secs.forEach(function (s) {
+    L.push("", "*" + s.t + "*");
+    s.rows.forEach(function (r) { L.push("- " + r[0].replace(/[؟?.:]\s*$/, "") + ": " + (r[1] && String(r[1]).trim() ? String(r[1]).replace(/\s*\n+\s*/g, " | ") : "—")); });
+  });
+  L.push("", A.consent ? "وافقت على نص الموافقة (نسخة 2026-11-17) في sagh.co/brief" : "الموافقة: —");
+  if (ref) L.push("المصدر: " + ref.slice(0, 40));
+  return L.join("\n");
+}
+/* the WhatsApp text: full answers, trimming long free text step by step until it fits WA_MAX_CHARS */
+function messageText() {
+  var caps = [0, 600, 400, 250, 150, 80, 40], t = "";
+  for (var i = 0; i < caps.length; i++) { t = summaryText(caps[i]); if (t.length <= WA_MAX_CHARS) return t; }
+  return t.slice(0, WA_MAX_CHARS - 1) + "…";
+}
+function buildWaUrl() { return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(messageText()); }
+function openWhatsApp(url) {
+  // runs inside the submit click, so browsers allow the new tab; on phones wa.me hands over to the WhatsApp app.
+  try { window.open(url, "_blank", "noopener"); } catch (e) { location.href = url; }
+}
+function renderThanks() {
+  var nm = (A.name || "").trim().split(/\s+/)[0] || "";
+  var s = '<section class="screen done">' +
+    '<div class="thanks"><span class="logo-tile" aria-hidden="true">' + ICON_CUBE + "</span>" +
+    '<h2 id="screen-title" tabindex="-1">شكرًا' + (nm ? " <em>" + esc(nm) + "</em>" : "") + "، باقي تضغط إرسال في الواتساب.</h2>" +
+    (briefRef ? '<p class="thanks__ref">رقم طلبك <b>' + esc(briefRef) + "</b></p>" : "") +
+    '<p class="thanks__next">وش اللي يصير الحين:</p><ol>' +
+    "<li><b>1</b><span>انفتحت لك رسالة في الواتساب فيها إجاباتك. أرسلها لنا مثل ما هي.</span></li>" +
+    "<li><b>2</b><span>نقرا اللي كتبته ونرجع لك على واتساب خلال يومين عمل. وإذا احتجنا نفهم أكثر، نسألك كم سؤال أو نرتب مكالمة قصيرة.</span></li>" +
+    "<li><b>3</b><span>نرسل لك عرض سعر مكتوب بالتفاصيل والمدة، صالح 14 يوم.</span></li></ol>" +
+    '<p class="thanks__cap">نشتغل على مشروع واحد بوقته عشان نعطيه حقه. إذا جدولنا مليان نقول لك أقرب موعد نقدر نبدأ فيه.</p></div>';
+  s += '<div class="fallback"><p class="fallback__title">إذا ما انفتح الواتساب، انسخ الملخص وأرسله لنا</p>' +
+    '<p class="fallback__text">على واتساب <span class="wa-num">+' + esc(WA_NUMBER) + "</span>. ما نحفظ إجاباتك عندنا، توصلنا بس لما ترسلها.</p>" +
+    '<div class="fallback__tools"><button type="button" class="btn" data-act="copy"><span>انسخ الملخص</span></button>' +
+    '<a class="textlink" id="wa-retry" href="' + esc(waUrl || buildWaUrl()) + '" target="_blank" rel="noopener">افتح الواتساب مرة ثانية</a>' +
+    '<span class="copied" id="copied" role="status"></span></div></div></section>';
+  return s;
+}
+
+/* ===================== validation ===================== */
+function setErr(id, msg) {
+  var el = form.querySelector('[data-q="' + id + '"]'); if (!el) return;
+  var e = el.querySelector(".err");
+  if (msg) { e.innerHTML = ICON_ERR + "<span>" + esc(msg) + "</span>"; e.hidden = false; el.classList.add("has-err"); }
+  else { e.hidden = true; e.textContent = ""; el.classList.remove("has-err"); }
+  var inp = el.querySelector(".field--num, .field, input[type=checkbox]#f-consent");
+  if (inp) { if (msg) inp.setAttribute("aria-invalid", "true"); else inp.removeAttribute("aria-invalid"); }
+}
+function checkQ(id) {
+  var q = Q[id], v = A[id];
+  if (q.type === "phone") {
+    var n = (v || "").replace(/[\s-]/g, ""), cc = (A.phone_cc || "").trim();
+    if (!n) return MSG.phoneEmpty;
+    if (!/^\+?\d{1,4}$/.test(cc) || !/^\d+$/.test(n)) return MSG.phoneBad;
+    if (cc === "+966" || cc === "966") { if (!/^(05\d{8}|5\d{8})$/.test(n)) return MSG.phoneBad; }
+    else if (n.length < 6 || n.length > 14) return MSG.phoneBad;
+    return "";
+  }
+  if (q.type === "email") return v && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? MSG.emailBad : "";
+  if (!q.req) return "";
+  if (q.type === "consent") return v ? "" : MSG.consent;
+  if (q.type === "single") return v ? "" : MSG.single;
+  if (q.type === "multi") return v && v.length ? "" : MSG.multi;
+  if (!v || !String(v).trim()) return id === "name" ? MSG.name : MSG.text;
+  return "";
+}
+function validateStep() {
+  var first = null;
+  stepQuestions(step).forEach(function (id) {
+    var msg = checkQ(id); setErr(id, msg);
+    if (msg && !first) first = id;
+  });
+  if (first) {
+    var el = form.querySelector('[data-q="' + first + '"]');
+    el.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    var f = el.querySelector("input, textarea"); if (f) f.focus({ preventScroll: true });
+    return false;
+  }
+  return true;
+}
+
+/* ===================== events ===================== */
+function readInput(t) {
+  var id = t.name; if (!id) return;
+  if (id === "phone_cc") { A.phone_cc = t.value; return; }
+  var q = Q[id]; if (!q) return;
+  if (q.type === "multi") {
+    var cur = Array.isArray(A[id]) ? A[id].slice() : [];
+    if (t.checked) {
+      if (q.exclusive && t.value === q.exclusive) cur = [q.exclusive];
+      else { cur = cur.filter(function (x) { return x !== q.exclusive; }); cur.push(t.value); }
+    } else cur = cur.filter(function (x) { return x !== t.value; });
+    A[id] = cur;
+    // reflect exclusivity in the DOM
+    form.querySelectorAll('input[name="' + id + '"]').forEach(function (i) { i.checked = has(cur, i.value); });
+  } else if (q.type === "consent") A.consent = t.checked;
+  else A[id] = t.value;
+  if (q.max) { var c = document.getElementById(id + "-count"); if (c) c.textContent = (A[id] || "").length + " / " + q.max; }
+  // in-step conditional questions (deadline)
+  form.querySelectorAll("[data-q]").forEach(function (el) {
+    var qq = Q[el.getAttribute("data-q")]; if (qq && qq.show) el.hidden = !qq.show(A);
+  });
+  // clear the message once the answer becomes valid
+  var holder = form.querySelector('[data-q="' + id + '"]');
+  if (holder && holder.classList.contains("has-err") && !checkQ(id)) setErr(id, "");
+}
+form.addEventListener("change", function (e) { readInput(e.target); });
+form.addEventListener("input", function (e) { if (e.target.matches("input[type=text], input[type=tel], input[type=email], textarea, input[type=date]")) readInput(e.target); });
+form.addEventListener("submit", function (e) { e.preventDefault(); go(1); });   // no form action: go(1) opens WhatsApp
+form.addEventListener("click", function (e) {
+  var b = e.target.closest("[data-act]"); if (!b) return;
+  var act = b.getAttribute("data-act");
+  if (act === "next" && b.type !== "submit") go(1);
+  else if (act === "back") go(-1);
+  else if (act === "copy") copySummary();
+});
+
+function go(dir) {
+  if (dir > 0 && step >= 1 && step <= 5 && !validateStep()) return;
+  if (dir > 0 && step === 5) {
+    // nothing is sent or stored by this page: it opens WhatsApp with the answers and the client presses send
+    submittedAt = new Date();
+    if (!briefRef) briefRef = makeRef(submittedAt);
+    waUrl = buildWaUrl();
+    openWhatsApp(waUrl);
+  }
+  setStep(Math.max(0, Math.min(6, step + dir)));
+}
+function setStep(s) {
+  step = s; render();
+  window.scrollTo(0, 0);
+  var t = document.getElementById("screen-title"); if (t && !firstPaint) t.focus({ preventScroll: true });
+  firstPaint = false;
+}
+var firstPaint = true;
+
+function copySummary() {
+  var txt = summaryText(0), out = document.getElementById("copied");
+  function ok() { out.textContent = MSG.copied; }
+  function fallback() {
+    var ta = document.createElement("textarea"); ta.value = txt; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); } catch (err) { out.textContent = MSG.copyFail; }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(ok, fallback); else fallback();
+}
+
+/* ===================== demo data (fictional client) ===================== */
+var DEMO = {
+  services: ["identity", "app"],
+  id_name: "draft", id_deliverables: ["system", "social_kit"],
+  web_pages: "upto5", web_languages: "both", web_features: ["cms", "form"],
+  store_platform: "salla", store_products: "20to100",
+  app_platforms: "both", app_screens: "10to20", app_features: ["login", "payments", "notifications"],
+  ux_for: "app", ux_screens: "10to20", ux_existing: "new",
+  social_posts: "8to15", social_platforms: ["instagram", "tiktok"],
+  other_desc: "منيو مطبوع للمخبز",
+  stage: "starting",
+  goal: "أبي الناس تطلب من التطبيق بدل الاتصال والواتساب، وتكون هوية المخبز واضحة وموحّدة بكل مكان.",
+  audience: "عوايل وموظفين في شمال جدة",
+  references: "https://example.com/bakery-one\nhttps://instagram.com/example",
+  ready: ["text", "photos"],
+  budget: "30to50", timeline: "1to3m", deadline: "2027-02-15", decision: "me_partner", source: "instagram",
+  name: "ريم الحربي", project_name: "مخبز سنبلة", phone_cc: "+966", phone: "0500000000", email: "reem@example.com", city: "جدة", consent: true
+};
+
+/* ===================== boot ===================== */
+if (params.demo === "1") {
+  Object.keys(DEMO).forEach(function (k) { A[k] = Array.isArray(DEMO[k]) ? DEMO[k].slice() : DEMO[k]; });
+  if (!ref) ref = "wa";
+}
+if (params.svc) A.services = params.svc.split(",").filter(function (v) { return Q.services.opts.some(function (o) { return o[0] === v; }); });
+if (params.step) {
+  var s0 = parseInt(params.step, 10);
+  if (s0 >= 0 && s0 <= 6) { if (s0 === 6) { submittedAt = new Date(); briefRef = makeRef(submittedAt); } step = s0; }
+}
+if (params.still === "1") document.documentElement.classList.add("no-anim");
+render();
+firstPaint = false;
+if (params.err === "1" && step >= 1 && step <= 5) validateStep();
+window.__brief = { A: function () { return A; }, step: function () { return step; }, summaryText: summaryText, messageText: messageText, stepQuestions: stepQuestions };
+})();
+</script>
+</body>
+</html>

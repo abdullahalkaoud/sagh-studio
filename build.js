@@ -2,6 +2,7 @@
 //   src/index.html + content/ar.json → dist/index.html
 //   src/index.html + content/en.json → dist/en/index.html
 //   content/projects.json            → the project cards (in place of <!--PROJECTS--> in the template)
+//   src/brief/index.html             → dist/brief/index.html (client brief form at /brief)
 //   styles.css, main.js, admin/, fonts/, assets/ → copied as-is
 const fs = require("fs");
 const path = require("path");
@@ -59,6 +60,9 @@ function renderProjects(projects, section, lang) {
     // Older entries without a status count as live when they have a URL.
     const status = ["live", "soon", "closed"].includes(p.status) ? p.status : "live";
     const url = status === "live" ? (p.url || "").trim() : "";
+    // url_play: optional Google Play link for apps. When set, the card shows two store links
+    // (url as "App Store", url_play as "Google Play") instead of "Visit project".
+    const play = url ? (p.url_play || "").trim() : "";
     const link = url ? ` href="${escape(url)}" target="_blank" rel="noopener"` : "";
     const media = p.image
       ? `<img src="${escape(p.image)}" alt="${escape(title)}" loading="lazy" decoding="async" />`
@@ -72,7 +76,9 @@ function renderProjects(projects, section, lang) {
               <p class="project__meta"><span>${escape(pick("category"))}</span>${p.year ? `<span class="project__year">${escape(p.year)}</span>` : ""}</p>
               <h3 class="project__title">${escape(title)}</h3>
               ${pick("summary") ? `<p class="project__text">${escape(pick("summary"))}</p>` : ""}
-              ${url ? `<a class="project__link"${link}>${escape(section.visit)}</a>` : ""}
+              ${url ? (play
+                ? `<p class="project__links"><a class="project__link"${link}>App Store</a><a class="project__link" href="${escape(play)}" target="_blank" rel="noopener">Google Play</a></p>`
+                : `<a class="project__link"${link}>${escape(section.visit)}</a>`) : ""}
             </div>
           </article>`;
   }).join("");
@@ -115,6 +121,15 @@ for (const [lang, opts] of Object.entries(languages)) {
   fs.writeFileSync(out, html);
   console.log(`built ${path.relative(root, out)}`);
 }
+
+// Client brief form at /brief (Arabic, noindex; we send its link to leads). Self-contained page:
+// on submit it opens WhatsApp with the answers, so the number comes from main.js (one place to change it).
+const waNumber = (fs.readFileSync(path.join(root, "main.js"), "utf8").match(/WHATSAPP_NUMBER\s*=\s*"(\d+)"/) || [])[1];
+if (!waNumber) throw new Error('main.js: WHATSAPP_NUMBER not found (needed by src/brief/index.html)');
+const brief = fs.readFileSync(path.join(root, "src/brief/index.html"), "utf8").replace(/__WHATSAPP_NUMBER__/g, waNumber);
+fs.mkdirSync(path.join(dist, "brief"), { recursive: true });
+fs.writeFileSync(path.join(dist, "brief/index.html"), brief);
+console.log("built dist/brief/index.html");
 
 copy("styles.css", "styles.css");
 copy("main.js", "main.js");
