@@ -724,14 +724,21 @@ function sheetPayload() {
   };
 }
 function sendToSheet() {
-  if (!SHEET_ENDPOINT || !window.fetch) return;
+  if (!SHEET_ENDPOINT) return;
+  var data = JSON.stringify(sheetPayload());
+  // sendBeacon is built for "send while the page is being left": the browser queues it even when the phone
+  // switches to the WhatsApp app right after. text/plain Blob = simple request, no CORS preflight.
+  try {
+    if (navigator.sendBeacon && navigator.sendBeacon(SHEET_ENDPOINT, new Blob([data], { type: "text/plain;charset=utf-8" }))) return;
+  } catch (e) { /* fall back to fetch */ }
+  if (!window.fetch) return;
   try {
     // text/plain + no-cors = a "simple" request: no CORS preflight, the response is opaque and never awaited.
     // keepalive lets it finish even if the page is left for WhatsApp.
     fetch(SHEET_ENDPOINT, {
       method: "POST", mode: "no-cors", keepalive: true, credentials: "omit",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(sheetPayload())
+      body: data
     }).catch(function () {});
   } catch (e) { /* never block WhatsApp */ }
 }
