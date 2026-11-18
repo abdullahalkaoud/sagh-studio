@@ -1,0 +1,5 @@
+{
+  "_help": "Google Sheet copy of each brief (card SAG-17). Both empty = off (WhatsApp only, as today). sheet_endpoint: the Apps Script Web app URL ending in /exec. sheet_token: the same value as BRIEF_TOKEN in the script's Script Properties (letters, digits, - or _, 16+ characters). The token is visible in the page source: it is a spam filter, not a password. Setup and token rotation: marketing/client-brief/sheets-integration/SETUP.md. After editing: node build.js, then deploy (with approval).",
+  "sheet_endpoint": "",
+  "sheet_token": ""
+}

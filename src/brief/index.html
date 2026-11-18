@@ -1,22 +1,25 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="{{lang}}" dir="{{dir}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>استبيان العميل — صاغ</title>
-<meta name="description" content="استبيان قصير يعرّفنا على مشروعك عشان نجهّز لك عرض سعر.">
+<title>{{meta.title}}</title>
+<meta name="description" content="{{meta.description}}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d1ff33'/%3E%3Ctext x='15.5' y='23.5' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='700' font-size='21' letter-spacing='-0.5' fill='%231a1a17'%3Es%3Ctspan font-size='15' dy='-5'%3E%2A%3C/tspan%3E%3C/text%3E%3C/svg%3E">
-<link rel="preload" href="/fonts/ibm-plex-sans-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/alexandria.woff2" as="font" type="font/woff2" crossorigin>
+{{=preload}}
 <!--
-  Sagh client brief, served at https://sagh.co/brief (card SAG-10). Built from the Design prototype
-  (marketing/client-brief/prototype/index.html); content from marketing/client-brief/questionnaire.md.
-  build.js copies this file to dist/brief/index.html and fills __WHATSAPP_NUMBER__ from main.js.
+  Sagh client brief, served at https://sagh.co/brief (Arabic) and https://sagh.co/en/brief (English), card SAG-10.
+  ONE template for both languages: this file holds layout, logic and question structure; the words live in
+  src/brief/ar.json and src/brief/en.json (same keys, build.js checks). build.js renders this file twice
+  (dist/brief/index.html, dist/en/brief/index.html), filling {{…}} placeholders, the string table and
+  the WhatsApp number (from main.js). Content source: marketing/client-brief/questionnaire.md; consent: legal/privacy/consent.md.
 
-  Submission: no backend and nothing stored by us. On submit the page opens
-  https://wa.me/<number>?text=<the answers as Arabic text>; the client presses send in WhatsApp.
+  Submission: on submit the page opens https://wa.me/<number>?text=<the answers>; the client presses send in WhatsApp.
+  Optional: if src/brief/config.json has a sheet endpoint (Google Apps Script web app, see
+  marketing/client-brief/sheets-integration/), the same answers are also POSTed there, fire-and-forget;
+  WhatsApp never waits for it.
   Test/screenshot hooks (URL hash):  #step=0..6  &demo=1 (fictional client)  &svc=app,identity  &err=1  &still=1
   Query: ?ref=<source>  (added to the message, e.g. ?ref=ig)
 -->
@@ -43,6 +46,7 @@
   --font-ar-display: "Alexandria", "IBM Plex Sans Arabic", system-ui, sans-serif;
   --font-latin: "Bricolage Grotesque", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --font-body: var(--font-ar); --font-display: var(--font-ar-display);   /* Latin under lang="en" (end of this sheet) */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --nav-h: 64px;
 }
@@ -50,7 +54,7 @@
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
-  font: 400 16px/1.7 var(--font-ar);
+  font: 400 16px/1.7 var(--font-body);
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
@@ -107,10 +111,10 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 }
 
 /* ---------- type ---------- */
-.eyebrow { font: 500 15px/1.7 var(--font-ar); color: var(--accent-text); }
+.eyebrow { font: 500 15px/1.7 var(--font-body); color: var(--accent-text); }
 .eyebrow .num { font: 500 12.5px/1 var(--font-mono); letter-spacing: 0.1em; padding-right: 8px; direction: ltr; unicode-bidi: isolate; }
 .title {
-  margin-top: 6px; font: 700 clamp(30px, 7.6vw, 44px)/1.35 var(--font-ar-display);
+  margin-top: 6px; font: 700 clamp(30px, 7.6vw, 44px)/1.35 var(--font-display);
 }
 .title em, .hl {
   font-style: normal; color: var(--text);
@@ -123,7 +127,7 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 
 /* ---------- intro ---------- */
 .intro { padding-bottom: 32px; }
-.intro__title { font: 700 clamp(32px, 8.4vw, 54px)/1.35 var(--font-ar-display); margin-top: 8px; }
+.intro__title { font: 700 clamp(32px, 8.4vw, 54px)/1.35 var(--font-display); margin-top: 8px; }
 .intro__body { margin-top: 14px; font-size: 17px; color: var(--muted); }
 .intro__body p + p { margin-top: 2px; }
 .intro__cta { margin-top: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
@@ -149,7 +153,7 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 .comp__chips { direction: rtl; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 290px; position: relative; }
 .comp__chips span {
   padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: #fff;
-  font: 500 13px/1.4 var(--font-ar); white-space: nowrap;
+  font: 500 13px/1.4 var(--font-body); white-space: nowrap;
 }
 .comp__chips span.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent-deep); }
 .comp__sel { position: absolute; inset: -8px; border: 1.5px solid var(--text); pointer-events: none; }
@@ -169,7 +173,7 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 52px; padding: 0 24px; border: 0; border-radius: 999px;
-  background: var(--accent); color: var(--accent-ink); font: 700 16px/1 var(--font-ar);
+  background: var(--accent); color: var(--accent-ink); font: 700 16px/1 var(--font-body);
   white-space: nowrap; cursor: pointer; text-decoration: none;
   box-shadow: 0 4px 0 var(--accent-deep);
   transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
@@ -192,14 +196,14 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 }
 .optional-hint { margin-top: 8px; }
 .q { margin: 30px 0 0; padding: 0; border: 0; min-width: 0; }
-.q__label { display: block; padding: 0; font: 600 18px/1.55 var(--font-ar); }
-.req { display: inline-block; margin-inline-start: 8px; font: 500 12.5px/1 var(--font-ar); color: var(--accent-text); vertical-align: 2px; }
+.q__label { display: block; padding: 0; font: 600 18px/1.55 var(--font-body); }
+.req { display: inline-block; margin-inline-start: 8px; font: 500 12.5px/1 var(--font-body); color: var(--accent-text); vertical-align: 2px; }
 .q__help { margin-top: 2px; font-size: 14px; color: var(--muted); }
 .q__body { margin-top: 12px; }
 .svc-head { margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
 .svc-head.is-first { border-top: 0; padding-top: 0; margin-top: 26px; }
 .svc-head + .svc > .q:first-child { margin-top: 14px; }
-.svc-head h3 { font: 700 21px/1.4 var(--font-ar-display); }
+.svc-head h3 { font: 700 21px/1.4 var(--font-display); }
 .svc-head .logo-tile { width: 26px; height: 26px; border-radius: 8px; }
 .svc-head .num { font: 500 12px/1 var(--font-mono); color: var(--muted); letter-spacing: 0.1em; margin-inline-start: auto; direction: ltr; unicode-bidi: isolate; }
 
@@ -210,7 +214,7 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 .chip {
   display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 18px 10px 20px;
   border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface);
-  font: 500 15.5px/1.45 var(--font-ar); color: var(--text);
+  font: 500 15.5px/1.45 var(--font-body); color: var(--text);
   transition: background-color 0.18s var(--ease), border-color 0.18s, box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
 }
 .chip__mark {
@@ -233,7 +237,7 @@ main { max-width: 760px; margin-inline: auto; padding: 28px 20px 0; }
 /* fields */
 .field {
   width: 100%; min-height: 54px; padding: 0 22px; border: 1px solid var(--line-strong); border-radius: 999px;
-  background: var(--surface); font: 400 16px/1.5 var(--font-ar); color: var(--text);
+  background: var(--surface); font: 400 16px/1.5 var(--font-body); color: var(--text);
   transition: border-color 0.18s, box-shadow 0.18s;
 }
 textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; resize: vertical; line-height: 1.7; }
@@ -297,9 +301,9 @@ textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; res
   background: radial-gradient(closest-side, rgba(209, 255, 51, 0.22), transparent); z-index: -1;
 }
 .thanks .logo-tile { width: 44px; height: 44px; border-radius: 12px; }
-.thanks h2 { margin-top: 20px; font: 700 clamp(28px, 7vw, 40px)/1.35 var(--font-ar-display); }
+.thanks h2 { margin-top: 20px; font: 700 clamp(28px, 7vw, 40px)/1.35 var(--font-display); }
 .thanks h2 em { font-style: normal; color: var(--accent); }
-.thanks__next { margin-top: 22px; font: 600 16px/1.6 var(--font-ar); color: var(--on-panel); }
+.thanks__next { margin-top: 22px; font: 600 16px/1.6 var(--font-body); color: var(--on-panel); }
 .thanks ol { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
 .thanks li { display: flex; gap: 12px; align-items: flex-start; font-size: 15.5px; line-height: 1.7; color: var(--on-panel-muted); }
 .thanks li b {
@@ -315,7 +319,7 @@ textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; res
 
 /* fallback when WhatsApp did not open */
 .fallback { margin-top: 20px; padding: 20px; border: 1px dashed rgba(26, 26, 23, 0.35); border-radius: 28px; background: var(--surface); }
-.fallback__title { font: 600 16px/1.6 var(--font-ar); }
+.fallback__title { font: 600 16px/1.6 var(--font-body); }
 .fallback__text { margin-top: 4px; font-size: 14px; color: var(--muted); }
 .fallback__tools { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; margin-top: 16px; }
 .fallback__tools .btn { min-height: 46px; font-size: 15px; }
@@ -332,19 +336,54 @@ textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; res
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .no-anim .screen { animation: none; }
+
+/* ---------- header end: step count + language pill (same look as the site's .nav__lang) ---------- */
+.top__end { display: flex; align-items: center; gap: 14px; }
+.lang-pill {
+  display: inline-grid; place-items: center; min-width: 40px; height: 34px; padding: 0 10px;
+  border: 1px solid var(--line); border-radius: 999px; text-decoration: none; color: var(--text);
+  font: 700 13px/1 var(--font-latin); transition: border-color 0.2s, background-color 0.2s;
+}
+.lang-pill:lang(ar) { font: 700 15px/1 var(--font-ar); }
+.lang-pill:hover { border-color: var(--text); background: var(--surface); }
+.under { margin: 14px 0 24px; font-size: 13px; line-height: 1.7; color: var(--muted); }
+/* spam trap: off screen, not focusable, ignored by people and assistive tech */
+.hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); visibility: hidden; }   /* no left:-10000px: in RTL that adds a horizontal scroll */
+
+/* ---------- English page (lang="en", LTR): Latin faces, uppercase mono eyebrows and labels ---------- */
+html[lang="en"] { --font-body: var(--font-latin); --font-display: var(--font-latin); }
+html[lang="en"] body { line-height: 1.6; }
+html[lang="en"] .eyebrow { font: 500 12.5px/1.7 var(--font-mono); letter-spacing: 0.22em; text-transform: uppercase; }
+html[lang="en"] .eyebrow .num { padding-right: 0; padding-left: 10px; }
+html[lang="en"] .title { line-height: 1.12; letter-spacing: -0.015em; }
+html[lang="en"] .intro__title { line-height: 1.1; letter-spacing: -0.02em; }
+html[lang="en"] .thanks h2 { line-height: 1.15; letter-spacing: -0.015em; }
+html[lang="en"] .svc-head h3 { line-height: 1.25; }
+html[lang="en"] .q__label { line-height: 1.4; }
+html[lang="en"] .req { font: 500 10.5px/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; vertical-align: 3px; }
+html[lang="en"] .chip { padding: 10px 20px 10px 18px; }
+html[lang="en"] .comp__chips { direction: ltr; }
+html[lang="en"] .field[type="date"], html[lang="en"] .field[type="email"], html[lang="en"] .field[type="url"],
+html[lang="en"] .field[type="email"]::placeholder { text-align: left; }
+html[lang="en"] .counter { text-align: right; }
+html[lang="en"] .cur { right: auto; left: 18%; }
+html[lang="en"] .btn { font-weight: 600; }
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="top__row">
-    <a class="brand" href="/" aria-label="صاغ — الصفحة الرئيسية">
+    <a class="brand" href="/" aria-label="{{meta.home_aria}}">
       <span class="logo-tile" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11"/></svg></span>
       <span class="brand__name">sagh*</span>
     </a>
-    <span class="top__count" id="count" aria-hidden="true"></span>
+    <div class="top__end">
+      <span class="top__count" id="count" aria-hidden="true"></span>
+      <a class="lang-pill" id="lang-switch" href="{{meta.alt_href}}" hreflang="{{meta.alt_lang}}" lang="{{meta.alt_lang}}" aria-label="{{meta.switch_aria}}">{{meta.switch_text}}</a>
+    </div>
   </div>
-  <nav class="progress" id="progress" aria-label="خطوات الاستبيان" hidden><ol></ol></nav>
+  <nav class="progress" id="progress" aria-label="{{meta.progress_aria}}" hidden><ol></ol></nav>
 </header>
 
 <main>
@@ -355,101 +394,83 @@ textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; res
 (function () {
 "use strict";
 
-/* ===================== settings ===================== */
+/* ===================== settings (shared by both languages) ===================== */
 var WA_NUMBER = "__WHATSAPP_NUMBER__";   // filled by build.js from WHATSAPP_NUMBER in main.js
 var WA_MAX_CHARS = 3500;                 // keep the pre-filled WhatsApp text under this (long free text is trimmed with "…")
+var WA_HEADER = "طلب مشروع جديد — صاغ / New project brief — Sagh";   // fixed first line of every message, both languages
+var CONSENT_VERSION;      // version of the consent text (legal/privacy/consent.md); change when the text changes
 
-/* ===================== CONSENT TEXT — owned by Legal (draft from Marketing, adapted to the WhatsApp flow) =====================
-   Replace with Legal's final wording before launch. Shown next to the required checkbox on the last step. */
-var CONSENT_TEXT = "أوافق إن صاغ تستلم إجاباتي على واتساب وتحفظها في سجل متابعة على Google Sheets (ممكن خوادمه تكون خارج المملكة) عشان تجهّز لي عرض سعر وتتواصل معي بخصوصه فقط، وتحذفها بعد ١٢ شهر إذا ما بدأنا مشروع. عمري ١٨ أو أكثر، وأقدر أسحب موافقتي أو أطلب تعديل بياناتي أو حذفها متى ما بغيت على واتساب.";  // Legal v0.1 2026-11-17, approved by Abdullah; no privacy-page link by his decision
+/* Google Sheet copy of each brief (optional). Do NOT edit here: set both values in src/brief/config.json
+   (build.js fills them in; empty = off). SHEET_ENDPOINT is the Apps Script web app URL ending in /exec,
+   SHEET_TOKEN equals BRIEF_TOKEN in the script's Script Properties. The token is visible in the page source:
+   it only stops random spam, it is not a secret. Setup: marketing/client-brief/sheets-integration/SETUP.md. */
+var SHEET_ENDPOINT = "__SHEET_ENDPOINT__";
+CONSENT_VERSION = SHEET_ENDPOINT ? "2026-11-18" : "2026-11-17";  // v0.2 (sheet on) / v0.1 (sheet off)
+var SHEET_TOKEN = "__SHEET_TOKEN__";
+var SHEET_MAX_FIELD = 2000;              // each answer sent to the sheet is cut to this many characters
 
-/* ===================== content: questionnaire.md v1.1 (do not edit wording here without Marketing) ===================== */
-var STEP_NAMES = ["الخدمة", "التفاصيل", "المشروع", "الميزانية والوقت", "التواصل"];
-var MULTI_HELP = "اختر كل اللي ينطبق.";
-var SCREENS_OPTS = [["lt10","أقل من 10"],["10to20","من 10 إلى 20"],["20to40","من 20 إلى 40"],["40plus","أكثر من 40"],["unsure","مو متأكد"]];
+/* ===================== words: src/brief/<lang>.json, injected by build.js ===================== */
+var T = /*__STRINGS__*/{};
+var LANG = document.documentElement.lang;
 
+/* ===================== question structure (labels come from T.q) ===================== */
 var Q = {
-  services: { type:"multi", req:true, label:"وش تحتاج منّا؟", help:MULTI_HELP, opts:[
-    ["identity","هوية بصرية"],["website","موقع"],["store","متجر إلكتروني"],["app","تطبيق جوال"],
-    ["uiux","تصميم واجهات UI/UX"],["social","تصاميم سوشيال ميديا"],["other","شي ثاني"]] },
-
-  id_name: { type:"single", req:true, label:"اسم المشروع جاهز؟", opts:[["final","الاسم جاهز"],["draft","عندي اسم بس ممكن يتغير"],["naming","نبي مساعدة في التسمية (خدمة إضافية بسعر منفصل)"],["none","لسّا ما عندي اسم، بختاره بنفسي"]] },
-  id_deliverables: { type:"multi", req:true, label:"وش تبي يكون ضمن الهوية؟", help:MULTI_HELP, opts:[
-    ["logo","شعار فقط"],["system","هوية كاملة: شعار وألوان وخطوط ودليل استخدام"],["stationery","مطبوعات: بطاقات وأوراق رسمية"],
-    ["social_kit","قوالب سوشيال ميديا"],["packaging","تغليف منتج"],["profile","بروفايل شركة"],["unsure","مو متأكد، أبي رأيكم"]] },
-
-  web_pages: { type:"single", req:true, label:"كم صفحة تقريبًا؟", opts:[["one","صفحة وحدة (صفحة هبوط)"],["upto5","من 2 إلى 5 صفحات"],["6to10","من 6 إلى 10 صفحات"],["10plus","أكثر من 10"],["unsure","مو متأكد"]] },
-  web_languages: { type:"single", req:true, label:"الموقع بأي لغة؟", opts:[["ar","عربي"],["en","إنجليزي"],["both","عربي وإنجليزي"]] },
-  web_features: { type:"multi", req:false, label:"وش يحتاج الموقع؟", help:MULTI_HELP, exclusive:"none", opts:[
-    ["cms","أعدّل المحتوى بنفسي من لوحة بسيطة"],["form","نموذج تواصل أو حجز"],["blog","مدونة أو أخبار"],["sell","بيع منتجات أو دفع إلكتروني"],["none","ولا شي من هذي"]] },
-
-  store_platform: { type:"single", req:true, label:"على أي منصة تبي المتجر؟", opts:[
-    ["salla","سلة"],["zid","زد"],["shopify","Shopify"],["custom","متجر مبرمج خاص"],["existing","عندي متجر شغّال وأبي أطوّره"],["unsure","مو متأكد، أبي رأيكم"]] },
-  store_products: { type:"single", req:true, label:"كم منتج تقريبًا؟", opts:[["lt20","أقل من 20"],["20to100","من 20 إلى 100"],["100to500","من 100 إلى 500"],["500plus","أكثر من 500"]] },
-
-  app_platforms: { type:"single", req:true, label:"التطبيق لأي أجهزة؟", opts:[["both","آيفون وأندرويد"],["ios","آيفون فقط"],["android","أندرويد فقط"],["unsure","مو متأكد"]] },
-  app_screens: { type:"single", req:true, label:"كم شاشة تقريبًا؟", help:"الشاشة = صفحة داخل التطبيق، مثل تسجيل الدخول أو الرئيسية أو السلة.", opts:SCREENS_OPTS },
-  app_features: { type:"multi", req:true, label:"وش يحتاج التطبيق؟", help:MULTI_HELP, exclusive:"none", opts:[
-    ["login","تسجيل دخول وحسابات"],["payments","دفع إلكتروني"],["admin","لوحة تحكم لإدارة المحتوى أو الطلبات"],
-    ["backend","عندي سيرفر أو نظام جاهز نربط عليه"],["notifications","إشعارات"],["maps","خرائط أو تتبّع موقع"],["none","ولا شي من هذي، تطبيق بسيط"]] },
-
-  ux_for: { type:"single", req:true, label:"التصميم لأي منتج؟", opts:[["app","تطبيق جوال"],["web","موقع أو منصة ويب"],["internal","نظام داخلي أو لوحة تحكم"]] },
-  ux_screens: { type:"single", req:true, label:"كم شاشة تقريبًا؟", opts:SCREENS_OPTS, show:function(a){ return !has(a.services,"app"); } },
-  ux_existing: { type:"single", req:true, label:"المنتج موجود الحين؟", opts:[["new","لا، منتج جديد"],["live","إيه، شغّال وأبي أحسّن تصميمه"],["building","يتبرمج الحين عند فريق ثاني"]] },
-
-  social_posts: { type:"single", req:true, label:"كم تصميم تحتاج بالشهر تقريبًا؟", opts:[["lt8","أقل من 8"],["8to15","من 8 إلى 15"],["16to30","من 16 إلى 30"],["once","تصاميم لمرة وحدة، مو شهري"]] },
-  social_platforms: { type:"multi", req:false, label:"على أي منصات؟", help:MULTI_HELP, opts:[["instagram","انستقرام"],["tiktok","تيك توك"],["x","إكس"],["snapchat","سناب شات"],["linkedin","لينكدإن"]] },
-
-  other_desc: { type:"textarea", req:true, label:"وصّف لنا وش تحتاج بسطرين.", ph:"مثال: عرض تقديمي للمستثمرين، أو تصميم منيو لمطعم" },
-
-  stage: { type:"single", req:true, label:"وين وصل مشروعك؟", opts:[["idea","فكرة، لسّا ما بدأ"],["starting","يبدأ قريب ويحتاج يطلع بشكل صح"],["live_refresh","شغّال ويبي تجديد"],["live_add","شغّال ويبي شي جديد يُضاف له"]] },
-  goal: { type:"textarea", req:true, max:500, label:"وش تبي يحقق لك هالمشروع؟", help:"سطرين يكفون.", ph:"مثال: أبي الناس تثق في المتجر وتطلب أونلاين بدل الواتساب" },
-  audience: { type:"text", req:false, label:"مين جمهورك؟", ph:"مثال: أمهات في الرياض، أو شركات صغيرة في قطاع المقاولات" },
-  references: { type:"textarea", req:false, links:true, label:"فيه منافسين أو أعمال تعجبك؟ حط روابطها.", help:"حسابات، مواقع، تطبيقات. وإذا فيه شي ما يعجبك قلنا بعد.", ph:"https://" },
-  ready: { type:"multi", req:true, label:"وش الجاهز عندك؟", help:MULTI_HELP, exclusive:"nothing", opts:[
-    ["logo","شعار أو هوية"],["text","النصوص والمحتوى"],["photos","صور المنتجات أو المكان"],["ui_design","تصميم واجهات جاهز (Figma أو غيره)"],["domain","دومين أو حسابات المتاجر"],["nothing","لسّا ما عندي شي"]] },
-
-  budget: { type:"single", req:true, label:"كم الميزانية اللي في بالك؟", help:"تساعدنا نقترح الحل المناسب لميزانيتك. ما هي التزام.", opts:[
-    ["lt3","أقل من 3 آلاف ريال"],["3to7","من 3 إلى 7 آلاف ريال"],["7to15","من 7 إلى 15 ألف ريال"],["15to30","من 15 إلى 30 ألف ريال"],
-    ["30to50","من 30 إلى 50 ألف ريال"],["50plus","أكثر من 50 ألف ريال"],["unsure","مو متأكد، أبي اقتراحكم"]] },
-  timeline: { type:"single", req:true, label:"متى تبيه يكون جاهز؟", opts:[["asap","بأسرع وقت"],["1m","خلال شهر"],["1to3m","من شهر إلى 3 أشهر"],["flex","مرن، الأهم الجودة"]] },
-  deadline: { type:"date", req:false, label:"فيه تاريخ محدد لازم نلحقه؟", help:"مثل افتتاح أو إطلاق أو مناسبة.", show:function(a){ return !!a.timeline && a.timeline !== "flex"; } },
-  decision: { type:"single", req:true, label:"مين يعتمد القرار في المشروع؟", opts:[["me","أنا"],["me_partner","أنا مع شريك أو إدارة"],["other","شخص ثاني، وأنا أجمع التفاصيل"]] },
-  source: { type:"single", req:false, label:"كيف عرفت عن صاغ؟", opts:[["referral","من شخص أعرفه"],["instagram","انستقرام"],["tiktok","تيك توك"],["x","إكس"],["google","بحث قوقل"],["site","موقع صاغ"],["other","غير كذا"]] },
-
-  name: { type:"text", req:true, label:"اسمك", auto:"name" },
-  project_name: { type:"text", req:false, label:"اسم الشركة أو المشروع", ph:"مثال: مقهى ركن", auto:"organization" },
-  phone: { type:"phone", req:true, label:"رقم الواتساب", ph:"05XXXXXXXX", help:"نرد عليك هنا، وما نشاركه مع أحد." },
-  email: { type:"email", req:false, label:"الإيميل", ph:"name@example.com", auto:"email" },
-  city: { type:"text", req:false, label:"المدينة", ph:"مثال: الرياض", auto:"address-level2" },
-  consent: { type:"consent", req:true, label:CONSENT_TEXT }
+  services: { type:"multi", req:true, help:"multi", opts:["identity","website","store","app","uiux","social","other"] },
+  id_name: { type:"single", req:true, opts:["final","draft","naming","none"] },
+  id_deliverables: { type:"multi", req:true, help:"multi", opts:["logo","system","stationery","social_kit","packaging","profile","unsure"] },
+  web_pages: { type:"single", req:true, opts:["one","upto5","6to10","10plus","unsure"] },
+  web_languages: { type:"single", req:true, opts:["ar","en","both"] },
+  web_features: { type:"multi", req:false, help:"multi", exclusive:"none", opts:["cms","form","blog","sell","none"] },
+  store_platform: { type:"single", req:true, opts:["salla","zid","shopify","custom","existing","unsure"] },
+  store_products: { type:"single", req:true, opts:["lt20","20to100","100to500","500plus"] },
+  app_platforms: { type:"single", req:true, opts:["both","ios","android","unsure"] },
+  app_screens: { type:"single", req:true, opts:["lt10","10to20","20to40","40plus","unsure"] },
+  app_features: { type:"multi", req:true, help:"multi", exclusive:"none", opts:["login","payments","admin","backend","notifications","maps","none"] },
+  ux_for: { type:"single", req:true, opts:["app","web","internal"] },
+  ux_screens: { type:"single", req:true, opts:["lt10","10to20","20to40","40plus","unsure"], show:function(a){ return !has(a.services,"app"); } },
+  ux_existing: { type:"single", req:true, opts:["new","live","building"] },
+  social_posts: { type:"single", req:true, opts:["lt8","8to15","16to30","once"] },
+  social_platforms: { type:"multi", req:false, help:"multi", opts:["instagram","tiktok","x","snapchat","linkedin"] },
+  other_desc: { type:"textarea", req:true },
+  stage: { type:"single", req:true, opts:["idea","starting","live_refresh","live_add"] },
+  goal: { type:"textarea", req:true, max:500 },
+  audience: { type:"text", req:false },
+  references: { type:"textarea", req:false, links:true },
+  ready: { type:"multi", req:true, help:"multi", exclusive:"nothing", opts:["logo","text","photos","ui_design","domain","nothing"] },
+  budget: { type:"single", req:true, opts:["lt3","3to7","7to15","15to30","30to50","50plus","unsure"] },
+  timeline: { type:"single", req:true, opts:["asap","1m","1to3m","flex"] },
+  deadline: { type:"date", req:false, show:function(a){ return !!a.timeline && a.timeline !== "flex"; } },
+  decision: { type:"single", req:true, opts:["me","me_partner","other"] },
+  source: { type:"single", req:false, opts:["referral","instagram","tiktok","x","google","site","other"] },
+  name: { type:"text", req:true, auto:"name" },
+  project_name: { type:"text", req:false, auto:"organization" },
+  phone: { type:"phone", req:true },
+  email: { type:"email", req:false, auto:"email" },
+  city: { type:"text", req:false, auto:"address-level2" },
+  consent: { type:"consent", req:true }
 };
+/* attach the words: label, help, placeholder and [value, label] option pairs */
+Object.keys(Q).forEach(function (id) {
+  var q = Q[id], w = id === "consent" ? { label: (SHEET_ENDPOINT ? T.consent : T.consent_nosheet) } : (T.q[id] || {});
+  q.label = w.label || id;
+  if (q.help === "multi") q.help = T.ui.multi_help;
+  if (w.help) q.help = w.help;
+  if (w.ph) q.ph = w.ph;
+  if (q.opts) q.opts = q.opts.map(function (v) { return [v, (w.opts && w.opts[v]) || v]; });
+});
+function svcName(v) { return T.q.services.opts[v] || v; }
 
 var BRANCHES = [
-  ["identity", "هوية بصرية", ["id_name","id_deliverables"]],
-  ["website", "موقع", ["web_pages","web_languages","web_features"]],
-  ["store", "متجر إلكتروني", ["store_platform","store_products"]],
-  ["app", "تطبيق جوال", ["app_platforms","app_screens","app_features"]],
-  ["uiux", "تصميم واجهات UI/UX", ["ux_for","ux_screens","ux_existing"]],
-  ["social", "تصاميم سوشيال ميديا", ["social_posts","social_platforms"]],
-  ["other", "شي ثاني", ["other_desc"]]
+  ["identity", ["id_name","id_deliverables"]],
+  ["website", ["web_pages","web_languages","web_features"]],
+  ["store", ["store_platform","store_products"]],
+  ["app", ["app_platforms","app_screens","app_features"]],
+  ["uiux", ["ux_for","ux_screens","ux_existing"]],
+  ["social", ["social_posts","social_platforms"]],
+  ["other", ["other_desc"]]
 ];
-var STEP_QS = [null, null, ["stage","goal","audience","references","ready"], ["budget","timeline","deadline","decision","source"], ["name","project_name","phone","email","city","consent"]];
-STEP_QS[0] = ["services"];
-
-/* ===================== microcopy added by Design (not in questionnaire.md; Marketing to confirm) ===================== */
-var MSG = {
-  single: "اختر وحدة من الخيارات عشان نكمل.",
-  multi: "اختر خيار واحد على الأقل.",
-  text: "هذي نحتاجها، اكتب لنا ولو سطر.",
-  name: "اكتب اسمك عشان نعرف مين نكلّم.",
-  phoneEmpty: "نحتاج رقم الواتساب عشان نرد عليك.",
-  phoneBad: "الرقم ناقص أو فيه شي غلط، اكتبه مثل 05XXXXXXXX.",
-  emailBad: "الإيميل فيه شي ناقص، تأكد منه.",
-  consent: "نحتاج موافقتك عشان نقدر نرد عليك بعرض السعر.",
-  copied: "تم النسخ. الصقه في محادثة واتساب معنا وأرسله.",
-  copyFail: "ما قدرنا ننسخ تلقائيًا. صوّر الشاشة أو اكتب لنا مباشرة."
-};
+var STEP_QS = [["services"], null, ["stage","goal","audience","references","ready"], ["budget","timeline","deadline","decision","source"], ["name","project_name","phone","email","city","consent"]];
+var MSG = T.msg;
 
 /* ===================== state ===================== */
 var A = { phone_cc: "+966" };
@@ -457,6 +478,7 @@ var step = 0;            // 0 intro, 1..5 steps, 6 thank-you
 var submittedAt = null;
 var briefRef = "";       // SB-YYMMDD-xxx, made on submit
 var waUrl = "";
+var sheetUsed = !!SHEET_ENDPOINT;
 var form = document.getElementById("form");
 var params = parseHash();
 var ref = (new URLSearchParams(location.search)).get("ref") || "";
@@ -470,27 +492,30 @@ function parseHash() {
 }
 
 /* which questions are visible on a step, given the current answers */
+function visible(id) { return !Q[id].show || Q[id].show(A); }
 function stepQuestions(s) {
   if (s === 2) {
     var out = [];
-    BRANCHES.forEach(function (b) { if (has(A.services, b[0])) b[2].forEach(function (id) { if (!Q[id].show || Q[id].show(A)) out.push(id); }); });
+    BRANCHES.forEach(function (b) { if (has(A.services, b[0])) b[1].forEach(function (id) { if (visible(id)) out.push(id); }); });
     return out;
   }
-  return (STEP_QS[s - 1] || []).filter(function (id) { return !Q[id].show || Q[id].show(A); });
+  return (STEP_QS[s - 1] || []).filter(visible);
 }
 
-/* ===================== icons ===================== */
+/* ===================== icons (arrows follow the reading direction) ===================== */
+var RTL = document.documentElement.dir === "rtl";
+var ARROW_L = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+var ARROW_R = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 var ICON_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
 var ICON_CUBE = '<svg viewBox="0 0 32 32"><path d="M16 5l10 5.5v11L16 27 6 21.5v-11z M6 10.5l10 5.5 10-5.5M16 16v11"/></svg>';
 var ICON_ERR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z"/></svg>';
-var ICON_NEXT = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
-var ICON_BACK = '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-var ICON_CHAT = '<svg class="chat" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5z"/></svg>';
-var ICON_CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+var ICON_NEXT = RTL ? ARROW_L : ARROW_R;
+var ICON_BACK = RTL ? ARROW_R : ARROW_L;
 
 /* ===================== rendering ===================== */
-function reqTag(q) { return q.req ? '<span class="req">مطلوب</span>' : ""; }
+function reqTag(q) { return q.req ? '<span class="req">' + esc(T.ui.req) + "</span>" : ""; }
 function helpHtml(id, q) { return q.help ? '<p class="q__help" id="' + id + '-help">' + esc(q.help) + "</p>" : ""; }
+function pad2(n) { return String(n).padStart(2, "0"); }
 
 function renderQ(id) {
   var q = Q[id], h = "", desc = (q.help ? id + "-help " : "") + id + "-err";
@@ -520,7 +545,7 @@ function renderQ(id) {
       h += '<textarea class="field"' + common + (q.max ? ' maxlength="' + q.max + '"' : "") + (q.links ? ' dir="auto" rows="3"' : ' rows="3"') + ">" + val + "</textarea>";
       if (q.max) h += '<div class="counter" id="' + id + '-count">' + (A[id] || "").length + " / " + q.max + "</div>";
     } else if (q.type === "phone") {
-      h += '<div class="phone"><input class="field field--cc" type="text" inputmode="tel" id="f-phone_cc" name="phone_cc" aria-label="مفتاح الدولة" value="' + esc(A.phone_cc || "+966") + '" maxlength="5" autocomplete="tel-country-code">' +
+      h += '<div class="phone"><input class="field field--cc" type="text" inputmode="tel" id="f-phone_cc" name="phone_cc" aria-label="' + esc(T.ui.cc_aria) + '" value="' + esc(A.phone_cc || "+966") + '" maxlength="5" autocomplete="tel-country-code">' +
            '<input class="field field--num" type="tel" inputmode="tel"' + common + ' value="' + val + '" autocomplete="tel-national"></div>';
     } else if (q.type === "date") {
       h += '<input class="field" type="date"' + common + ' value="' + val + '">';
@@ -536,46 +561,49 @@ function renderQ(id) {
 
 function actions(nextLabel, isLast) {
   return '<div class="actions">' +
-    '<button type="button" class="btn btn--ghost btn--back" data-act="back">' + ICON_BACK + "<span>رجوع</span></button>" +
-    '<button type="' + (isLast ? "submit" : "button") + '" class="btn btn--next" data-act="next"><span>' + nextLabel + "</span>" + ICON_NEXT + "</button></div>";
+    '<button type="button" class="btn btn--ghost btn--back" data-act="back">' + ICON_BACK + "<span>" + esc(T.ui.back) + "</span></button>" +
+    '<button type="' + (isLast ? "submit" : "button") + '" class="btn btn--next" data-act="next"><span>' + esc(nextLabel) + "</span>" + ICON_NEXT + "</button></div>";
 }
 
-function head(s, titleHtml, sub) {
-  return '<div class="step__head"><p class="eyebrow">الخطوة<span class="num">' + String(s).padStart(2, "0") + " / 05</span></p>" +
-    '<h1 class="title" tabindex="-1" id="screen-title">' + titleHtml + "</h1>" + (sub ? '<p class="lead">' + sub + "</p>" : "") + "</div>";
+function head(s, sub) {
+  var t = T.ui.step_titles[s - 1];
+  return '<div class="step__head"><p class="eyebrow">' + esc(T.ui.step) + '<span class="num">' + pad2(s) + " / 05</span></p>" +
+    '<h1 class="title" tabindex="-1" id="screen-title"><em class="hl">' + esc(t[0]) + "</em>" + esc(t[1]) + "</h1>" + (sub ? '<p class="lead">' + esc(sub) + "</p>" : "") + "</div>";
 }
 
 function render() {
-  var h = "";
+  var h = "", U = T.ui;
   if (step === 0) {
+    var chips = U.intro_chips.map(function (c, i) { return "<span" + (i === 1 || i === 3 ? ' class="on"' : "") + ">" + esc(c) + "</span>"; }).join("");
     h = '<section class="screen intro" aria-labelledby="screen-title">' +
-      '<p class="eyebrow">استبيان العميل الجديد</p>' +
-      '<h1 class="intro__title" id="screen-title" tabindex="-1">هلا، هذا استبيان قصير <em class="hl">يعرّفنا على مشروعك.</em></h1>' +
-      '<div class="intro__body"><p>ياخذ تقريبًا 4 دقايق، وأغلبه اختيارات.</p><p>بعدها نرجع لك بالخطوة الجاية.</p></div>' +
-      '<div class="intro__cta"><button type="button" class="btn" data-act="next"><span>نبدأ</span>' + ICON_NEXT + "</button>" +
-      '<p class="small">اللي ما عليه «مطلوب» تقدر تتركه. وفي الأخير ينفتح لك الواتساب برسالة فيها إجاباتك، ترسلها لنا بنفسك.</p></div>' +
+      '<p class="eyebrow">' + esc(U.intro_eyebrow) + "</p>" +
+      '<h1 class="intro__title" id="screen-title" tabindex="-1">' + esc(U.intro_title) + '<em class="hl">' + esc(U.intro_title_hl) + "</em></h1>" +
+      '<div class="intro__body">' + U.intro_body.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") + "</div>" +
+      '<div class="intro__cta"><button type="button" class="btn" data-act="next"><span>' + esc(U.start) + "</span>" + ICON_NEXT + "</button>" +
+      '<p class="small">' + esc(SHEET_ENDPOINT ? U.intro_small_sheet : U.intro_small) + "</p></div>" +
       '<div class="comp" aria-hidden="true"><div class="comp__bar"><i></i><i></i><i></i><span class="comp__file">sagh — brief</span><span class="comp__zoom">100%</span></div>' +
-      '<div class="comp__area"><div class="comp__chips"><span>موقع</span><span class="on">هوية بصرية</span><span>متجر إلكتروني</span><span class="on">تطبيق جوال</span><span>شي ثاني</span>' +
+      '<div class="comp__area"><div class="comp__chips">' + chips +
       '<div class="comp__sel"><i></i><i></i><i></i><i></i><span class="comp__tag">5 options</span></div></div>' +
       '<div class="cur"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.4-7.6L20.5 11z"/></svg><span>sagh</span></div></div></div>' +
       "</section>";
   } else if (step === 1) {
-    h = '<section class="screen">' + head(1, '<em class="hl">الخدمة</em>') + renderQ("services") + actions("التالي") + "</section>";
+    h = '<section class="screen">' + head(1) + renderQ("services") + actions(U.next) + "</section>";
   } else if (step === 2) {
     var picked = BRANCHES.filter(function (b) { return has(A.services, b[0]); });
-    h = '<section class="screen">' + head(2, '<em class="hl">التفاصيل</em>');
-    if (picked.length >= 4) h += '<p class="step__note">اخترت أكثر من خدمة، نسأل عن كل وحدة سؤالين أو ثلاثة بسرعة.</p>';
+    h = '<section class="screen">' + head(2);
+    if (picked.length >= 4) h += '<p class="step__note">' + esc(U.many_note) + "</p>";
     picked.forEach(function (b, i) {
-      if (picked.length > 1) h += '<div class="svc-head' + (i === 0 ? " is-first" : "") + '"><span class="logo-tile" aria-hidden="true">' + ICON_CUBE + "</span><h3>" + esc(b[1]) + '</h3><span class="num">' + (i + 1) + "/" + picked.length + "</span></div>";
-      h += '<div class="svc" data-svc="' + b[0] + '">' + b[2].map(renderQ).join("") + "</div>";
+      if (picked.length > 1) h += '<div class="svc-head' + (i === 0 ? " is-first" : "") + '"><span class="logo-tile" aria-hidden="true">' + ICON_CUBE + "</span><h3>" + esc(svcName(b[0])) + '</h3><span class="num">' + (i + 1) + "/" + picked.length + "</span></div>";
+      h += '<div class="svc" data-svc="' + b[0] + '">' + b[1].map(renderQ).join("") + "</div>";
     });
-    h += actions("التالي") + "</section>";
-  } else if (step === 3) {
-    h = '<section class="screen">' + head(3, '<em class="hl">المشروع</em>') + STEP_QS[2].map(renderQ).join("") + actions("التالي") + "</section>";
-  } else if (step === 4) {
-    h = '<section class="screen">' + head(4, '<em class="hl">الميزانية</em> والوقت') + STEP_QS[3].map(renderQ).join("") + actions("التالي") + "</section>";
+    h += actions(U.next) + "</section>";
+  } else if (step === 3 || step === 4) {
+    h = '<section class="screen">' + head(step) + STEP_QS[step - 1].map(renderQ).join("") + actions(U.next) + "</section>";
   } else if (step === 5) {
-    h = '<section class="screen">' + head(5, '<em class="hl">التواصل</em>', "آخر خطوة. وين نرد عليك؟") + STEP_QS[4].map(renderQ).join("") + actions("أرسل عبر واتساب", true) + '<p style="margin:14px 0 24px;font-size:13px;line-height:1.7;color:var(--muted,rgba(26,26,23,.6))">الضغط هنا يفتح واتساب برسالة فيها إجاباتك، وما توصلنا إلا إذا ضغطت «إرسال» بنفسك. موقعنا ما يحفظ إجاباتك.</p>' + "</section>";
+    h = '<section class="screen">' + head(5, U.contact_lead) + STEP_QS[4].map(renderQ).join("") +
+      // spam trap: people never see or reach it; bots that fill every field get flagged in the sheet payload
+      '<div class="hp" aria-hidden="true"><label for="f-hp_extra">Leave this empty</label><input type="text" id="f-hp_extra" name="hp_extra" tabindex="-1" autocomplete="off"></div>' +
+      actions(U.submit, true) + '<p class="under">' + esc(sheetUsed ? U.under_button_sheet : U.under_button) + "</p></section>";
   } else {
     h = renderThanks();
   }
@@ -586,10 +614,10 @@ function render() {
 function renderProgress() {
   var nav = document.getElementById("progress"), cnt = document.getElementById("count");
   nav.hidden = step === 0 || step === 6;
-  cnt.textContent = step >= 1 && step <= 5 ? String(step).padStart(2, "0") + " / 05" : "";
-  nav.querySelector("ol").innerHTML = STEP_NAMES.map(function (n, i) {
+  cnt.textContent = step >= 1 && step <= 5 ? pad2(step) + " / 05" : "";
+  nav.querySelector("ol").innerHTML = T.ui.step_names.map(function (n, i) {
     var s = i + 1, cls = s < step ? "is-done" : s === step ? "is-current" : "";
-    return '<li class="' + cls + '"' + (s === step ? ' aria-current="step"' : "") + '><b aria-hidden="true"></b><span>' + n + (s < step ? '<span class="sr"> (تمّت)</span>' : "") + "</span></li>";
+    return '<li class="' + cls + '"' + (s === step ? ' aria-current="step"' : "") + '><b aria-hidden="true"></b><span>' + esc(n) + (s < step ? '<span class="sr">' + esc(T.ui.done_sr) + "</span>" : "") + "</span></li>";
   }).join("");
 }
 
@@ -599,9 +627,9 @@ function labelOf(id, v, cap) {
   if (v == null || v === "" || (Array.isArray(v) && !v.length)) return "";
   if (q.opts) {
     var m = {}; q.opts.forEach(function (o) { m[o[0]] = o[1]; });
-    return Array.isArray(v) ? v.map(function (x) { return m[x] || x; }).join("، ") : (m[v] || v);
+    return Array.isArray(v) ? v.map(function (x) { return m[x] || x; }).join(T.wa.sep) : (m[v] || v);
   }
-  if (id === "consent") return v ? "وافق" : "";
+  if (id === "consent") return v ? T.wa.agreed : "";
   return clip(String(v).trim(), cap);
 }
 /* trim free text to cap characters (0 = no limit), ending on a word with "…" */
@@ -614,40 +642,48 @@ function phoneFull() {
   return n ? cc + " " + n : "";
 }
 function makeRef(d) {
-  function p(x) { return String(x).padStart(2, "0"); }
   var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", r = "", buf = new Uint8Array(3);
   window.crypto.getRandomValues(buf);
   for (var i = 0; i < 3; i++) r += abc[buf[i] % abc.length];
-  return "SB-" + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + "-" + r;
+  return "SB-" + String(d.getFullYear()).slice(2) + pad2(d.getMonth() + 1) + pad2(d.getDate()) + "-" + r;
+}
+/* does a question apply to this brief (its service is picked and its condition holds)? */
+function applies(id) {
+  for (var i = 0; i < BRANCHES.length; i++) if (has(BRANCHES[i][1], id)) return has(A.services, BRANCHES[i][0]) && visible(id);
+  return visible(id);
+}
+function flagsList() {
+  var flags = [];
+  if (has(A.services, "identity") && A.id_name === "naming") flags.push(T.wa.flag_naming);
+  if (has(A.services, "website") && has(A.web_features, "sell")) flags.push(T.wa.flag_sell);
+  return flags;
 }
 function summaryModel(cap) {
+  var W = T.wa;
   function row(id, label) { return [label || Q[id].label, labelOf(id, A[id], cap)]; }
-  function visible(id) { return !Q[id].show || Q[id].show(A); }
   var secs = [];
-  secs.push({ t: "التواصل", rows: [row("name"), row("project_name"), ["رقم الواتساب", phoneFull()], row("email"), row("city")] });
-  secs.push({ t: "الخدمة", rows: [row("services")] });
+  secs.push({ t: W.contact, rows: [row("name"), row("project_name"), [W.phone, phoneFull()], row("email"), row("city")] });
+  secs.push({ t: W.service, rows: [row("services")] });
   BRANCHES.forEach(function (b) {
     if (!has(A.services, b[0])) return;
-    secs.push({ t: "التفاصيل: " + b[1], rows: b[2].filter(visible).map(function (id) { return row(id); }) });
+    secs.push({ t: W.details + ": " + svcName(b[0]), rows: b[1].filter(visible).map(function (id) { return row(id); }) });
   });
-  [[2, "المشروع"], [3, "الميزانية والوقت"]].forEach(function (x) {
+  [[2, W.project], [3, W.budget_time]].forEach(function (x) {
     secs.push({ t: x[1], rows: STEP_QS[x[0]].filter(visible).map(function (id) { return row(id); }) });
   });
-  var flags = [];
-  if (has(A.services, "identity") && A.id_name === "naming") flags.push("يبي مساعدة في التسمية: خدمة إضافية بسعر منفصل.");
-  if (has(A.services, "website") && has(A.web_features, "sell")) flags.push("طلب بيع منتجات أو دفع في الموقع: يمكن المتجر أنسب له.");
-  return { secs: secs, flags: flags };
+  return { secs: secs, flags: flagsList() };
 }
 /* plain-text summary; cap trims each free-text answer (0 = full text) */
 function summaryText(cap) {
-  var m = summaryModel(cap || 0), L = ["طلب مشروع جديد — صاغ", "رقم الطلب: " + (briefRef || "—")];
-  m.flags.forEach(function (f) { L.push("تنبيه: " + f); });
+  var W = T.wa, m = summaryModel(cap || 0), L = [WA_HEADER, W.ref + ": " + (briefRef || "—")];
+  if (W.lang_line) L.push(W.lang_line);
+  m.flags.forEach(function (f) { L.push(W.note + ": " + f); });
   m.secs.forEach(function (s) {
     L.push("", "*" + s.t + "*");
     s.rows.forEach(function (r) { L.push("- " + r[0].replace(/[؟?.:]\s*$/, "") + ": " + (r[1] && String(r[1]).trim() ? String(r[1]).replace(/\s*\n+\s*/g, " | ") : "—")); });
   });
-  L.push("", A.consent ? "وافقت على نص الموافقة (نسخة 2026-11-17) في sagh.co/brief" : "الموافقة: —");
-  if (ref) L.push("المصدر: " + ref.slice(0, 40));
+  L.push("", A.consent ? W.consent_line.replace("{v}", CONSENT_VERSION) : W.consent_none);
+  if (ref) L.push(W.source + ": " + ref.slice(0, 40));
   return L.join("\n");
 }
 /* the WhatsApp text: full answers, trimming long free text step by step until it fits WA_MAX_CHARS */
@@ -661,21 +697,59 @@ function openWhatsApp(url) {
   // runs inside the submit click, so browsers allow the new tab; on phones wa.me hands over to the WhatsApp app.
   try { window.open(url, "_blank", "noopener"); } catch (e) { location.href = url; }
 }
+
+/* ===================== Google Sheet copy (fire-and-forget) ===================== */
+/* One JSON object per brief (field list: marketing/client-brief/sheets-integration/columns.md).
+   submitted_at: client clock, ISO; source_ref: the ?ref= value; page_url: the page the brief was sent from;
+   answers: readable text in the page language (one sheet column each); raw: the stable option codes, for filtering.
+   Column order is set in Code.gs. */
+function sheetPayload() {
+  var answers = {}, raw = {};
+  Object.keys(Q).forEach(function (id) {
+    if (id === "consent") return;
+    var on = applies(id), v = A[id];
+    if (id === "phone") { answers.phone = phoneFull(); raw.phone = answers.phone; return; }
+    answers[id] = on ? labelOf(id, v, SHEET_MAX_FIELD) : "";
+    // raw: stable option codes only (for filtering); free text is already in answers, so it is not sent twice
+    if (on && Q[id].opts && v != null && v !== "" && !(Array.isArray(v) && !v.length)) raw[id] = Array.isArray(v) ? v.join(",") : String(v);
+  });
+  var hp = form.querySelector('[name="hp_extra"]');
+  return {
+    v: 1, token: SHEET_TOKEN, hp_extra: hp ? hp.value : "",
+    ref: briefRef, lang: LANG, source_ref: ref.slice(0, 40),
+    page_url: (location.origin + location.pathname + location.search).slice(0, 300),   // no #hash
+    submitted_at: submittedAt ? submittedAt.toISOString() : "",
+    consent: !!A.consent, consent_version: CONSENT_VERSION,
+    flags: flagsList().join(" | "), answers: answers, raw: raw
+  };
+}
+function sendToSheet() {
+  if (!SHEET_ENDPOINT || !window.fetch) return;
+  try {
+    // text/plain + no-cors = a "simple" request: no CORS preflight, the response is opaque and never awaited.
+    // keepalive lets it finish even if the page is left for WhatsApp.
+    fetch(SHEET_ENDPOINT, {
+      method: "POST", mode: "no-cors", keepalive: true, credentials: "omit",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(sheetPayload())
+    }).catch(function () {});
+  } catch (e) { /* never block WhatsApp */ }
+}
+
 function renderThanks() {
-  var nm = (A.name || "").trim().split(/\s+/)[0] || "";
+  var U = T.ui, nm = (A.name || "").trim().split(/\s+/)[0] || "";
   var s = '<section class="screen done">' +
     '<div class="thanks"><span class="logo-tile" aria-hidden="true">' + ICON_CUBE + "</span>" +
-    '<h2 id="screen-title" tabindex="-1">شكرًا' + (nm ? " <em>" + esc(nm) + "</em>" : "") + "، باقي تضغط إرسال في الواتساب.</h2>" +
-    (briefRef ? '<p class="thanks__ref">رقم طلبك <b>' + esc(briefRef) + "</b></p>" : "") +
-    '<p class="thanks__next">وش اللي يصير الحين:</p><ol>' +
-    "<li><b>1</b><span>انفتحت لك رسالة في الواتساب فيها إجاباتك. أرسلها لنا مثل ما هي.</span></li>" +
-    "<li><b>2</b><span>نقرا اللي كتبته ونرجع لك على واتساب خلال يومين عمل. وإذا احتجنا نفهم أكثر، نسألك كم سؤال أو نرتب مكالمة قصيرة.</span></li>" +
-    "<li><b>3</b><span>نرسل لك عرض سعر مكتوب بالتفاصيل والمدة، صالح 14 يوم.</span></li></ol>" +
-    '<p class="thanks__cap">نشتغل على مشروع واحد بوقته عشان نعطيه حقه. إذا جدولنا مليان نقول لك أقرب موعد نقدر نبدأ فيه.</p></div>';
-  s += '<div class="fallback"><p class="fallback__title">إذا ما انفتح الواتساب، انسخ الملخص وأرسله لنا</p>' +
-    '<p class="fallback__text">على واتساب <span class="wa-num">+' + esc(WA_NUMBER) + "</span>. ما نحفظ إجاباتك عندنا، توصلنا بس لما ترسلها.</p>" +
-    '<div class="fallback__tools"><button type="button" class="btn" data-act="copy"><span>انسخ الملخص</span></button>' +
-    '<a class="textlink" id="wa-retry" href="' + esc(waUrl || buildWaUrl()) + '" target="_blank" rel="noopener">افتح الواتساب مرة ثانية</a>' +
+    '<h2 id="screen-title" tabindex="-1">' + esc(U.thanks_title) + (nm ? " <em>" + esc(nm) + "</em>" : "") + esc(U.thanks_title_end) + "</h2>" +
+    (briefRef ? '<p class="thanks__ref">' + esc(U.thanks_ref) + " <b>" + esc(briefRef) + "</b></p>" : "") +
+    '<p class="thanks__next">' + esc(U.thanks_next) + "</p><ol>" +
+    U.thanks_steps.map(function (t, i) { return "<li><b>" + (i + 1) + "</b><span>" + esc(t) + "</span></li>"; }).join("") + "</ol>" +
+    '<p class="thanks__cap">' + esc(U.thanks_cap) + "</p></div>";
+  var fbText = sheetUsed ? U.fallback_text_sheet : U.fallback_text;
+  s += '<div class="fallback"><p class="fallback__title">' + esc(U.fallback_title) + "</p>" +
+    '<p class="fallback__text">' + esc(U.fallback_on) + ' <span class="wa-num">+' + esc(WA_NUMBER) + "</span>." + (fbText ? " " + esc(fbText) : "") + "</p>" +
+    '<div class="fallback__tools"><button type="button" class="btn" data-act="copy"><span>' + esc(U.copy) + "</span></button>" +
+    '<a class="textlink" id="wa-retry" href="' + esc(waUrl || buildWaUrl()) + '" target="_blank" rel="noopener">' + esc(U.retry) + "</a>" +
     '<span class="copied" id="copied" role="status"></span></div></div></section>';
   return s;
 }
@@ -761,11 +835,11 @@ form.addEventListener("click", function (e) {
 function go(dir) {
   if (dir > 0 && step >= 1 && step <= 5 && !validateStep()) return;
   if (dir > 0 && step === 5) {
-    // nothing is sent or stored by this page: it opens WhatsApp with the answers and the client presses send
     submittedAt = new Date();
     if (!briefRef) briefRef = makeRef(submittedAt);
     waUrl = buildWaUrl();
-    openWhatsApp(waUrl);
+    sendToSheet();          // optional copy to the Google Sheet: async, errors swallowed, never awaited
+    openWhatsApp(waUrl);    // the client still sends the WhatsApp message themselves
   }
   setStep(Math.max(0, Math.min(6, step + dir)));
 }
@@ -789,7 +863,10 @@ function copySummary() {
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(ok, fallback); else fallback();
 }
 
-/* ===================== demo data (fictional client) ===================== */
+/* keep ?ref=… when switching language (answers are not carried over) */
+(function () { var a = document.getElementById("lang-switch"); if (a && location.search) a.href = a.getAttribute("href") + location.search; })();
+
+/* ===================== demo data (fictional client; free text from T.demo) ===================== */
 var DEMO = {
   services: ["identity", "app"],
   id_name: "draft", id_deliverables: ["system", "social_kit"],
@@ -798,15 +875,13 @@ var DEMO = {
   app_platforms: "both", app_screens: "10to20", app_features: ["login", "payments", "notifications"],
   ux_for: "app", ux_screens: "10to20", ux_existing: "new",
   social_posts: "8to15", social_platforms: ["instagram", "tiktok"],
-  other_desc: "منيو مطبوع للمخبز",
   stage: "starting",
-  goal: "أبي الناس تطلب من التطبيق بدل الاتصال والواتساب، وتكون هوية المخبز واضحة وموحّدة بكل مكان.",
-  audience: "عوايل وموظفين في شمال جدة",
   references: "https://example.com/bakery-one\nhttps://instagram.com/example",
   ready: ["text", "photos"],
   budget: "30to50", timeline: "1to3m", deadline: "2027-02-15", decision: "me_partner", source: "instagram",
-  name: "ريم الحربي", project_name: "مخبز سنبلة", phone_cc: "+966", phone: "0500000000", email: "reem@example.com", city: "جدة", consent: true
+  phone_cc: "+966", phone: "0500000000", email: "reem@example.com", consent: true
 };
+Object.keys(T.demo).forEach(function (k) { DEMO[k] = T.demo[k]; });
 
 /* ===================== boot ===================== */
 if (params.demo === "1") {
@@ -822,7 +897,7 @@ if (params.still === "1") document.documentElement.classList.add("no-anim");
 render();
 firstPaint = false;
 if (params.err === "1" && step >= 1 && step <= 5) validateStep();
-window.__brief = { A: function () { return A; }, step: function () { return step; }, summaryText: summaryText, messageText: messageText, stepQuestions: stepQuestions };
+window.__brief = { A: function () { return A; }, step: function () { return step; }, summaryText: summaryText, messageText: messageText, stepQuestions: stepQuestions, sheetPayload: sheetPayload };
 })();
 </script>
 </body>

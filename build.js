@@ -2,7 +2,8 @@
 //   src/index.html + content/ar.json → dist/index.html
 //   src/index.html + content/en.json → dist/en/index.html
 //   content/projects.json            → the project cards (in place of <!--PROJECTS--> in the template)
-//   src/brief/index.html             → dist/brief/index.html (client brief form at /brief)
+//   src/brief/index.html + src/brief/{ar,en}.json → dist/brief/index.html, dist/en/brief/index.html (client brief)
+//   src/brief/config.json            → Google Sheet endpoint + token for the brief (empty = off)
 //   styles.css, main.js, admin/, fonts/, assets/ → copied as-is
 const fs = require("fs");
 const path = require("path");
@@ -122,14 +123,61 @@ for (const [lang, opts] of Object.entries(languages)) {
   console.log(`built ${path.relative(root, out)}`);
 }
 
-// Client brief form at /brief (Arabic, noindex; we send its link to leads). Self-contained page:
-// on submit it opens WhatsApp with the answers, so the number comes from main.js (one place to change it).
+// Client brief form at /brief (Arabic) and /en/brief (English), noindex; we send its link to leads.
+// One template (src/brief/index.html) + one string table per language (src/brief/ar.json, en.json).
+// On submit the page opens WhatsApp with the answers, so the number comes from main.js (one place to change it).
 const waNumber = (fs.readFileSync(path.join(root, "main.js"), "utf8").match(/WHATSAPP_NUMBER\s*=\s*"(\d+)"/) || [])[1];
 if (!waNumber) throw new Error('main.js: WHATSAPP_NUMBER not found (needed by src/brief/index.html)');
-const brief = fs.readFileSync(path.join(root, "src/brief/index.html"), "utf8").replace(/__WHATSAPP_NUMBER__/g, waNumber);
-fs.mkdirSync(path.join(dist, "brief"), { recursive: true });
-fs.writeFileSync(path.join(dist, "brief/index.html"), brief);
-console.log("built dist/brief/index.html");
+const briefTemplate = fs.readFileSync(path.join(root, "src/brief/index.html"), "utf8");
+// Google Sheet copy of each brief: the ONE place to set it is src/brief/config.json (see its "_help").
+// Both values empty = off. Checked here so a typo fails the build instead of silently losing rows.
+const sheet = JSON.parse(fs.readFileSync(path.join(root, "src/brief/config.json"), "utf8"));
+const sheetEndpoint = String(sheet.sheet_endpoint || "").trim(), sheetToken = String(sheet.sheet_token || "").trim();
+if (!!sheetEndpoint !== !!sheetToken)
+  throw new Error("src/brief/config.json: set both sheet_endpoint and sheet_token, or leave both empty");
+if (sheetEndpoint && !/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(sheetEndpoint))
+  throw new Error("src/brief/config.json: sheet_endpoint must look like https://script.google.com/macros/s/<id>/exec");
+if (sheetToken && !/^[A-Za-z0-9_-]{16,128}$/.test(sheetToken))
+  throw new Error("src/brief/config.json: sheet_token must be 16-128 letters, digits, - or _");
+console.log(`brief → Google Sheet: ${sheetEndpoint ? "ON" : "off"}`);
+const briefLangs = {
+  ar: { dir: "rtl", out: "brief/index.html", fonts: ["ibm-plex-sans-arabic-400.woff2", "alexandria.woff2"] },
+  en: { dir: "ltr", out: "en/brief/index.html", fonts: ["bricolage-grotesque.woff2", "jetbrains-mono.woff2"] },
+};
+// Both string tables must have the same keys, so an edit in one language cannot be forgotten in the other.
+const keyPaths = (v, p = "") =>
+  v && typeof v === "object" && !Array.isArray(v)
+    ? Object.keys(v).flatMap((k) => keyPaths(v[k], p ? `${p}.${k}` : k))
+    : [Array.isArray(v) ? `${p}[${v.length}]` : p];
+const briefStrings = Object.fromEntries(Object.keys(briefLangs).map((lang) =>
+  [lang, JSON.parse(fs.readFileSync(path.join(root, `src/brief/${lang}.json`), "utf8"))]));
+const arKeys = new Set(keyPaths(briefStrings.ar)), enKeys = new Set(keyPaths(briefStrings.en));
+const keyDiff = [...arKeys].filter((k) => !enKeys.has(k)).concat([...enKeys].filter((k) => !arKeys.has(k)));
+if (keyDiff.length) throw new Error(`src/brief/ar.json and en.json differ in: ${keyDiff.join(", ")}`);
+
+for (const [lang, opts] of Object.entries(briefLangs)) {
+  const strings = briefStrings[lang];
+  const data = {
+    lang, dir: opts.dir, meta: strings.meta,
+    preload: opts.fonts.map((f) => `<link rel="preload" href="/fonts/${f}" as="font" type="font/woff2" crossorigin>`).join("\n"),
+  };
+  // string table as a JS literal; "<" escaped so no text can close the <script> tag
+  const json = JSON.stringify(strings).replace(/</g, "\\u003c");
+  const html = briefTemplate
+    .replace(/\{\{(=?)([\w.]+)\}\}/g, (_, raw, key) => {
+      const value = key.split(".").reduce((v, part) => (v == null ? undefined : v[part]), data);
+      if (value == null || value === "") throw new Error(`src/brief/${lang}.json: missing "${key}"`);
+      return raw ? value : escape(value);
+    })
+    .replace("/*__STRINGS__*/{}", () => json)
+    .replace(/__WHATSAPP_NUMBER__/g, waNumber)
+    .replace('"__SHEET_ENDPOINT__"', () => JSON.stringify(sheetEndpoint))
+    .replace('"__SHEET_TOKEN__"', () => JSON.stringify(sheetToken));
+  const out = path.join(dist, opts.out);
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.writeFileSync(out, html);
+  console.log(`built ${path.relative(root, out)}`);
+}
 
 copy("styles.css", "styles.css");
 copy("main.js", "main.js");

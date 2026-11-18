@@ -1,0 +1,393 @@
+{
+  "_note": "English strings for /en/brief. Wording from marketing/client-brief/questionnaire.md (EN) and legal/privacy/consent.md (EN, without the privacy link). Lines not in those files are marked in the SAG-10 report as new microcopy for Marketing to confirm. Same keys as ar.json (build.js checks).",
+  "meta": {
+    "title": "Client brief — Sagh",
+    "description": "A short brief so we can get to know your project and prepare a quote.",
+    "home_aria": "Sagh — home",
+    "progress_aria": "Brief steps",
+    "alt_href": "/brief",
+    "alt_lang": "ar",
+    "switch_text": "عربي",
+    "switch_aria": "النسخة العربية"
+  },
+  "ui": {
+    "req": "Required",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Send on WhatsApp",
+    "start": "Let's start",
+    "step": "Step",
+    "done_sr": " (done)",
+    "cc_aria": "Country code",
+    "multi_help": "Pick all that apply.",
+    "step_names": [
+      "Service",
+      "Details",
+      "Project",
+      "Budget and timing",
+      "Contact"
+    ],
+    "step_titles": [
+      [
+        "Service",
+        ""
+      ],
+      [
+        "Details",
+        ""
+      ],
+      [
+        "Project",
+        ""
+      ],
+      [
+        "Budget",
+        " and timing"
+      ],
+      [
+        "Contact",
+        ""
+      ]
+    ],
+    "intro_eyebrow": "New client brief",
+    "intro_title": "Hi, this is a short brief ",
+    "intro_title_hl": "so we can get to know your project.",
+    "intro_body": [
+      "It takes about 4 minutes, and most of it is tapping a choice.",
+      "After that we get back to you with the next step."
+    ],
+    "intro_small": "Anything not marked \"Required\" can be skipped. At the end, WhatsApp opens with your answers in a message you send to us yourself.",
+    "intro_chips": [
+      "Website",
+      "Brand identity",
+      "Online store",
+      "Mobile app",
+      "Something else"
+    ],
+    "many_note": "You picked several services, so we'll ask two or three quick questions about each.",
+    "contact_lead": "Last step. Where should we reply?",
+    "under_button": "This opens WhatsApp with your answers in a message. Nothing reaches us unless you press send. Our website does not store your answers.",
+    "under_button_sheet": "Pressing this saves your answers to our follow-up sheet on Google Sheets right away, even if you don't send the WhatsApp message. WhatsApp then opens with the same answers for you to send.",
+    "thanks_title": "Thanks",
+    "thanks_title_end": ", now just press send in WhatsApp.",
+    "thanks_ref": "Your reference",
+    "thanks_next": "What happens next:",
+    "thanks_steps": [
+      "A WhatsApp message with your answers just opened. Send it to us as it is.",
+      "We read your brief and reply on WhatsApp within 2 working days. If we need more detail, we ask a few questions or set up a short call.",
+      "We send a written quote with scope and timeline, valid for 14 days."
+    ],
+    "thanks_cap": "We take on one project at a time so it gets our full attention. If we're booked, we'll tell you the earliest date we can start.",
+    "fallback_title": "If WhatsApp didn't open, copy the summary and send it to us",
+    "fallback_text": "We don't keep your answers; they reach us only when you send them.",
+    "fallback_text_sheet": "A copy of your answers was sent to our follow-up sheet when you pressed the button. Send them on WhatsApp too, so we know they arrived and can reply faster.",
+    "fallback_on": "on WhatsApp",
+    "copy": "Copy the summary",
+    "retry": "Open WhatsApp again",
+    "intro_small_sheet": "Anything not marked \"Required\" can be skipped. At the end, your answers are saved with us and WhatsApp opens with the same answers in a message for you to send."
+  },
+  "msg": {
+    "single": "Pick one of the options to continue.",
+    "multi": "Pick at least one option.",
+    "text": "We need this one, even a single line.",
+    "name": "Type your name so we know who we're talking to.",
+    "phoneEmpty": "We need your WhatsApp number to reply.",
+    "phoneBad": "The number looks incomplete or wrong. Write it like 05XXXXXXXX.",
+    "emailBad": "Something's missing in the email, please check it.",
+    "consent": "We need your consent so we can reply with a quote.",
+    "copied": "Copied. Paste it into a WhatsApp chat with us and send it.",
+    "copyFail": "We couldn't copy it automatically. Take a screenshot or message us directly."
+  },
+  "consent": "I agree that my answers are saved automatically to Sagh's follow-up sheet on Google Sheets (its servers may be outside Saudi Arabia) as soon as I press \"Send on WhatsApp\", even if I don't send the WhatsApp message, only so Sagh can prepare a quote and contact me about it, and that they are deleted after 12 months if no project starts. I am 18 or older and can withdraw consent or ask to correct or delete my data at any time on WhatsApp.",
+  "wa": {
+    "ref": "Ref",
+    "lang_line": "لغة الصفحة / Page language: English",
+    "note": "Note",
+    "contact": "Contact",
+    "service": "Service",
+    "details": "Details",
+    "project": "Project",
+    "budget_time": "Budget and timing",
+    "phone": "WhatsApp number",
+    "sep": ", ",
+    "agreed": "Agreed",
+    "flag_naming": "Wants help with naming: extra service, priced separately.",
+    "flag_sell": "Asked for selling products or payment on the site: a store may fit better.",
+    "consent_line": "Agreed to the consent text (version {v}) at sagh.co/en/brief",
+    "consent_none": "Consent: —",
+    "source": "Source"
+  },
+  "q": {
+    "services": {
+      "label": "What do you need from us?",
+      "opts": {
+        "identity": "Brand identity",
+        "website": "Website",
+        "store": "Online store",
+        "app": "Mobile app",
+        "uiux": "UI/UX design",
+        "social": "Social media design",
+        "other": "Something else"
+      }
+    },
+    "id_name": {
+      "label": "Is the name ready?",
+      "opts": {
+        "final": "The name is ready",
+        "draft": "I have one, but it may change",
+        "naming": "We want help with naming (extra service, priced separately)",
+        "none": "Not yet, I'll choose it myself"
+      }
+    },
+    "id_deliverables": {
+      "label": "What should the identity include?",
+      "opts": {
+        "logo": "Logo only",
+        "system": "Full identity: logo, colours, type and a usage guide",
+        "stationery": "Stationery: cards and letterheads",
+        "social_kit": "Social media templates",
+        "packaging": "Product packaging",
+        "profile": "Company profile",
+        "unsure": "Not sure, I'd like your advice"
+      }
+    },
+    "web_pages": {
+      "label": "Roughly how many pages?",
+      "opts": {
+        "one": "One page (landing page)",
+        "upto5": "2 to 5 pages",
+        "6to10": "6 to 10 pages",
+        "10plus": "More than 10",
+        "unsure": "Not sure"
+      }
+    },
+    "web_languages": {
+      "label": "Which language(s)?",
+      "opts": {
+        "ar": "Arabic",
+        "en": "English",
+        "both": "Arabic and English"
+      }
+    },
+    "web_features": {
+      "label": "What does the site need?",
+      "opts": {
+        "cms": "I want to edit the content myself",
+        "form": "A contact or booking form",
+        "blog": "A blog or news section",
+        "sell": "Selling products or online payment",
+        "none": "None of these"
+      }
+    },
+    "store_platform": {
+      "label": "Which platform?",
+      "opts": {
+        "salla": "Salla",
+        "zid": "Zid",
+        "shopify": "Shopify",
+        "custom": "Custom-built store",
+        "existing": "I have a live store I want to improve",
+        "unsure": "Not sure, I'd like your advice"
+      }
+    },
+    "store_products": {
+      "label": "Roughly how many products?",
+      "opts": {
+        "lt20": "Under 20",
+        "20to100": "20 to 100",
+        "100to500": "100 to 500",
+        "500plus": "More than 500"
+      }
+    },
+    "app_platforms": {
+      "label": "Which devices?",
+      "opts": {
+        "both": "iPhone and Android",
+        "ios": "iPhone only",
+        "android": "Android only",
+        "unsure": "Not sure"
+      }
+    },
+    "app_screens": {
+      "label": "Roughly how many screens?",
+      "help": "A screen is one page in the app, like login, home or cart.",
+      "opts": {
+        "lt10": "Under 10",
+        "10to20": "10 to 20",
+        "20to40": "20 to 40",
+        "40plus": "More than 40",
+        "unsure": "Not sure"
+      }
+    },
+    "app_features": {
+      "label": "What does the app need?",
+      "opts": {
+        "login": "Login and user accounts",
+        "payments": "Online payments",
+        "admin": "An admin panel for content or orders",
+        "backend": "I already have a backend or system to connect to",
+        "notifications": "Push notifications",
+        "maps": "Maps or location tracking",
+        "none": "None of these, it's a simple app"
+      }
+    },
+    "ux_for": {
+      "label": "What is the design for?",
+      "opts": {
+        "app": "A mobile app",
+        "web": "A website or web platform",
+        "internal": "An internal system or dashboard"
+      }
+    },
+    "ux_screens": {
+      "label": "Roughly how many screens?",
+      "opts": {
+        "lt10": "Under 10",
+        "10to20": "10 to 20",
+        "20to40": "20 to 40",
+        "40plus": "More than 40",
+        "unsure": "Not sure"
+      }
+    },
+    "ux_existing": {
+      "label": "Does the product exist already?",
+      "opts": {
+        "new": "No, it's new",
+        "live": "Yes, it's live and I want a better design",
+        "building": "It's being built by another team"
+      }
+    },
+    "social_posts": {
+      "label": "Roughly how many designs a month?",
+      "opts": {
+        "lt8": "Under 8",
+        "8to15": "8 to 15",
+        "16to30": "16 to 30",
+        "once": "A one-off set, not monthly"
+      }
+    },
+    "social_platforms": {
+      "label": "Which platforms?",
+      "opts": {
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "x": "X",
+        "snapchat": "Snapchat",
+        "linkedin": "LinkedIn"
+      }
+    },
+    "other_desc": {
+      "label": "Tell us what you need in a couple of lines.",
+      "ph": "e.g. an investor deck, or a menu design for a restaurant"
+    },
+    "stage": {
+      "label": "Where is your project at?",
+      "opts": {
+        "idea": "An idea, not started yet",
+        "starting": "Starting soon and needs to launch right",
+        "live_refresh": "Live and needs a refresh",
+        "live_add": "Live and needs something new added"
+      }
+    },
+    "goal": {
+      "label": "What do you want this project to achieve?",
+      "help": "A couple of lines is enough.",
+      "ph": "e.g. I want people to trust the store and order online instead of on WhatsApp"
+    },
+    "audience": {
+      "label": "Who is it for?",
+      "ph": "e.g. mothers in Riyadh, or small contracting companies"
+    },
+    "references": {
+      "label": "Any competitors or work you like? Paste the links.",
+      "help": "Accounts, sites, apps. If there's something you don't like, tell us too.",
+      "ph": "https://"
+    },
+    "ready": {
+      "label": "What do you already have?",
+      "opts": {
+        "logo": "A logo or identity",
+        "text": "The text and content",
+        "photos": "Product or location photos",
+        "ui_design": "Ready UI design (Figma or similar)",
+        "domain": "A domain or store/developer accounts",
+        "nothing": "Nothing yet"
+      }
+    },
+    "budget": {
+      "label": "What budget do you have in mind?",
+      "help": "It helps us suggest the right fit for your budget. It's not a commitment.",
+      "opts": {
+        "lt3": "Under SAR 3,000",
+        "3to7": "SAR 3,000–7,000",
+        "7to15": "SAR 7,000–15,000",
+        "15to30": "SAR 15,000–30,000",
+        "30to50": "SAR 30,000–50,000",
+        "50plus": "Over SAR 50,000",
+        "unsure": "Not sure, I'd like your suggestion"
+      }
+    },
+    "timeline": {
+      "label": "When do you need it ready?",
+      "opts": {
+        "asap": "As soon as possible",
+        "1m": "Within a month",
+        "1to3m": "In 1 to 3 months",
+        "flex": "Flexible, quality matters more"
+      }
+    },
+    "deadline": {
+      "label": "Is there a fixed date we must hit?",
+      "help": "Like an opening, a launch or an event."
+    },
+    "decision": {
+      "label": "Who signs off on the project?",
+      "opts": {
+        "me": "Me",
+        "me_partner": "Me with a partner or management",
+        "other": "Someone else, I'm collecting the details"
+      }
+    },
+    "source": {
+      "label": "How did you hear about Sagh?",
+      "opts": {
+        "referral": "Someone I know",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "x": "X",
+        "google": "Google search",
+        "site": "Sagh's website",
+        "other": "Somewhere else"
+      }
+    },
+    "name": {
+      "label": "Your name"
+    },
+    "project_name": {
+      "label": "Company or project name",
+      "ph": "e.g. Rukn Café"
+    },
+    "phone": {
+      "label": "WhatsApp number",
+      "ph": "05XXXXXXXX",
+      "help": "We'll reply here, and we don't share it with anyone."
+    },
+    "email": {
+      "label": "Email",
+      "ph": "name@example.com"
+    },
+    "city": {
+      "label": "City",
+      "ph": "e.g. Riyadh"
+    }
+  },
+  "demo": {
+    "other_desc": "A printed menu for the bakery",
+    "goal": "I want people to order from the app instead of calling or using WhatsApp, and the bakery's identity to look clear and consistent everywhere.",
+    "audience": "Families and office workers in north Jeddah",
+    "name": "Reem Alharbi",
+    "project_name": "Sunbula Bakery",
+    "city": "Jeddah"
+  },
+  "consent_nosheet": "I agree that Sagh receives my answers on WhatsApp and keeps them in a follow-up sheet on Google Sheets (its servers may be outside Saudi Arabia), only to prepare a quote and contact me about it, and deletes them after 12 months if no project starts. I am 18 or older and can withdraw consent or ask to correct or delete my data at any time on WhatsApp."
+}
