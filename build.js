@@ -4,7 +4,8 @@
 //   content/projects.json            → the project cards (in place of <!--PROJECTS--> in the template)
 //   src/brief/index.html + src/brief/{ar,en}.json → dist/brief/index.html, dist/en/brief/index.html (client brief)
 //   src/brief/config.json            → Google Sheet endpoint + token for the brief (empty = off)
-//   styles.css, main.js, admin/, fonts/, assets/ → copied as-is
+//   src/gtm.json                     → Google Tag Manager container + consent bar settings (container_id empty = off)
+//   styles.css, main.js, consent.js, admin/, fonts/, assets/ → copied as-is
 const fs = require("fs");
 const path = require("path");
 
@@ -65,6 +66,8 @@ function renderProjects(projects, section, lang) {
     // (url as "App Store", url_play as "Google Play") instead of "Visit project".
     const play = url ? (p.url_play || "").trim() : "";
     const link = url ? ` href="${escape(url)}" target="_blank" rel="noopener"` : "";
+    // data-cta: the name consent.js sends with the cta_click dataLayer event
+    const cta = (name) => ` data-cta="project_${name}"`;
     const media = p.image
       ? `<img src="${escape(p.image)}" alt="${escape(title)}" loading="lazy" decoding="async" />`
       : `<span class="project__initial">${escape(title.slice(0, 1))}</span>`;
@@ -78,8 +81,8 @@ function renderProjects(projects, section, lang) {
               <h3 class="project__title">${escape(title)}</h3>
               ${pick("summary") ? `<p class="project__text">${escape(pick("summary"))}</p>` : ""}
               ${url ? (play
-                ? `<p class="project__links"><a class="project__link"${link}>App Store</a><a class="project__link" href="${escape(play)}" target="_blank" rel="noopener">Google Play</a></p>`
-                : `<a class="project__link"${link}>${escape(section.visit)}</a>`) : ""}
+                ? `<p class="project__links"><a class="project__link"${link}${cta("app_store")}>App Store</a><a class="project__link" href="${escape(play)}" target="_blank" rel="noopener"${cta("google_play")}>Google Play</a></p>`
+                : `<a class="project__link"${link}${cta("visit")}>${escape(section.visit)}</a>`) : ""}
             </div>
           </article>`;
   }).join("");
@@ -104,6 +107,45 @@ function copy(from, to) {
   fs.cpSync(src, dest, { recursive: true });
 }
 
+// Google Tag Manager + Consent Mode v2 (card SAG-44). The ONE place to set it is src/gtm.json; container_id empty = off.
+// gtmHead goes at the top of <head> in both templates (<!--GTM_HEAD-->), gtmBody right after <body> (<!--GTM_BODY-->).
+// Order matters: consent defaults (all four denied) → a stored "granted" choice → only then the GTM loader.
+// The bar itself and the dataLayer events are in consent.js. admin/ is copied as-is and never gets GTM.
+const gtm = JSON.parse(fs.readFileSync(path.join(root, "src/gtm.json"), "utf8"));
+const gtmId = String(gtm.container_id || "").trim();
+if (gtmId && !/^GTM-[A-Z0-9]{4,12}$/.test(gtmId)) throw new Error('src/gtm.json: container_id must look like "GTM-XXXXXXX" (or be empty to switch GTM off)');
+function gtmSnippets(lang) {
+  if (!gtmId) return { head: "", body: "" };
+  const privacy = String((gtm.privacy_href || {})[lang] || "").trim();
+  if (!/^\/[\w\-/]*$/.test(privacy)) throw new Error(`src/gtm.json: privacy_href.${lang} must be a path on this site, like "/privacy"`);
+  const head = `<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",wait_for_update:500});
+gtag("set","ads_data_redaction",true);
+window.SAGH_GTM={id:${JSON.stringify(gtmId)},privacy:${JSON.stringify(privacy)}};
+try{(function(c){if(c&&c.v===1&&c.choice==="granted"&&Date.now()-Date.parse(c.at)<180*864e5)gtag("consent","update",{ad_storage:"granted",analytics_storage:"granted",ad_user_data:"granted",ad_personalization:"granted"});})(JSON.parse(localStorage.getItem("sagh_consent")||"null"));}catch(e){}
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(gtmId)});</script>
+<!-- End Google Tag Manager -->`;
+  const body = `<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->`;
+  return { head, body };
+}
+const withGtm = (html, lang) => {
+  const g = gtmSnippets(lang);
+  for (const mark of ["<!--GTM_HEAD-->", "<!--GTM_BODY-->"])
+    if (html.split(mark).length !== 2) throw new Error(`template for "${lang}" must contain ${mark} exactly once`);
+  return html.replace("<!--GTM_HEAD-->", () => g.head).replace("<!--GTM_BODY-->", () => g.body);
+};
+console.log(`Google Tag Manager: ${gtmId || "off"}`);
+for (const lang of ["ar", "en"]) {
+  const href = gtmId && (gtm.privacy_href || {})[lang];
+  if (href && !gtm.privacy_page_ready)
+    console.warn(`WARNING: the consent bar links to ${href}; this site has no privacy page yet. Publish it, then set "privacy_page_ready": true in src/gtm.json.`);
+}
+
 fs.rmSync(dist, { recursive: true, force: true });
 const template = fs.readFileSync(path.join(root, "src/index.html"), "utf8");
 const projects = JSON.parse(fs.readFileSync(path.join(root, "content/projects.json"), "utf8")).items || [];
@@ -119,7 +161,7 @@ for (const [lang, opts] of Object.entries(languages)) {
   );
   const out = path.join(dist, opts.out);
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, html);
+  fs.writeFileSync(out, withGtm(html, lang));
   console.log(`built ${path.relative(root, out)}`);
 }
 
@@ -175,13 +217,14 @@ for (const [lang, opts] of Object.entries(briefLangs)) {
     .replace('"__SHEET_TOKEN__"', () => JSON.stringify(sheetToken));
   const out = path.join(dist, opts.out);
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, html);
+  fs.writeFileSync(out, withGtm(html, lang));
   console.log(`built ${path.relative(root, out)}`);
 }
 
 copy("styles.css", "styles.css");
 copy("main.js", "main.js");
+copy("consent.js", "consent.js");
 copy("admin", "admin");
 copy("fonts", "fonts");
 copy("assets", "assets");
-console.log("copied styles.css, main.js, admin/, fonts/, assets/");
+console.log("copied styles.css, main.js, consent.js, admin/, fonts/, assets/");

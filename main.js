@@ -228,6 +228,8 @@ const smooth = (t) => t * t * (3 - 2 * t);
     ].join("\n");
 
     const url = `${waBase}?text=${encodeURIComponent(message)}`;
+    // dataLayer event (consent.js): the source only, never the message or the number
+    window.saghTrack?.("whatsapp_click", { wa_source: "contact_form" });
     // "noopener" in the features string makes open() return null, so detach manually.
     const win = window.open(url, "_blank");
     if (win) win.opener = null;

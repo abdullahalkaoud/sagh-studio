@@ -1,0 +1,6 @@
+{
+  "_help": "Google Tag Manager + cookie consent bar (card SAG-44). container_id: the GTM container, like GTM-XXXXXXX; empty = GTM, the consent bar and the 'Cookie settings' links are all off. build.js writes the Consent Mode v2 defaults (everything denied) and the GTM loader at the top of <head> on the four pages (/, /en/, /brief, /en/brief), never in /admin. privacy_href: where the bar's privacy link goes, per language. privacy_page_ready: set true once those pages are published (silences the build warning). The bar's wording and the dataLayer events are in consent.js. After editing: node build.js, then deploy (with approval).",
+  "container_id": "GTM-NHLDRWBD",
+  "privacy_href": { "ar": "/privacy", "en": "/en/privacy" },
+  "privacy_page_ready": false
+}

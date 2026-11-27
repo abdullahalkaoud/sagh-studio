@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--GTM_HEAD-->
 <meta name="robots" content="noindex, nofollow">
 <title>{{meta.title}}</title>
 <meta name="description" content="{{meta.description}}">
@@ -371,6 +372,7 @@ html[lang="en"] .btn { font-weight: 600; }
 </style>
 </head>
 <body>
+<!--GTM_BODY-->
 
 <header class="top">
   <div class="top__row">
@@ -389,6 +391,10 @@ html[lang="en"] .btn { font-weight: 600; }
 <main>
   <form class="sheet" id="form" novalidate autocomplete="on"></form>
 </main>
+
+<!-- text and click come from /consent.js; stays hidden when GTM is off (src/gtm.json) -->
+<footer class="ck-foot"><button type="button" data-cookie-settings hidden></button></footer>
+<script src="/consent.js"></script>
 
 <script>
 (function () {
@@ -755,8 +761,8 @@ function renderThanks() {
   var fbText = sheetUsed ? U.fallback_text_sheet : U.fallback_text;
   s += '<div class="fallback"><p class="fallback__title">' + esc(U.fallback_title) + "</p>" +
     '<p class="fallback__text">' + esc(U.fallback_on) + ' <span class="wa-num">+' + esc(WA_NUMBER) + "</span>." + (fbText ? " " + esc(fbText) : "") + "</p>" +
-    '<div class="fallback__tools"><button type="button" class="btn" data-act="copy"><span>' + esc(U.copy) + "</span></button>" +
-    '<a class="textlink" id="wa-retry" href="' + esc(waUrl || buildWaUrl()) + '" target="_blank" rel="noopener">' + esc(U.retry) + "</a>" +
+    '<div class="fallback__tools"><button type="button" class="btn" data-act="copy" data-cta="brief_copy"><span>' + esc(U.copy) + "</span></button>" +
+    '<a class="textlink" id="wa-retry" data-wa="brief_retry" href="' + esc(waUrl || buildWaUrl()) + '" target="_blank" rel="noopener">' + esc(U.retry) + "</a>" +
     '<span class="copied" id="copied" role="status"></span></div></div></section>';
   return s;
 }
@@ -845,11 +851,16 @@ function go(dir) {
     submittedAt = new Date();
     if (!briefRef) briefRef = makeRef(submittedAt);
     waUrl = buildWaUrl();
+    track("brief_submit");  // event name only: no answers, no ref, no URL (see /consent.js)
     sendToSheet();          // optional copy to the Google Sheet: async, errors swallowed, never awaited
     openWhatsApp(waUrl);    // the client still sends the WhatsApp message themselves
   }
+  if (dir > 0 && step === 0 && !briefStarted) { briefStarted = true; track("brief_start"); }
   setStep(Math.max(0, Math.min(6, step + dir)));
 }
+// dataLayer events go through window.saghTrack (/consent.js), which drops anything that is not a short code.
+var briefStarted = false;
+function track(name) { try { if (window.saghTrack) window.saghTrack(name); } catch (e) {} }
 function setStep(s) {
   step = s; render();
   window.scrollTo(0, 0);

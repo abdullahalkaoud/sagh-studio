@@ -8,6 +8,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!--GTM_HEAD-->
   <title>{{meta.title}}</title>
   <meta name="description" content="{{meta.description}}" />
   <meta name="theme-color" content="#ffffff" />
@@ -20,6 +21,7 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="is-loading">
+  <!--GTM_BODY-->
   <!-- Splash: ~2s, click or any key skips -->
   <div class="splash" id="splash" aria-hidden="true">
     <!-- mini design canvas: a selection box is drawn around the wordmark, cursor on its corner -->
@@ -41,9 +43,9 @@
         <span class="brand__name">sagh*</span>
       </a>
       <nav class="nav__end" aria-label="{{a11y.sections}}">
-        <a class="nav__link" href="#approach">{{nav.link}}</a>
+        <a class="nav__link" href="#approach" data-cta="nav_approach">{{nav.link}}</a>
         <a class="nav__lang" href="{{alt_href}}" hreflang="{{alt_lang}}" lang="{{alt_lang}}" aria-label="{{a11y.switch}}">{{nav.lang}}</a>
-        <a class="btn" href="#contact">{{nav.cta}}</a>
+        <a class="btn" href="#contact" data-cta="nav_contact">{{nav.cta}}</a>
       </nav>
     </div>
   </header>
@@ -186,7 +188,7 @@
         </form>
 
         <div class="contact__pills">
-          <a class="pill" id="phonePill" href="#" target="_blank" rel="noopener" dir="ltr"></a>
+          <a class="pill" id="phonePill" data-wa="phone_pill" href="#" target="_blank" rel="noopener" dir="ltr"></a>
           <a class="pill" href="#top">sagh.co</a>
         </div>
       </div>
@@ -201,13 +203,16 @@
           <small>© <span id="year">2026</span> {{footer.rights}}</small>
         </span>
       </div>
+      <!-- text and click come from consent.js; stays hidden when GTM is off (src/gtm.json) -->
+      <button type="button" data-cookie-settings hidden></button>
     </div>
   </footer>
 
-  <a class="fab" id="fab" href="#contact" target="_blank" rel="noopener" aria-label="{{a11y.whatsapp}}">
+  <a class="fab" id="fab" data-wa="fab" href="#contact" target="_blank" rel="noopener" aria-label="{{a11y.whatsapp}}">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5z" /></svg>
   </a>
 
+  <script src="/consent.js" defer></script>
   <script src="/main.js" defer></script>
 </body>
 </html>
