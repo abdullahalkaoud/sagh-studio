@@ -3,3 +3,6 @@ node_modules/
 
 # API keys (e.g. marketing/tiktok-idea-to-app/.env)
 .env
+
+# Client briefs and concepts (personal data, card SAG-29): stay on this PC
+clients/
