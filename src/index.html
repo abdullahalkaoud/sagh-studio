@@ -21,7 +21,6 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="is-loading">
-  <!--GTM_BODY-->
   <!-- Splash: ~2s, click or any key skips -->
   <div class="splash" id="splash" aria-hidden="true">
     <!-- mini design canvas: a selection box is drawn around the wordmark, cursor on its corner -->
@@ -203,8 +202,11 @@
           <small>© <span id="year">2026</span> {{footer.rights}}</small>
         </span>
       </div>
-      <!-- text and click come from consent.js; stays hidden when GTM is off (src/gtm.json) -->
-      <button type="button" data-cookie-settings hidden></button>
+      <nav class="footer__links" aria-label="{{privacy.label}}">
+        <a href="{{privacy.href}}" data-cta="footer_privacy">{{privacy.label}}</a>
+        <!-- text and click come from consent.js; stays hidden when GTM is off (src/gtm.json) -->
+        <button type="button" data-cookie-settings hidden></button>
+      </nav>
     </div>
   </footer>
 

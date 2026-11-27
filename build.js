@@ -5,6 +5,7 @@
 //   src/brief/index.html + src/brief/{ar,en}.json → dist/brief/index.html, dist/en/brief/index.html (client brief)
 //   src/brief/config.json            → Google Sheet endpoint + token for the brief (empty = off)
 //   src/gtm.json                     → Google Tag Manager container + consent bar settings (container_id empty = off)
+//   src/privacy/index.html + src/privacy/{ar,en}.md → dist/privacy/index.html, dist/en/privacy/index.html (privacy notice)
 //   styles.css, main.js, consent.js, admin/, fonts/, assets/ → copied as-is
 const fs = require("fs");
 const path = require("path");
@@ -107,43 +108,66 @@ function copy(from, to) {
   fs.cpSync(src, dest, { recursive: true });
 }
 
-// Google Tag Manager + Consent Mode v2 (card SAG-44). The ONE place to set it is src/gtm.json; container_id empty = off.
-// gtmHead goes at the top of <head> in both templates (<!--GTM_HEAD-->), gtmBody right after <body> (<!--GTM_BODY-->).
-// Order matters: consent defaults (all four denied) → a stored "granted" choice → only then the GTM loader.
-// The bar itself and the dataLayer events are in consent.js. admin/ is copied as-is and never gets GTM.
+// Google Analytics 4 through Google Tag Manager, with Consent Mode v2 (card SAG-44). The ONE place to set it is
+// src/gtm.json; container_id empty = off. The snippet goes at the top of <head> in every template (<!--GTM_HEAD-->).
+// Consent mode "basic": the snippet only sets the defaults (all four denied) and DEFINES the loader. Nothing is
+// requested from Google until SAGH_GTM.load() runs: here when a stored "granted" choice exists, or from consent.js
+// when the visitor presses «أوافق». load() grants analytics_storage only; the three advertising signals stay denied.
+// No <noscript> iframe: it would call Google before any choice. admin/ is copied as-is and never gets GTM.
 const gtm = JSON.parse(fs.readFileSync(path.join(root, "src/gtm.json"), "utf8"));
 const gtmId = String(gtm.container_id || "").trim();
 if (gtmId && !/^GTM-[A-Z0-9]{4,12}$/.test(gtmId)) throw new Error('src/gtm.json: container_id must look like "GTM-XXXXXXX" (or be empty to switch GTM off)');
-function gtmSnippets(lang) {
-  if (!gtmId) return { head: "", body: "" };
-  const privacy = String((gtm.privacy_href || {})[lang] || "").trim();
-  if (!/^\/[\w\-/]*$/.test(privacy)) throw new Error(`src/gtm.json: privacy_href.${lang} must be a path on this site, like "/privacy"`);
-  const head = `<script>
+const consentVersion = Number(gtm.consent_version), consentDays = Number(gtm.consent_days);
+if (gtmId && !(Number.isInteger(consentVersion) && consentVersion > 0 && Number.isInteger(consentDays) && consentDays > 0))
+  throw new Error("src/gtm.json: consent_version and consent_days must be whole numbers above 0");
+// Where "Privacy policy" links go, per language. Used by the consent bar, the footers and the brief.
+const privacyLabel = { ar: "سياسة الخصوصية", en: "Privacy policy" };
+const privacyHref = (lang) => {
+  const href = String((gtm.privacy_href || {})[lang] || "").trim();
+  if (!/^\/[\w\-/]*$/.test(href)) throw new Error(`src/gtm.json: privacy_href.${lang} must be a path on this site, like "/privacy"`);
+  return href;
+};
+function gtmHead(lang) {
+  if (!gtmId) return "";
+  return `<script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",wait_for_update:500});
+gtag("consent","default",{ad_storage:"denied",analytics_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
 gtag("set","ads_data_redaction",true);
-window.SAGH_GTM={id:${JSON.stringify(gtmId)},privacy:${JSON.stringify(privacy)}};
-try{(function(c){if(c&&c.v===1&&c.choice==="granted"&&Date.now()-Date.parse(c.at)<180*864e5)gtag("consent","update",{ad_storage:"granted",analytics_storage:"granted",ad_user_data:"granted",ad_personalization:"granted"});})(JSON.parse(localStorage.getItem("sagh_consent")||"null"));}catch(e){}
-</script>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(gtmId)});</script>
-<!-- End Google Tag Manager -->`;
-  const body = `<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->`;
-  return { head, body };
+window.SAGH_GTM={id:${JSON.stringify(gtmId)},privacy:${JSON.stringify(privacyHref(lang))},v:${consentVersion},days:${consentDays},on:false,load:function(){
+gtag("consent","update",{analytics_storage:"granted"});if(this.on)return;this.on=true;
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',this.id);}};
+try{(function(c,g){if(c&&c.v===g.v&&c.choice==="granted"&&Date.now()-Date.parse(c.at)<g.days*864e5)g.load();})(JSON.parse(localStorage.getItem("sagh_consent")||"null"),SAGH_GTM);}catch(e){}
+</script>`;
 }
 const withGtm = (html, lang) => {
-  const g = gtmSnippets(lang);
-  for (const mark of ["<!--GTM_HEAD-->", "<!--GTM_BODY-->"])
-    if (html.split(mark).length !== 2) throw new Error(`template for "${lang}" must contain ${mark} exactly once`);
-  return html.replace("<!--GTM_HEAD-->", () => g.head).replace("<!--GTM_BODY-->", () => g.body);
+  if (html.split("<!--GTM_HEAD-->").length !== 2) throw new Error(`template for "${lang}" must contain <!--GTM_HEAD--> exactly once`);
+  return html.replace("<!--GTM_HEAD-->", () => gtmHead(lang));
 };
-console.log(`Google Tag Manager: ${gtmId || "off"}`);
-for (const lang of ["ar", "en"]) {
-  const href = gtmId && (gtm.privacy_href || {})[lang];
-  if (href && !gtm.privacy_page_ready)
-    console.warn(`WARNING: the consent bar links to ${href}; this site has no privacy page yet. Publish it, then set "privacy_page_ready": true in src/gtm.json.`);
+console.log(`Google Tag Manager: ${gtmId ? gtmId + " (loads after consent only)" : "off"}`);
+
+// Privacy notice: a small Markdown subset (what Legal's text uses) → HTML. Everything is escaped first.
+function markdown(md, file) {
+  const inline = (t) => escape(t)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/g, '<a href="$2">$1</a>')
+    .replace(/(^|[\s:])(https:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener" dir="ltr">$2</a>');
+  const out = [];
+  let list = false;
+  const closeList = () => { if (list) { out.push("</ul>"); list = false; } };
+  for (const raw of md.replace(/<!--[\s\S]*?-->/g, "").split(/\r?\n/)) {
+    const line = raw.trim();
+    if (/^[<>|`]/.test(line)) throw new Error(`${file}: unsupported Markdown: ${line.slice(0, 40)}`);
+    if (!line) { closeList(); continue; }
+    let m;
+    if ((m = /^- (.+)$/.exec(line))) { if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${inline(m[1])}</li>`); continue; }
+    closeList();
+    if ((m = /^# (.+)$/.exec(line))) out.push(`<h1 class="legal__title">${inline(m[1])}</h1>`);
+    else if ((m = /^## (.+)$/.exec(line))) out.push(`<h2>${inline(m[1])}</h2>`);
+    else if (/^#/.test(line)) throw new Error(`${file}: unsupported heading: ${line.slice(0, 40)}`);
+    else out.push(`<p>${inline(line)}</p>`);
+  }
+  closeList();
+  return out.map((l) => "      " + l).join("\n");
 }
 
 fs.rmSync(dist, { recursive: true, force: true });
@@ -152,7 +176,7 @@ const projects = JSON.parse(fs.readFileSync(path.join(root, "content/projects.js
 
 for (const [lang, opts] of Object.entries(languages)) {
   const content = JSON.parse(fs.readFileSync(path.join(root, `content/${lang}.json`), "utf8"));
-  const data = { ...content, lang, dir: opts.dir, alt_lang: opts.alt_lang, alt_href: opts.alt_href, a11y: opts.a11y };
+  const data = { ...content, lang, dir: opts.dir, alt_lang: opts.alt_lang, alt_href: opts.alt_href, a11y: opts.a11y, privacy: { href: privacyHref(lang), label: privacyLabel[lang] } };
   const projectsHtml = renderProjects(projects, lookup(data, "projects", lang), lang);
   // Eyebrows are styled for spaced-out Latin caps; Arabic ones get their own style.
   const html = render(template, data, lang).replace("<!--PROJECTS-->", projectsHtml).replace(
@@ -200,7 +224,7 @@ if (keyDiff.length) throw new Error(`src/brief/ar.json and en.json differ in: ${
 for (const [lang, opts] of Object.entries(briefLangs)) {
   const strings = briefStrings[lang];
   const data = {
-    lang, dir: opts.dir, meta: strings.meta,
+    lang, dir: opts.dir, meta: strings.meta, privacy_href: privacyHref(lang), privacy_label: privacyLabel[lang],
     preload: opts.fonts.map((f) => `<link rel="preload" href="/fonts/${f}" as="font" type="font/woff2" crossorigin>`).join("\n"),
   };
   // string table as a JS literal; "<" escaped so no text can close the <script> tag
@@ -216,6 +240,33 @@ for (const [lang, opts] of Object.entries(briefLangs)) {
     .replace('"__SHEET_ENDPOINT__"', () => JSON.stringify(sheetEndpoint))
     .replace('"__SHEET_TOKEN__"', () => JSON.stringify(sheetToken));
   const out = path.join(dist, opts.out);
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.writeFileSync(out, withGtm(html, lang));
+  console.log(`built ${path.relative(root, out)}`);
+}
+
+// Privacy notice at /privacy and /en/privacy: src/privacy/index.html + src/privacy/<lang>.md (Legal's text).
+const privacyTemplate = fs.readFileSync(path.join(root, "src/privacy/index.html"), "utf8");
+const privacyDescription = { ar: "وش نجمع، وليش، ووين يروح، ومتى نحذفه، وكيف تتحكم فيه.", en: "What we collect, why, where it goes, when we delete it, and how you control it." };
+for (const [lang, opts] of Object.entries(languages)) {
+  const content = JSON.parse(fs.readFileSync(path.join(root, `content/${lang}.json`), "utf8"));
+  const file = `src/privacy/${lang}.md`;
+  const body = markdown(fs.readFileSync(path.join(root, file), "utf8"), file);
+  const title = (/<h1[^>]*>(.*?)<\/h1>/.exec(body) || [])[1];
+  if (!title) throw new Error(`${file}: the first line must be a "# " title`);
+  const other = lang === "ar" ? "en" : "ar";
+  const data = {
+    lang, dir: opts.dir, content: body, title: `${title} — ${lang === "ar" ? "صاغ" : "Sagh"}`, description: privacyDescription[lang],
+    home_href: lang === "ar" ? "/" : "/en/", home_aria: opts.a11y.home, sections_aria: opts.a11y.sections,
+    alt_href: privacyHref(other), alt_lang: other, switch_aria: opts.a11y.switch, switch_text: lookup(content, "nav.lang", lang),
+    cta: lookup(content, "nav.cta", lang), rights: lookup(content, "footer.rights", lang), year: String(new Date().getFullYear()),
+    privacy_label: privacyLabel[lang],
+  };
+  const html = privacyTemplate.replace(/\{\{(=?)(\w+)\}\}/g, (_, raw, key) => {
+    if (data[key] == null || data[key] === "") throw new Error(`src/privacy/index.html: no value for "${key}" (${lang})`);
+    return raw ? data[key] : escape(data[key]);
+  });
+  const out = path.join(dist, privacyHref(lang).replace(/^\//, ""), "index.html");
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, withGtm(html, lang));
   console.log(`built ${path.relative(root, out)}`);

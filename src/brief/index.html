@@ -265,6 +265,9 @@ textarea.field { min-height: 116px; padding: 14px 20px; border-radius: 20px; res
 .consent input:checked + .chip__mark svg { opacity: 1; }
 .consent input:focus-visible + .chip__mark { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 .consent__text { font-size: 15px; line-height: 1.8; }
+.ck-foot { display: flex; justify-content: center; align-items: center; gap: 22px; flex-wrap: wrap; padding: 8px 20px 28px; }
+.ck-foot a { padding: 6px 0; font-size: 13px; line-height: 1.4; font-weight: 500; color: inherit; opacity: 0.7; text-underline-offset: 4px; }
+.ck-foot a:hover { opacity: 1; }
 .consent__more { display: inline-block; margin-top: 8px; margin-inline-start: 36px; font-size: 13.5px; color: var(--accent-text); text-underline-offset: 4px; }
 
 .err {
@@ -372,7 +375,6 @@ html[lang="en"] .btn { font-weight: 600; }
 </style>
 </head>
 <body>
-<!--GTM_BODY-->
 
 <header class="top">
   <div class="top__row">
@@ -393,7 +395,7 @@ html[lang="en"] .btn { font-weight: 600; }
 </main>
 
 <!-- text and click come from /consent.js; stays hidden when GTM is off (src/gtm.json) -->
-<footer class="ck-foot"><button type="button" data-cookie-settings hidden></button></footer>
+<footer class="ck-foot"><a id="privacy-link" href="{{privacy_href}}" target="_blank" rel="noopener">{{privacy_label}}</a><button type="button" data-cookie-settings hidden></button></footer>
 <script src="/consent.js"></script>
 
 <script>
@@ -541,6 +543,9 @@ function renderQ(id) {
     h += '<div class="q consent" data-q="' + id + '">';
     h += '<label><input type="checkbox" name="consent" id="f-consent"' + (A.consent ? " checked" : "") + ' aria-required="true" aria-describedby="consent-err">' +
          '<span class="chip__mark">' + ICON_CHECK + '</span><span class="consent__text">' + esc(q.label) + reqTag(q) + "</span></label>";
+    // the privacy notice, in a new tab so the answers typed so far stay on this page
+    var pl = document.getElementById("privacy-link");
+    if (pl) h += '<a class="consent__more" href="' + esc(pl.getAttribute("href")) + '" target="_blank" rel="noopener">' + esc(pl.textContent) + "</a>";
   } else {
     h += '<div class="q" data-q="' + id + '"' + hidden + ">";
     h += '<label class="q__label" for="f-' + id + '">' + esc(q.label) + reqTag(q) + "</label>" + helpHtml(id, q);

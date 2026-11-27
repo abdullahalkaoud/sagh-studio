@@ -1,39 +1,44 @@
 /* صاغ — cookie consent bar + dataLayer events (no dependencies). Loaded on every page except /admin.
  *
+ * Analytics only (Google Analytics 4 through Google Tag Manager), and only after the visitor accepts.
  * The <head> snippet written by build.js (from src/gtm.json) runs first: it sets Google Consent Mode v2 to
- * "denied" for ad_storage, analytics_storage, ad_user_data and ad_personalization, re-applies a stored "granted"
- * choice, and only then loads Google Tag Manager. This file adds:
+ * "denied" for ad_storage, analytics_storage, ad_user_data and ad_personalization, and defines SAGH_GTM.load().
+ * Nothing is requested from Google until load() runs: on page load when a stored "granted" choice exists,
+ * or at the moment the visitor presses «أوافق». The three advertising signals stay "denied" always.
+ * This file adds:
  *   1. the consent bar (Arabic / English from <html lang>), with «أوافق» and «أرفض» in the same weight;
  *   2. "Cookie settings" buttons ([data-cookie-settings]) that reopen the bar at any time;
  *   3. window.saghTrack(event, params): the ONLY way the site pushes events to the dataLayer.
+ * Wording: legal/privacy/cookie-banner.md (Legal). If the text or the tools change, raise "consent_version"
+ * in src/gtm.json so visitors are asked again.
  *
- * Events (all carry lang "ar" | "en" and page_type "home" | "brief"):
+ * Events (all carry lang "ar" | "en" and page_type "home" | "brief" | "privacy"):
  *   whatsapp_click  wa_source: fab | phone_pill | contact_form | brief_retry | link
  *   cta_click       cta_name: the element's data-cta value (e.g. nav_contact, project_app_store)
  *   brief_start     first move from the brief's intro to question 1
  *   brief_submit    the brief was validated and handed to WhatsApp
  *   sagh_consent    consent_state: granted | denied (on every page once a choice exists, and when it changes)
+ * Events wait in the dataLayer; Google only receives them if GTM was loaded, i.e. after consent.
  * No personal data: saghTrack keeps only the parameters listed in ALLOWED, and only short code-like values
  * (a-z, 0-9, _ and -). Names, phone numbers, link URLs and brief answers can never pass.
  */
 (function () {
   "use strict";
-  var KEY = "sagh_consent";          // localStorage: {"v":1,"choice":"granted"|"denied","at":"<ISO date>"}
-  var MAX_AGE_DAYS = 180;            // ask again after this long (keep in sync with the <head> snippet in build.js)
+  var KEY = "sagh_consent";          // localStorage: {"v":<consent_version>,"choice":"granted"|"denied","at":"<ISO date>"}
   var doc = document, html = doc.documentElement;
   var lang = html.lang === "en" ? "en" : "ar";
-  var pageType = /\/brief\/?$/.test(location.pathname) ? "brief" : "home";
+  var pageType = /\/brief\/?$/.test(location.pathname) ? "brief" : /\/privacy\/?$/.test(location.pathname) ? "privacy" : "home";
   var cfg = window.SAGH_GTM || null;  // set by the <head> snippet; null when GTM is off in src/gtm.json
 
   var T = {
     ar: {
       label: "موافقة الكوكيز",
-      text: "نستخدم الكوكيز عشان نعرف كيف يُستخدم الموقع ونقيس إعلاناتنا. توافق؟",
+      text: "نستخدم كوكيز Google Analytics عشان نعرف كيف يُستخدم الموقع ونحسّنه، وبياناتها تُعالج خارج المملكة. ما تشتغل إلا إذا وافقت.",
       privacy: "سياسة الخصوصية", accept: "أوافق", reject: "أرفض", settings: "إعدادات الكوكيز",
     },
     en: {
       label: "Cookie consent",
-      text: "We use cookies to see how the site is used and to measure our ads. Is that OK?",
+      text: "We use Google Analytics cookies to see how the site is used and improve it. The data is processed outside Saudi Arabia. They only run if you accept.",
       privacy: "Privacy policy", accept: "Accept", reject: "Decline", settings: "Cookie settings",
     },
   }[lang];
@@ -65,31 +70,43 @@
     if (wa) track("whatsapp_click", { wa_source: wa.getAttribute("data-wa") || "link" });
   }, true);
 
-  /* ---------- stored choice ---------- */
+  if (!cfg) return;   // GTM off: events still reach the dataLayer for testing, no bar is shown
+
+  /* ---------- stored choice (version and lifetime come from src/gtm.json through the <head> snippet) ---------- */
   function read() {
     try {
       var c = JSON.parse(localStorage.getItem(KEY) || "null");
-      if (!c || c.v !== 1 || (c.choice !== "granted" && c.choice !== "denied")) return null;
-      if (Date.now() - Date.parse(c.at) > MAX_AGE_DAYS * 864e5) return null;
+      if (!c || c.v !== cfg.v || (c.choice !== "granted" && c.choice !== "denied")) return null;
+      if (Date.now() - Date.parse(c.at) > cfg.days * 864e5) return null;
       return c.choice;
     } catch (err) { return null; }
   }
   function save(choice) {
-    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, choice: choice, at: new Date().toISOString() })); } catch (err) { /* private mode: asked again next visit */ }
+    try { localStorage.setItem(KEY, JSON.stringify({ v: cfg.v, choice: choice, at: new Date().toISOString() })); } catch (err) { /* private mode: asked again next visit */ }
+  }
+  // Removes Google Analytics cookies (_ga, _ga_<ID>) left by an earlier "accept".
+  function dropAnalyticsCookies() {
+    try {
+      var parts = location.hostname.split("."), domains = [""];
+      for (var i = 0; i < parts.length - 1; i++) domains.push("; domain=." + parts.slice(i).join("."));
+      doc.cookie.split(";").forEach(function (c) {
+        var name = c.split("=")[0].trim();
+        if (!/^_ga(_|$)/.test(name)) return;
+        domains.forEach(function (d) { doc.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d; });
+      });
+    } catch (err) { /* nothing to remove */ }
   }
   function apply(choice) {
-    var s = choice === "granted" ? "granted" : "denied";
-    gtag("consent", "update", { ad_storage: s, analytics_storage: s, ad_user_data: s, ad_personalization: s });
-    track("sagh_consent", { consent_state: s });
+    if (choice === "granted") cfg.load();   // analytics_storage → granted, then the GTM loader (once)
+    else { gtag("consent", "update", { analytics_storage: "denied" }); dropAnalyticsCookies(); }
+    track("sagh_consent", { consent_state: choice === "granted" ? "granted" : "denied" });
   }
-
-  if (!cfg) return;   // GTM off: events still reach the dataLayer for testing, no bar is shown
 
   /* ---------- the bar ---------- */
   var css =
     ".ck{position:fixed;z-index:60;inset-inline:0;bottom:0;display:flex;justify-content:center;padding:0 12px max(12px,env(safe-area-inset-bottom));pointer-events:none;font-family:var(--font-body,system-ui,sans-serif)}" +
     ".ck[hidden]{display:none}" +
-    ".ck__box{pointer-events:auto;display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;width:100%;max-width:880px;padding:12px 14px 15px 18px;background:#fff;color:#1a1a17;border:1.5px solid #1a1a17;border-radius:20px;box-shadow:0 18px 40px -18px rgba(26,26,23,.45)}" +
+    ".ck__box{pointer-events:auto;display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;width:100%;max-width:960px;padding:12px 14px 15px 18px;background:#fff;color:#1a1a17;border:1.5px solid #1a1a17;border-radius:20px;box-shadow:0 18px 40px -18px rgba(26,26,23,.45)}" +
     "[dir=rtl] .ck__box{padding:12px 18px 15px 14px}" +
     ".ck__text{flex:1 1 300px;margin:0;font-size:14px;line-height:1.6}" +
     ".ck__text a{color:#4f6200;font-weight:600;text-underline-offset:4px;white-space:nowrap}" +
@@ -102,12 +119,11 @@
     ".ck__btn:focus-visible{border-radius:999px}" +
     ".ck-open{padding:6px 0;border:0;background:none;color:inherit;opacity:.7;font:500 13px/1.4 var(--font-body,system-ui,sans-serif);text-decoration:underline;text-underline-offset:4px;cursor:pointer}" +
     ".ck-open:hover{opacity:1}" +
-    ".ck-foot{display:flex;justify-content:center;padding:8px 20px 28px}" +
     /* the bar takes its own room: the page, the WhatsApp button and the brief's action bar move up by its height */
     "html.has-ck body{padding-bottom:var(--ck-h,0px)}" +
     "html.has-ck .fab{bottom:calc(max(20px,env(safe-area-inset-bottom)) + var(--ck-h,0px))}" +
     "html.has-ck .actions{bottom:var(--ck-h,0px)}" +
-    "@media (max-width:560px){.ck{padding-inline:8px}.ck__box,[dir=rtl] .ck__box{gap:8px;padding:10px 12px 13px;border-radius:18px}.ck__text{flex-basis:100%;font-size:13px;line-height:1.55}.ck__btns{flex:1 1 100%}.ck__btn{min-height:42px}}" +
+    "@media (max-width:560px){.ck{padding-inline:8px}.ck__box,[dir=rtl] .ck__box{gap:8px;padding:10px 12px 13px;border-radius:18px}.ck__text{flex-basis:100%;font-size:12.5px;line-height:1.5}.ck__btns{flex:1 1 100%}.ck__btn{min-height:42px}}" +
     "@media (prefers-reduced-motion:reduce){.ck__btn{transition:none}.ck__btn:hover,.ck__btn:active{transform:none}}" +
     "@media print{.ck,.ck-open{display:none}}";
   var style = doc.createElement("style");
@@ -133,7 +149,7 @@
   button(T.reject, "denied");
   box.appendChild(p); box.appendChild(btns); bar.appendChild(box);
 
-  var opener = null, ro = null;
+  var opener = null;
   function measure() { html.style.setProperty("--ck-h", bar.hidden ? "0px" : Math.ceil(bar.getBoundingClientRect().height) + "px"); }
   function open(from) {
     opener = from || null;
@@ -148,14 +164,14 @@
 
   function start() {
     doc.body.appendChild(bar);
-    if (window.ResizeObserver) { ro = new ResizeObserver(measure); ro.observe(bar); }
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(bar);
     window.addEventListener("resize", measure);
     [].forEach.call(doc.querySelectorAll("[data-cookie-settings]"), function (b) {
       b.textContent = T.settings; b.classList.add("ck-open"); b.hidden = false;
       b.addEventListener("click", function () { open(b); });
     });
     var choice = read();
-    if (choice) track("sagh_consent", { consent_state: choice });   // the <head> snippet already applied it
+    if (choice) track("sagh_consent", { consent_state: choice });   // "granted" was already applied by the <head> snippet
     else open(null);
   }
   if (doc.body) start(); else doc.addEventListener("DOMContentLoaded", start);
