@@ -279,3 +279,7 @@ copy("admin", "admin");
 copy("fonts", "fonts");
 copy("assets", "assets");
 console.log("copied styles.css, main.js, consent.js, admin/, fonts/, assets/");
+
+// Product waitlist pages (cards SAG-48, SAG-49): static, no GTM, no cookies; the form posts to the waitlist Apps Script.
+copy("src/hafiztha", "hafiztha");
+console.log("copied src/hafiztha/ -> dist/hafiztha/");

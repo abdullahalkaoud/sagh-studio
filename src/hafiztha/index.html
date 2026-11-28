@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>حفظتها — كل شي حفظته، تلقاه</title>
+<meta name="description" content="مكتبة عربية لكل مقطع تحفظه من تيك توك وانستقرام وسناب وإكس، تبحث فيها بالعربي وتشوف الأماكن على خريطة. سجّل اهتمامك قبل الإطلاق.">
+<meta name="robots" content="noindex">
+<!-- SAG-48 waitlist page v2 (2026-11-28). DRAFT, not published. Planned path: sagh.co/hafiztha/ (fonts at ../fonts/).
+     Form -> Google Sheet through an Apps Script web app (validation/sheets/Code.gs). No cookies, no analytics, no WhatsApp.
+     Design references from Mobbin: ISO Meet hero (floating items), Base (phone + waitlist), Norma (how-it-works cards), Monarch (segmented answers). -->
+<style>
+@font-face{font-family:"Alexandria";src:url("../fonts/alexandria.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Plex";src:url("../fonts/ibm-plex-sans-arabic-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Plex";src:url("../fonts/ibm-plex-sans-arabic-600.woff2") format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"JBMono";src:url("../fonts/jetbrains-mono.woff2") format("woff2");font-weight:100 800;font-display:swap}
+:root{--ink:#16130f;--mid:#6f675e;--line:#e6dccf;--soft:#f3ebe0;--cream:#fffaf3;--accent:#ff6a3d;--deep:#c94a22;--tint:#ffd9cb;--ok:#2e7d4a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Plex",system-ui,sans-serif;font-size:17px;line-height:1.7}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+/* header */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+.logo{font-family:"Alexandria";font-weight:800;font-size:23px;display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo i{width:28px;height:28px;border-radius:9px 9px 9px 2px;background:var(--accent);border:1.5px solid var(--ink);display:inline-block}
+.nav .right{display:flex;gap:10px;align-items:center}
+.pill{font-size:13px;border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;background:#fff;color:var(--mid)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:999px;background:var(--accent);color:#fff;border:1.5px solid var(--ink);box-shadow:0 4px 0 var(--deep);font-family:"Alexandria";font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;transition:transform .12s, box-shadow .12s}
+.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--deep)}
+.btn.sm{min-height:42px;padding:0 18px;font-size:14px;box-shadow:0 3px 0 var(--deep)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:none}
+/* hero */
+.hero{position:relative;text-align:center;padding:70px 0 40px;min-height:660px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--mid);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px 14px}
+.eyebrow b{color:var(--deep)}
+h1{font-family:"Alexandria";font-weight:800;font-size:clamp(40px,7vw,78px);line-height:1.15;margin:22px auto 14px;max-width:12ch}
+.hl{background:linear-gradient(to top,var(--tint) 0,var(--tint) .42em,transparent .42em);padding:0 .08em}
+.lead{color:var(--mid);font-size:19px;max-width:30em;margin:0 auto 28px}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.note{font-size:13.5px;color:var(--mid);margin-top:12px}
+.float{position:absolute;width:190px;background:#fff;border:1.5px solid var(--ink);border-radius:18px;padding:10px;text-align:right;box-shadow:0 8px 24px rgba(22,19,15,.08);font-size:13.5px;line-height:1.45}
+.float .th{height:78px;border-radius:12px;margin-bottom:8px;background:repeating-linear-gradient(45deg,var(--soft) 0 9px,#fbf6ef 9px 18px);border:1px solid var(--line)}
+.float b{display:block}
+.float span{font-family:"JBMono";font-size:10.5px;direction:ltr;display:inline-block;border:1.2px solid var(--ink);border-radius:5px;padding:0 5px;margin-top:4px;background:var(--cream)}
+.f1{right:0;top:30px;transform:rotate(4deg)}.f2{right:30px;top:440px;transform:rotate(-5deg)}
+.f3{left:0;top:40px;transform:rotate(-4deg)}.f4{left:20px;top:450px;transform:rotate(5deg)}
+/* platforms strip */
+.strip{display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;align-items:center;padding:18px 0 34px;color:var(--mid);font-size:15px}
+.strip b{font-family:"Alexandria";color:var(--ink);font-size:17px}
+/* sections */
+section{padding:72px 0;border-top:1.5px solid var(--line)}
+.sec-h{font-family:"Alexandria";font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1.3;margin:0 0 10px}
+.sec-p{color:var(--mid);max-width:36em;margin:0 0 34px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:#fff;border:1.5px solid var(--ink);border-radius:26px;overflow:hidden;display:flex;flex-direction:column}
+.step .t{padding:20px 22px 10px}
+.step .n{font-family:"JBMono";font-size:12px;border:1.5px solid var(--ink);border-radius:999px;padding:1px 10px}
+.step h3{font-family:"Alexandria";font-size:21px;margin:12px 0 4px}
+.step p{margin:0;color:var(--mid);font-size:15.5px}
+.step .shot{margin-top:auto;height:300px;overflow:hidden;background:var(--soft);border-top:1.5px solid var(--ink);display:flex;justify-content:center;padding-top:22px}
+.step .shot img{width:72%;border-radius:22px 22px 0 0;border:1.5px solid var(--ink);border-bottom:0;object-fit:cover;object-position:top}
+/* search demo */
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.sbox{background:#fff;border:1.5px solid var(--ink);border-radius:22px;padding:18px}
+.sbar{height:54px;border:1.5px solid var(--ink);border-radius:16px;display:flex;align-items:center;gap:10px;padding:0 16px;font-weight:600}
+.res{padding:12px 4px;border-bottom:1.5px solid var(--soft);font-size:15px}
+.res:last-child{border:0}
+.res small{color:var(--mid)}
+mark{background:var(--tint);color:inherit;border-radius:4px;padding:0 3px}
+.syn{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.syn span{border:1.5px dashed var(--mid);border-radius:999px;padding:3px 12px;font-size:14px;color:var(--mid)}
+/* promises */
+.prom{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pr{border:1.5px solid var(--line);border-radius:22px;padding:22px;background:#fff}
+.pr b{font-family:"Alexandria";font-size:18px;display:block;margin-bottom:4px}
+.pr p{margin:0;color:var(--mid);font-size:15.5px}
+/* waitlist */
+.wl{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:start}
+.phone{border:2px solid var(--ink);border-radius:38px;background:#fff;padding:10px;max-width:300px;margin:0 auto;box-shadow:0 20px 50px rgba(22,19,15,.12)}
+.phone img{width:100%;border-radius:28px;display:block}
+form{display:none;background:#fff;border:1.5px solid var(--ink);border-radius:28px;padding:28px}
+form h3{font-family:"Alexandria";font-size:26px;margin:0 0 4px}
+label.f{display:block;font-weight:600;font-size:15px;margin:18px 0 6px}
+input[type=text],input[type=email]{width:100%;height:52px;border:1.5px solid var(--ink);border-radius:14px;padding:0 14px;font:inherit;font-size:16px;background:var(--cream)}
+input[type=email]{direction:ltr;text-align:right}
+input:focus,button:focus-visible,.seg label:focus-within{outline:3px solid var(--tint);outline-offset:2px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{border:1.5px solid var(--ink);border-radius:14px;min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 8px;font-size:14.5px;cursor:pointer;background:#fff;line-height:1.35}
+.seg input:checked+span{font-weight:600}
+.seg label:has(input:checked){background:var(--ink);color:#fff}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--mid);margin-top:18px}
+.consent input{width:20px;height:20px;margin-top:3px;flex:none;accent-color:var(--accent)}
+.err{color:var(--deep);font-size:13.5px;min-height:20px;margin-top:6px}
+.hp{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+form .btn{width:100%;margin-top:14px}
+.teaser{background:#fff;border:1.5px solid var(--ink);border-radius:28px;padding:32px 28px}.teaser h3{font-family:"Alexandria";font-size:28px;margin:0 0 6px}.open form{display:block}.open .teaser{display:none}
+.thanks{display:none;text-align:center;background:#fff;border:1.5px solid var(--ink);border-radius:28px;padding:40px 28px}
+.thanks h3{font-family:"Alexandria";font-size:28px;margin:10px 0 6px}
+.thanks .ok{width:64px;height:64px;border-radius:50%;background:var(--accent);border:1.5px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:30px}
+footer{padding:36px 0 60px;font-size:14px;color:var(--mid);border-top:1.5px solid var(--line)}
+@media (max-width:900px){.float{display:none}.hero{min-height:0;padding-top:40px}.steps,.prom,.demo,.wl{grid-template-columns:1fr}.step .shot{height:260px}.nav .pill{display:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <a class="logo" href="#top" aria-label="حفظتها"><i></i>حفظتها</a>
+  <div class="right"><span class="pill">قبل الإطلاق</span><a class="btn sm" href="#join" data-open>سجّل اهتمامك</a></div>
+</header>
+
+<div class="hero" id="top">
+  <div class="float f1" aria-hidden="true"><div class="th"></div><b>أهدأ كوفي بالملقا</b><span>TikTok</span></div>
+  <div class="float f2" aria-hidden="true"><div class="th"></div><b>كيكة التمر بدون فرن</b><span>Instagram</span></div>
+  <div class="float f3" aria-hidden="true"><div class="th"></div><b>5 أماكن للمذاكرة بالرياض</b><span>X</span></div>
+  <div class="float f4" aria-hidden="true"><div class="th"></div><b>مطعم برقر جديد بالعارض</b><span>Snapchat</span></div>
+  <span class="eyebrow"><b>قريباً</b> مكتبة عربية لمحفوظاتك</span>
+  <h1>كل شي حفظته، <span class="hl">تلقاه.</span></h1>
+  <p class="lead">تحفظ مقطع كوفي أو وصفة أو فكرة، وبعد أسبوعين ما تلقاه. «حفظتها» يجمع محفوظاتك من كل التطبيقات في مكان واحد: تبحث فيها بالعربي، والأماكن تطلع لك على خريطة.</p>
+  <div class="cta"><a class="btn" href="#join" data-open>أبي أجربه أول ما يجهز</a><a class="btn ghost" href="#how">كيف يشتغل؟</a></div>
+  <p class="note">التسجيل اسم وإيميل بس. بدون إعلانات، وبدون بيع بيانات.</p>
+</div>
+
+<div class="strip" aria-label="المنصات"><span>محفوظاتك من</span><b>TikTok</b><b>Instagram</b><b>Snapchat</b><b>X</b><b>YouTube</b><span>في مكان واحد</span></div>
+
+<section id="how">
+  <h2 class="sec-h">ثلاث خطوات، وبس</h2>
+  <p class="sec-p">ما تحتاج تغير عادتك: كمّل تحفظ مثل ما تحفظ اليوم، بس شارك الرابط لـ«حفظتها».</p>
+  <div class="steps">
+    <div class="step"><div class="t"><span class="n">01</span><h3>شارك الرابط</h3><p>من زر المشاركة في أي تطبيق، اختر «حفظتها». ينحفظ بثانية.</p></div><div class="shot"><img src="shots/01-welcome.png" alt="شاشة البداية: شارك أي رابط" loading="lazy"></div></div>
+    <div class="step"><div class="t"><span class="n">02</span><h3>رتّبه بضغطة</h3><p>مكان، وصفة، منتج، فكرة: تختار النوع وتكتب كلمتين، وتلقاه في مكانه.</p></div><div class="shot"><img src="shots/03-library.png" alt="شاشة المكتبة" loading="lazy"></div></div>
+    <div class="step"><div class="t"><span class="n">03</span><h3>تلقاه على الخريطة</h3><p>اختر اسم المكان لما تحفظ، وينحط على خريطتك: «حفظت 12 مكان قريب منك».</p></div><div class="shot"><img src="shots/05-map.png" alt="شاشة خريطة الأماكن" loading="lazy"></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="demo">
+    <div>
+      <h2 class="sec-h">دوّر بالعربي، وباللهجة</h2>
+      <p class="sec-p" style="margin-bottom:10px">اكتب مثل ما تتكلم. «كوفي هادي للمذاكرة» يلقى اللي حفظته وكتبت عليه «رايق، ما فيه زحمة»، من ملاحظاتك ووسومك واسم المكان.</p>
+      <div class="syn" aria-label="كلمات بنفس المعنى"><span>هادي</span><span>رايق</span><span>ما فيه زحمة</span><span>للمذاكرة</span><span>للدراسة</span></div>
+    </div>
+    <div class="sbox" aria-label="مثال بحث (محتوى خيالي)">
+      <div class="sbar"><span aria-hidden="true">⌕</span>كوفي هادي للمذاكرة</div>
+      <div class="res"><b>كوفي «سَمْت» بالملقا</b><br><small>ملاحظتك: «<mark>رايق</mark>، يصلح <mark>للمذاكرة</mark>» · TikTok</small></div>
+      <div class="res"><b>مكتبة وكوفي «ورق»</b><br><small>وسومك: <mark>كوفي</mark> · <mark>هادي</mark> · شغل · Instagram</small></div>
+      <div class="res"><b>قائمة «أماكن المذاكرة»</b><br><small>قائمتك: 5 أماكن · X</small></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-h">محفوظاتك لك</h2>
+  <div class="prom">
+    <div class="pr"><b>بدون إعلانات</b><p>ولا نبيع بياناتك لأحد. الدخل من اشتراك اختياري بس.</p></div>
+    <div class="pr"><b>الرابط بس</b><p>نحفظ الرابط وكلامك أنت. ما ننزّل المقاطع ولا ننسخ محتوى غيرك.</p></div>
+    <div class="pr"><b>تطلع متى ما بغيت</b><p>تصدّر كل محفوظاتك أو تحذفها نهائياً من داخل التطبيق.</p></div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="wl">
+    <div class="phone" aria-hidden="true"><img src="shots/05-map.png" alt="" loading="lazy"></div>
+    <div id="box">
+      <div class="teaser"><h3>تبي تكون من أول اللي يجربونه؟</h3><p style="color:var(--mid);margin:0 0 20px">سجّل اسمك وإيميلك، وجاوب سؤال واحد عن السعر. نبلغك أول ما تفتح التجربة.</p><button class="btn" type="button" data-open>أبي أجربه أول ما يجهز</button></div>
+      <form id="wl" novalidate>
+        <h3>سجّل اهتمامك</h3>
+        <p style="margin:0;color:var(--mid)">نبلغك أول ما تفتح التجربة. ما نرسل لك شي غيرها.</p>
+        <label class="f" for="nm">الاسم</label>
+        <input type="text" id="nm" name="name" autocomplete="name" maxlength="80" required>
+        <label class="f" for="em">الإيميل</label>
+        <input type="email" id="em" name="email" autocomplete="email" maxlength="120" required inputmode="email">
+        <fieldset style="border:0;padding:0;margin:0"><legend class="f" style="font-weight:600;font-size:15px;margin:18px 0 6px">لو التطبيق جاهز، تدفع <b>99 ريال بالسنة</b>؟ <span style="color:var(--mid);font-weight:400">(فيه نسخة مجانية لـ100 محفوظ)</span></legend>
+          <div class="seg">
+            <label><input type="radio" name="price" value="yes_99"><span>نعم</span></label>
+            <label><input type="radio" name="price" value="lower"><span>بسعر أقل</span></label>
+            <label><input type="radio" name="price" value="free_only"><span>المجاني يكفيني</span></label>
+          </div>
+        </fieldset>
+        <div class="hp" aria-hidden="true"><label>اتركه فاضي<input type="text" name="hp_extra" tabindex="-1" autocomplete="off"></label></div>
+        <label class="consent"><input type="checkbox" id="cs" name="consent" required><span id="consent-text">أوافق إن مؤسسة صاغ الابتكارية تحفظ اسمي وإيميلي وجوابي عن السعر في جدول على Google Sheets (خوادمه ممكن تكون خارج المملكة)، عشان تعرف مدى الاهتمام بـ«حفظتها» وتبلغني بالإيميل لما تفتح التجربة، وما تستخدمها لغير كذا. تحذفها بعد الإطلاق أو خلال 12 شهر أيهما أقرب، أو متى ما طلبت على واتساب <span dir="ltr">+966558000321</span>. عمري 18 أو أكثر.</span></label>
+        <div class="err" id="err" role="alert"></div>
+        <button class="btn" type="submit" id="send">أرسل</button>
+        <p class="note" style="font-size:13px;margin-top:12px">المسؤول عن بياناتك: مؤسسة صاغ الابتكارية، الرياض. لك تطلب نسخة من بياناتك أو تصحيحها أو حذفها في أي وقت على واتساب <span dir="ltr">+966558000321</span>، ونرد خلال 30 يوماً. <a href="/privacy">سياسة الخصوصية</a></p>
+      </form>
+      <div class="thanks" id="thanks" role="status" tabindex="-1"><span class="ok" aria-hidden="true">✓</span><h3>وصل، شكراً <span id="thx-name"></span></h3><p style="color:var(--mid);margin:0">بنراسلك على إيميلك لما تفتح التجربة، مرة وحدة. ولو تبي نحذف بياناتك قبلها، راسلنا على واتساب <span dir="ltr">+966558000321</span>.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>«حفظتها» مشروع تحت التجربة من مؤسسة صاغ الابتكارية، الرياض. للتواصل: واتساب <span dir="ltr">+966558000321</span>. الشاشات تصور مبدئي ومحتواها خيالي. ما فيه ملفات تتبع ولا تحليلات في هالصفحة.<br>«حفظتها» غير تابع لـ TikTok أو Instagram أو Snapchat أو X أو YouTube ولا مدعوم منها.</footer>
+</div>
+<script>
+/* Fill these after the Apps Script web app is deployed (validation/sheets/SETUP.md). Empty endpoint = form shows a notice and sends nothing. */
+var SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbwbYbD4Mcvc6nWV6MGY9QqvPaGHS7JKsYOXrcfi87vNzKTVeuPy8hrfRkU-GsP2sCo-JQ/exec";            // https://script.google.com/macros/s/<id>/exec
+var SHEET_TOKEN = "ksuvdC3jyh91H8LwUq9B2nXs";               // same value as WAITLIST_TOKEN in Script Properties (anti-spam, not a secret)
+var PRODUCT = "hafiztha";
+var CONSENT_VERSION = "2026-11-28";
+
+var form = document.getElementById("wl"), err = document.getElementById("err"), box = document.getElementById("box");
+function q(n){ return form.elements[n]; }
+document.querySelectorAll("[data-open]").forEach(function(a){ a.addEventListener("click", function(e){ e.preventDefault(); box.classList.add("open"); document.getElementById("join").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); setTimeout(function(){ q("name").focus({preventScroll:true}); }, 450); }); });
+form.addEventListener("submit", function(e){
+  e.preventDefault(); err.textContent = "";
+  var name = q("name").value.trim(), email = q("email").value.trim(), price = (form.querySelector("input[name=price]:checked") || {}).value || "";
+  if (name.length < 2) { err.textContent = "اكتب اسمك."; q("name").focus(); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { err.textContent = "الإيميل مو واضح، تأكد منه."; q("email").focus(); return; }
+  if (!price) { err.textContent = "اختر جواب لسؤال السعر."; return; }
+  if (!q("consent").checked) { err.textContent = "نحتاج موافقتك عشان نحفظ بياناتك."; q("consent").focus(); return; }
+  if (!SHEET_ENDPOINT) { err.textContent = "التسجيل يفتح قريباً. (الصفحة تحت التجهيز)"; return; }
+  var payload = { token: SHEET_TOKEN, product: PRODUCT, name: name, email: email, price: price,
+    consent: true, consent_version: CONSENT_VERSION, hp_extra: q("hp_extra").value,
+    page_url: (location.origin + location.pathname).slice(0, 200), submitted_at: new Date().toISOString() };
+  document.getElementById("send").disabled = true;
+  // text/plain + no-cors = simple request, no preflight; the response cannot be read, so we confirm after sending.
+  fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", credentials: "omit", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+    .then(done, function(){ document.getElementById("send").disabled = false; err.textContent = "ما وصل الإرسال، جرب مرة ثانية."; });
+  function done(){ box.classList.remove("open"); document.querySelector(".teaser").style.display = "none"; form.style.display = "none"; document.getElementById("thx-name").textContent = name.split(/\s+/)[0]; var t = document.getElementById("thanks"); t.style.display = "block"; t.focus(); }
+});
+</script>
+</body>
+</html>
