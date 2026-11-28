@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex">
 <!-- SAG-48 waitlist page v2 (2026-11-28). DRAFT, not published. Planned path: sagh.co/hafiztha/ (fonts at ../fonts/).
      Form -> Google Sheet through an Apps Script web app (validation/sheets/Code.gs). No cookies, no analytics, no WhatsApp.
-     Design references from Mobbin: ISO Meet hero (floating items), Base (phone + waitlist), Norma (how-it-works cards), Monarch (segmented answers). -->
+     Design references from Mobbin: Opacity hero (floating labels, chosen by Abdullah 2026-11-28, direction 5), Base (phone + waitlist), Norma (how-it-works cards), Monarch (segmented answers). -->
 <style>
 @font-face{font-family:"Alexandria";src:url("../fonts/alexandria.woff2") format("woff2");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Plex";src:url("../fonts/ibm-plex-sans-arabic-400.woff2") format("woff2");font-weight:400;font-display:swap}
@@ -23,7 +23,7 @@ a{color:inherit}
 /* header */
 .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
 .logo{font-family:"Alexandria";font-weight:800;font-size:23px;display:flex;align-items:center;gap:9px;text-decoration:none}
-.logo i{width:28px;height:28px;border-radius:9px 9px 9px 2px;background:var(--accent);border:1.5px solid var(--ink);display:inline-block}
+.logo i{width:22px;height:28px;border-radius:4px 4px 0 0;background:var(--accent);clip-path:polygon(0 0,100% 0,100% 100%,50% 74%,0 100%);display:inline-block}
 .nav .right{display:flex;gap:10px;align-items:center}
 .pill{font-size:13px;border:1.5px solid var(--line);border-radius:999px;padding:4px 12px;background:#fff;color:var(--mid)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:999px;background:var(--accent);color:#fff;border:1.5px solid var(--ink);box-shadow:0 4px 0 var(--deep);font-family:"Alexandria";font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;transition:transform .12s, box-shadow .12s}
@@ -31,20 +31,21 @@ a{color:inherit}
 .btn.sm{min-height:42px;padding:0 18px;font-size:14px;box-shadow:0 3px 0 var(--deep)}
 .btn.ghost{background:#fff;color:var(--ink);box-shadow:none}
 /* hero */
-.hero{position:relative;text-align:center;padding:70px 0 40px;min-height:660px}
+.hero{position:relative;text-align:center;padding:150px 0 40px;min-height:660px}
 .eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--mid);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px 14px}
 .eyebrow b{color:var(--deep)}
-h1{font-family:"Alexandria";font-weight:800;font-size:clamp(40px,7vw,78px);line-height:1.15;margin:22px auto 14px;max-width:12ch}
+h1{font-family:"Alexandria";font-weight:800;font-size:clamp(38px,6vw,66px);line-height:1.2;margin:22px auto 14px;max-width:14ch}
 .hl{background:linear-gradient(to top,var(--tint) 0,var(--tint) .42em,transparent .42em);padding:0 .08em}
 .lead{color:var(--mid);font-size:19px;max-width:30em;margin:0 auto 28px}
 .hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .note{font-size:13.5px;color:var(--mid);margin-top:12px}
-.float{position:absolute;width:190px;background:#fff;border:1.5px solid var(--ink);border-radius:18px;padding:10px;text-align:right;box-shadow:0 8px 24px rgba(22,19,15,.08);font-size:13.5px;line-height:1.45}
-.float .th{height:78px;border-radius:12px;margin-bottom:8px;background:repeating-linear-gradient(45deg,var(--soft) 0 9px,#fbf6ef 9px 18px);border:1px solid var(--line)}
-.float b{display:block}
-.float span{font-family:"JBMono";font-size:10.5px;direction:ltr;display:inline-block;border:1.2px solid var(--ink);border-radius:5px;padding:0 5px;margin-top:4px;background:var(--cream)}
-.f1{right:0;top:30px;transform:rotate(4deg)}.f2{right:30px;top:440px;transform:rotate(-5deg)}
-.f3{left:0;top:40px;transform:rotate(-4deg)}.f4{left:20px;top:450px;transform:rotate(5deg)}
+.hero{background:none}
+.tg{position:absolute;display:flex;align-items:flex-start;gap:3px;pointer-events:none;color:var(--c)}
+.tg i{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid currentColor;transform:rotate(35deg)}
+.tg span{color:#fff;border-radius:999px;padding:3px 13px;font-size:13.5px;margin-top:10px;white-space:nowrap;background:var(--c)}
+.tg span b{color:#fff;font-weight:400}
+@media (prefers-reduced-motion:no-preference){.tg{animation:drift 7s ease-in-out infinite alternate}.tg:nth-child(2n){animation-duration:9s;animation-direction:alternate-reverse}}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(6px,-8px)}}
 /* platforms strip */
 .strip{display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;align-items:center;padding:18px 0 34px;color:var(--mid);font-size:15px}
 .strip b{font-family:"Alexandria";color:var(--ink);font-size:17px}
@@ -100,7 +101,7 @@ form .btn{width:100%;margin-top:14px}
 .thanks h3{font-family:"Alexandria";font-size:28px;margin:10px 0 6px}
 .thanks .ok{width:64px;height:64px;border-radius:50%;background:var(--accent);border:1.5px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:30px}
 footer{padding:36px 0 60px;font-size:14px;color:var(--mid);border-top:1.5px solid var(--line)}
-@media (max-width:900px){.float{display:none}.hero{min-height:0;padding-top:40px}.steps,.prom,.demo,.wl{grid-template-columns:1fr}.step .shot{height:260px}.nav .pill{display:none}}
+@media (max-width:900px){.tg{display:none}.hero{min-height:0;padding-top:40px}.steps,.prom,.demo,.wl{grid-template-columns:1fr}.step .shot{height:260px}.nav .pill{display:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
 </style>
 </head>
@@ -112,12 +113,17 @@ footer{padding:36px 0 60px;font-size:14px;color:var(--mid);border-top:1.5px soli
 </header>
 
 <div class="hero" id="top">
-  <div class="float f1" aria-hidden="true"><div class="th"></div><b>أهدأ كوفي بالملقا</b><span>TikTok</span></div>
-  <div class="float f2" aria-hidden="true"><div class="th"></div><b>كيكة التمر بدون فرن</b><span>Instagram</span></div>
-  <div class="float f3" aria-hidden="true"><div class="th"></div><b>5 أماكن للمذاكرة بالرياض</b><span>X</span></div>
-  <div class="float f4" aria-hidden="true"><div class="th"></div><b>مطعم برقر جديد بالعارض</b><span>Snapchat</span></div>
+  <div class="tg" style="--c:#ff6a3d;right:4%;top:10px" aria-hidden="true"><i></i><span><b>كوفي · العليا</b></span></div>
+  <div class="tg" style="--c:#8a5a35;right:46%;top:40px" aria-hidden="true"><i></i><span><b>معرض كتاب</b></span></div>
+  <div class="tg" style="--c:#7a5af8;left:6%;top:30px" aria-hidden="true"><i></i><span><b>محل عطور</b></span></div>
+  <div class="tg" style="--c:#2e7d4a;right:20%;top:110px" aria-hidden="true"><i></i><span><b>وصفة كنافة</b></span></div>
+  <div class="tg" style="--c:#0e8fb5;left:2%;top:200px" aria-hidden="true"><i></i><span><b>مطعم بحري · جدة</b></span></div>
+  <div class="tg" style="--c:#d9467a;right:0;top:340px" aria-hidden="true"><i></i><span><b>فكرة ديكور</b></span></div>
+  <div class="tg" style="--c:#c98500;right:10%;top:560px" aria-hidden="true"><i></i><span><b>كشته · الثمامة</b></span></div>
+  <div class="tg" style="--c:#16130f;left:10%;top:540px" aria-hidden="true"><i></i><span><b>حلويات · الخبر</b></span></div>
+  <div class="tg" style="--c:#3b6fd8;left:44%;top:610px" aria-hidden="true"><i></i><span><b>تمرين ظهر</b></span></div>
   <span class="eyebrow"><b>قريباً</b> مكتبة عربية لمحفوظاتك</span>
-  <h1>كل شي حفظته، <span class="hl">تلقاه</span></h1>
+  <h1>محفوظاتك مو بس <span class="hl">علامة حفظ</span></h1>
   <p class="lead">تحفظ مقطع كوفي أو وصفة أو فكرة، وبعد أسبوعين ما تلقاه، «حفظتها» يجمع محفوظاتك من كل التطبيقات في مكان واحد: تبحث فيها بالعربي، والأماكن تطلع لك على خريطة</p>
   <div class="cta"><a class="btn" href="#join" data-open>أبي أجربه أول ما يجهز</a><a class="btn ghost" href="#how">كيف يشتغل؟</a></div>
   <p class="note">التسجيل اسم وإيميل بس، بدون إعلانات، وبدون بيع بيانات</p>
@@ -131,7 +137,7 @@ footer{padding:36px 0 60px;font-size:14px;color:var(--mid);border-top:1.5px soli
   <div class="steps">
     <div class="step"><div class="t"><span class="n">01</span><h3>شارك الرابط</h3><p>من زر المشاركة في أي تطبيق، اختر «حفظتها»، ينحفظ بثانية</p></div><div class="shot"><img src="shots/01-welcome.png" alt="شاشة البداية: شارك أي رابط" loading="lazy"></div></div>
     <div class="step"><div class="t"><span class="n">02</span><h3>رتّبه بضغطة</h3><p>مكان، وصفة، منتج، فكرة: تختار النوع وتكتب كلمتين، وتلقاه في مكانه</p></div><div class="shot"><img src="shots/03-library.png" alt="شاشة المكتبة" loading="lazy"></div></div>
-    <div class="step"><div class="t"><span class="n">03</span><h3>تلقاه على الخريطة</h3><p>اختر اسم المكان لما تحفظ، وينحط على خريطتك: «حفظت 12 مكان قريب منك»</p></div><div class="shot"><img src="shots/05-map.png" alt="شاشة خريطة الأماكن" loading="lazy"></div></div>
+    <div class="step"><div class="t"><span class="n">03</span><h3>تلقاه على الخريطة</h3><p>اختر اسم المكان لما تحفظ، وينحط على خريطتك: «حفظت 12 مكان قريب منك» (للمشتركين)</p></div><div class="shot"><img src="shots/05-map.png" alt="شاشة خريطة الأماكن" loading="lazy"></div></div>
   </div>
 </section>
 
@@ -172,7 +178,7 @@ footer{padding:36px 0 60px;font-size:14px;color:var(--mid);border-top:1.5px soli
         <input type="text" id="nm" name="name" autocomplete="name" maxlength="80" required>
         <label class="f" for="em">الإيميل</label>
         <input type="email" id="em" name="email" autocomplete="email" maxlength="120" required inputmode="email">
-        <fieldset style="border:0;padding:0;margin:0"><legend class="f" style="font-weight:600;font-size:15px;margin:18px 0 6px">لو التطبيق جاهز، تدفع <b>49 ريال بالسنة</b>؟ <span style="color:var(--mid);font-weight:400">(فيه نسخة مجانية لـ100 محفوظ)</span></legend>
+        <fieldset style="border:0;padding:0;margin:0"><legend class="f" style="font-weight:600;font-size:15px;margin:18px 0 6px">لو التطبيق جاهز، تدفع <b>49 ريال بالسنة</b>؟ <span style="color:var(--mid);font-weight:400">(فيه نسخة مجانية لـ100 محفوظ، والخريطة للمشتركين)</span></legend>
           <div class="seg">
             <label><input type="radio" name="price" value="yes_49"><span>نعم</span></label>
             <label><input type="radio" name="price" value="lower"><span>بسعر أقل</span></label>
